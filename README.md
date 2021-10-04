@@ -7,19 +7,15 @@
 ### Requirements
 
 - Git
-- JDK 1.8 or later
+- JDK 11 or later
 - Maven 3.2 or later
 
 ### Instructions
 
+Clone the current repository.
+
+Run the project locally with Maven using Spring's built-in development server:
 ```bash
-# Go to the directory where you want to clone the project.
-cd path/where/to/put/the/project
-
-# Clone the project.
-git clone https://github.com/AMT-2021/AMT
-
-# Run the project locally with Maven.
 mvn spring-boot:run
 ```
 
@@ -30,7 +26,7 @@ You should be able to access the website on [http://localhost:8080/](http://loca
 Once the project is running locally, you can access it with a web browser on [http://localhost:8080/](http://localhost:8080/).
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests or bugfixes are welcome. For new features or other changes, please open an issue first to discuss what you would like to change.
 
 Constributions must follow the [workflow](https://github.com/AMT-2021/AMT/wiki/Workflow) described in the wiki.
 
