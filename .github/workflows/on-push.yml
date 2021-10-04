@@ -16,7 +16,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
       - run: mvn clean compile
+      - name: Save Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: save
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -36,6 +44,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
       - run: mvn test
   Package:
     runs-on: ubuntu-latest
@@ -50,6 +62,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
       - run: mvn package
       - run: cp target/backend-0.0.1-SNAPSHOT.jar AMT-backend.jar
       - name: Upload package artifacts
