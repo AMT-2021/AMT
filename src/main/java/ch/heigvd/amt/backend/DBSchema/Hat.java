@@ -1,6 +1,5 @@
 package ch.heigvd.amt.backend.DBSchema;
 
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,14 +15,10 @@ import javax.persistence.Id;
 @EqualsAndHashCode
 public class Hat {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  private Integer id;
 
-    @Getter
-    @Setter
-    private String name;
-
-
+  @Getter @Setter private String name;
 }

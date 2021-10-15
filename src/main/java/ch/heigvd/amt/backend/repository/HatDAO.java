@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface HatDAO extends JpaRepository<Hat, Integer> {
-    Optional<Hat> getHatById(Integer id);
+  Optional<Hat> getHatById(Integer id);
 }
