@@ -14,7 +14,8 @@ import java.util.Optional;
 @RestController
 public class HatService {
 
-  @Autowired private HatDAO hatDAO;
+  @Autowired
+  private HatDAO hatDAO;
 
   @GetMapping("/hats/{hatId}")
   public ResponseEntity<Hat> getHatNameById(@PathVariable Integer hatId) {
