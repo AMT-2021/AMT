@@ -13,12 +13,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class BasicTemplateTests {
-  @Autowired private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
   @Test
   public void basicTemplate() throws Exception {
-    mvc.perform(MockMvcRequestBuilders.get("/basic-template"))
-        .andExpect(status().isOk())
+    mvc.perform(MockMvcRequestBuilders.get("/basic-template")).andExpect(status().isOk())
         .andExpect(content().string(containsString("Basic template")));
   }
 }
