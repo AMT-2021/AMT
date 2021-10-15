@@ -16,19 +16,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RESTControllerTests {
-  @Autowired private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-  @Autowired private HatDAO hatRepository;
+  @Autowired
+  private HatDAO hatRepository;
 
   @Test
   @Transactional
   public void createAndSelectHatTest() throws Exception {
     this.mockMvc
-        .perform(
-            post("/hats")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"name\": \"testHat\" }")
-                .accept(MediaType.APPLICATION_JSON))
+        .perform(post("/hats").contentType(MediaType.APPLICATION_JSON)
+            .content("{ \"name\": \"testHat\" }").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name").value("testHat"));

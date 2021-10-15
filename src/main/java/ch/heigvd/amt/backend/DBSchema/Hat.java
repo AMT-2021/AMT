@@ -20,5 +20,7 @@ public class Hat {
   @Getter
   private Integer id;
 
-  @Getter @Setter private String name;
+  @Getter
+  @Setter
+  private String name;
 }

@@ -14,7 +14,8 @@ import java.util.Optional;
 @RestController
 public class HatService {
 
-  @Autowired private HatDAO hatDAO;
+  @Autowired
+  private HatDAO hatDAO;
 
   @GetMapping("/hats/{hatId}")
   public ResponseEntity<Hat> getHatNameById(@PathVariable Integer hatId) {
@@ -26,9 +27,7 @@ public class HatService {
     }
   }
 
-  @PostMapping(
-      path = "/hats",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
+  @PostMapping(path = "/hats", consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Hat> createHat(@RequestBody Hat newHat) throws ServerException {
     Hat hat = hatDAO.save(newHat);

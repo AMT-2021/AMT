@@ -8,5 +8,4 @@ class AmtBackendApplicationTests {
 
   @Test
   void contextLoads() {}
-
 }
