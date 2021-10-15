@@ -39,6 +39,20 @@ jobs:
     name: Unit tests
     runs-on: ubuntu-latest
     needs: Build
+    services:
+        # Label used to access the service container
+        postgres:
+          # Docker Hub image
+          image: postgres
+          # Provide the password for postgres
+          env:
+            POSTGRES_PASSWORD: admin
+          # Set health checks to wait until postgres has started
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
     steps:
       - uses: actions/checkout@v2
       - name: Download build artifacts
@@ -51,12 +65,17 @@ jobs:
           java-version: '11'
       - name: Restore Maven cache
         uses: skjolber/maven-cache-github-action@v1
+        
         with:
           step: restore
       - run: mvn test
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
   Package:
     runs-on: ubuntu-latest
     needs: Build
+    
     steps:
       - uses: actions/checkout@v2
       - name: Download build artifacts
@@ -102,15 +121,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: AMT-backend.war
-      - run: |
-          echo "I would be running integration tests on the release package \
-          but this is not yet implemented. Note that I should not require \
-          access to the code, but all my inputs should be artifacts."
-          echo "Using package artifact:"
-          stat AMT-backend.jar
-
-      - name: Connect to PostgreSQL
-        run: mvn test
+      - run: mvn verify
         env:
           POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
