@@ -24,12 +24,8 @@ public class RESTControllerTests {
   @Transactional
   public void createAndSelectHatTest() throws Exception {
     this.mockMvc
-        .perform(
-            post("/hats")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"name\": \"testHat\" }")
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isCreated())
+        .perform(post("/hats").contentType(MediaType.APPLICATION_JSON)
+            .content("{ \"name\": \"testHat\" }").accept(MediaType.APPLICATION_JSON))
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name").value("testHat"));
   }
