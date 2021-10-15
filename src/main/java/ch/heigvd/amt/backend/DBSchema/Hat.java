@@ -20,5 +20,8 @@ public class Hat {
   @Getter
   private Integer id;
 
-  @Getter @Setter private String name;
+  @Getter
+  @Setter
+  private String name;
+++ b/src/main/java/ch/heigvd/amt/backend/routes/HatService.java
 }
