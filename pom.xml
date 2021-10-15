@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>ch.heigvd.amt</groupId>
 	<artifactId>backend</artifactId>
+	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>amt-backend</name>
 	<description>Backend for AMT project at HEIG-VD</description>
@@ -29,7 +30,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -42,6 +42,17 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>ch.heigvd.amt.backend.AmtBackendApplication.class</mainClass>
+					<layout>WAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
