@@ -27,10 +27,8 @@ public class HatService {
     }
   }
 
-  @PostMapping(
-      path = "/hats",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/hats", consumes = MediaType.APPLICATION_JSON_VALUE,
+++ b/src/test/java/ch/heigvd/amt/backend/RESTControllerTests.java
   public ResponseEntity<Hat> createHat(@RequestBody Hat newHat) throws ServerException {
     Hat hat = hatDAO.save(newHat);
     if (hat == null) {
