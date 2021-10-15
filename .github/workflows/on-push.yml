@@ -5,23 +5,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - run: mvn formatter:format
+      - run: git diff
       - run: |
-          echo "I should be running the linter here, but I don't know how to \
-          do so yet."
+          [ -z "$(git status --porcelain)" ]
   Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          echo "I should be building the project here, but I do not know how \
-          to build it yet."
-          date > build-datetime.txt
-          echo "I stored the build date time in a text file."
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+      - run: mvn clean compile
+      - name: Save Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: save
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build-datetime
-          path: build-datetime.txt
+          name: build-result
+          path: target
   unit-test:
     name: Unit tests
     runs-on: ubuntu-latest
@@ -31,12 +44,16 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: build-datetime
-      - run: |
-          echo "I should be running the project unit tests here. But they have \
-          not been implemented yet. Note that I should not build them since \
-          they should have already been built in the “build” stage."
-          echo "Using build artifacts from $(cat build-datetime.txt)."
+          name: build-result
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+      - run: mvn test
   Package:
     runs-on: ubuntu-latest
     needs: Build
@@ -45,19 +62,22 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: build-datetime
-      - run: |
-          echo "I would be packaging the application in a format suitable for \
-          deployment but this is not yet implemented. Note that I should not \
-          build them since they should have already been built in the “build” \
-          stage."
-          echo "Using build artifacts from $(cat build-datetime.txt)."
-          cp build-datetime.txt package-artifact.txt
+          name: build-result
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+      - run: mvn package
+      - run: cp target/backend-0.0.1-SNAPSHOT.jar AMT-backend.jar
       - name: Upload package artifacts
         uses: actions/upload-artifact@v2
         with:
           name: package-artifact
-          path: package-artifact.txt
+          path: AMT-backend.jar
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
@@ -66,9 +86,10 @@ jobs:
       - name: Download package artifacts
         uses: actions/download-artifact@v2
         with:
-          path: package-artifact
+          path: AMT-backend.jar
       - run: |
           echo "I would be running integration tests on the release package \
           but this is not yet implemented. Note that I should not require \
           access to the code, but all my inputs should be artifacts."
-          echo "Using package artifact $(cat package-artifact.txt)."
+          echo "Using package artifact:"
+          stat AMT-backend.jar
