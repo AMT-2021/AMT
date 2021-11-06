@@ -11,12 +11,14 @@
 	<groupId>ch.heigvd.amt</groupId>
 	<artifactId>ochap-backend</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>amt-backend</name>
-	<description>Backend for AMT project at HEIG-VD</description>
+	<name>Backend of the Ô Chap' project</name>
+	<version>0.0.1</version>
+	<description>Main backend application of the Ô Chap' project</description>
+
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
