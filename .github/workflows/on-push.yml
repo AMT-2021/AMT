@@ -9,7 +9,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - run: mvn formatter:format
+      - run: mvn formatter:format -pl '!:ochap-java-components'
       - run: git diff
       - run: |
           [ -z "$(git status --porcelain)" ]
