@@ -9,7 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ch.heigvd.amt</groupId>
-	<artifactId>backend</artifactId>
+	<artifactId>ochap-backend</artifactId>
+	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>amt-backend</name>
 	<description>Backend for AMT project at HEIG-VD</description>
