@@ -1,0 +1,14 @@
+/*!
+ * Common CSS of the Ô Chap' user management application.
+ */
+
+.center-elems {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-viewport {
+  height: 100vh;
+  width: 100vw;
+}
