@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ShoppingCartTemplate {
   @GetMapping("/shopping-cart")
   public String basicTemplate(Model model) {
-    Item[] items = new Item[] { new Item("p1",1, 5.2f), new Item("p2",2, 3.4f) };
+    Item[] items = new Item[] {new Item("p1", 1, 5.2f), new Item("p2", 2, 3.4f)};
     model.addAttribute("items", items);
     return "shopping-cart-template";
   }
