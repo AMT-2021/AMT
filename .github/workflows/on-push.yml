@@ -35,25 +35,6 @@ jobs:
         with:
           name: build-result
           path: target
-  unit-test:
-    name: Unit tests
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
-      - uses: actions/checkout@v2
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: build-result
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-      - name: Restore Maven cache
-        uses: skjolber/maven-cache-github-action@v1
-        with:
-          step: restore
-      - run: mvn test
   Package:
     runs-on: ubuntu-latest
     needs: Build
