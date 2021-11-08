@@ -1,7 +1,7 @@
 package ch.heigvd.amt.backend;
 
-import ch.heigvd.amt.backend.DBSchema.Category;
-import ch.heigvd.amt.backend.DBSchema.Product;
+import ch.heigvd.amt.backend.entities.Category;
+import ch.heigvd.amt.backend.entities.Product;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import org.junit.jupiter.api.Test;
