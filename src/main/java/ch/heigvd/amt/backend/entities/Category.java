@@ -1,4 +1,4 @@
-package ch.heigvd.amt.backend.DBSchema;
+package ch.heigvd.amt.backend.entities;
 
 import lombok.Data;
 
