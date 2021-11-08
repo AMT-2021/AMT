@@ -81,8 +81,5 @@ jobs:
         with:
           path: AMT-backend.jar
       - run: |
-          echo "I would be running integration tests on the release package \
-          but this is not yet implemented. Note that I should not require \
-          access to the code, but all my inputs should be artifacts."
-          echo "Using package artifact:"
+          mvn verify
           stat AMT-backend.jar
