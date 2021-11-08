@@ -135,13 +135,31 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h3> your products </h3>
-                    <ul>
-                        <th:block th:each="item : ${items}">
-                            <li th:utext="${item}"> item </li>
-                        </th:block>
-                    </ul>
+                <div id="brand" class="brand-bg">
+                    <h3>Your products</h3>
+                    <div class="col">
+                        <div class="row d-flex justify-content-between align-items-center">
+                            <p> product </p>
+                            <p> unit price </p>
+                            <p> number </p>
+                        </div>
+                        <form>
+                            <div class="card rounded-3 mb-4 pb-0 pt-0 pr-3" th:each="item : ${items}">
+                                <div class="card-body">
+                                    <div class="row d-flex justify-content-between align-items-center">
+                                        <p th:utext="${item.name}"></p>
+                                        <p th:utext="${item.price}"></p>
+                                        <div class="row d-flex justify-content-between align-items-center">
+                                            <label>
+                                                <input style="width: 60px" th:value="${item.number}" type="number">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="m-1"> save changes</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
