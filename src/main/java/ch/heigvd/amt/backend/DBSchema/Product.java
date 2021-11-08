@@ -1,38 +1,33 @@
 package ch.heigvd.amt.backend.DBSchema;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@ToString
-@EqualsAndHashCode
+@Data
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
 
-    @Getter
-    @Setter
-    private String name;
 
-    @Getter
-    @Setter
-    private int price;
+  @Column
+  private String name;
 
-    @Getter
-    @Setter
-    private String description;
+  @Column
+  private int price;
 
-    @Getter
-    @Setter
-    private int stock;
+
+  @Column
+  private String description;
+
+
+  @Column
+  private int stock;
+
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
 }
