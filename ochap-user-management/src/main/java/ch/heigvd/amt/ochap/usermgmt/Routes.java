@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 
 import ch.heigvd.amt.ochap.usermgmt.data.LoginDTO;
+import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;
 
 @Controller
 public class Routes {
@@ -50,9 +51,23 @@ public class Routes {
   }
 
   @GetMapping("/register")
-  public String registerView(Model model) {
+  public String registerView(Model model, RegisterDTO registerDTO) {
     model.addAttribute("callbackUrl", "/");
-    model.addAttribute("cancelUrl", "/");
     return "register";
+  }
+
+  @PostMapping("/register")
+  public String registerPerform(@RequestParam Map<String, String> queryParams,
+      @Valid RegisterDTO registerDTO, BindingResult bindingResult, Model model,
+      HttpServletRequest request, HttpServletResponse response) {
+    String callbackUrl = queryParams.getOrDefault("callback", "/");
+    model.addAttribute("callbackUrl", callbackUrl);
+    if (bindingResult.hasErrors()) {
+      return "register";
+    }
+
+    request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
+    response.addCookie(new Cookie("Authorization", "invalid-register-not-implemented"));
+    return "redirect:" + callbackUrl;
   }
 }

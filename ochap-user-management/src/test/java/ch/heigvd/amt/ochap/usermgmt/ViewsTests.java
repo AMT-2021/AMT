@@ -40,11 +40,29 @@ public class ViewsTests {
   }
 
   @Test
+  public void registerActionRedirectsAndSetsCookie() throws Exception {
+    this.mvc
+        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("username", "test-username").param("password", "test-password"))
+        .andExpect(view().name("redirect:/foo"))
+        .andExpect(cookie().value("Authorization", "invalid-register-not-implemented"));
+  }
+
+  @Test
   public void loginActionValidationFailureContainsErrorMessages() throws Exception {
     this.mvc
         .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", "").param("password", ""))
         .andExpect(content().string(containsString("Username cannot be empty")))
         .andExpect(content().string(containsString("Password cannot be empty")));
+  }
+
+  @Test
+  public void registerActionValidationFailureContainsErrorMessages() throws Exception {
+    this.mvc
+        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("username", "u").param("password", "p"))
+        .andExpect(content().string(containsString("Username must have at least 4 characters")))
+        .andExpect(content().string(containsString("Password must have at least 4 characters")));
   }
 }
