@@ -53,12 +53,12 @@ jobs:
         with:
           step: restore
       - run: mvn package -Dmaven.test.skip=true
-      - run: cp target/backend-0.0.1-SNAPSHOT.jar AMT-backend.jar
+      - run: cp ochap-backend/target/ochap-backend-*.war AMT-backend.war
       - name: Upload package artifacts
         uses: actions/upload-artifact@v2
         with:
           name: package-artifact
-          path: AMT-backend.jar
+          path: AMT-backend.war
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
