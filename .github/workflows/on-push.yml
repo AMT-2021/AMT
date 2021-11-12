@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-result
-          path: target
+          path: '**/target'
   Package:
     runs-on: ubuntu-latest
     needs: Build
