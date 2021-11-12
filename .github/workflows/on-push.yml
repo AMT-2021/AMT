@@ -9,7 +9,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - run: mvn formatter:format
+      - run: mvn formatter:format -pl '!:ochap-java-components'
       - run: git diff
       - run: |
           [ -z "$(git status --porcelain)" ]
@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-result
-          path: target
+          path: '**/target'
   Package:
     runs-on: ubuntu-latest
     needs: Build
@@ -53,12 +53,12 @@ jobs:
         with:
           step: restore
       - run: mvn package -Dmaven.test.skip=true
-      - run: cp target/backend-0.0.1-SNAPSHOT.jar AMT-backend.jar
+      - run: cp ochap-backend/target/ochap-backend-*.war AMT-backend.war
       - name: Upload package artifacts
         uses: actions/upload-artifact@v2
         with:
           name: package-artifact
-          path: AMT-backend.jar
+          path: AMT-backend.war
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
