@@ -13,7 +13,6 @@ public class ShoppingCartTemplate {
     return "shopping-cart-template";
   }
 }
-
 class Item {
   public String name;
   public int number;
