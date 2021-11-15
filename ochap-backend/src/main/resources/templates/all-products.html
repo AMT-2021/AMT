@@ -63,9 +63,11 @@
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
                             <div class="brand-box">
                                 <i> <img src="icon/p1.png"/> </i>
-                                <h4 th:text="${product}"></h4>
+                                <h4 th:text="${product.name}"></h4>
+                                <h4>Price: CHF <span th:text="${product.price}"></span></h4>
+                                <h4>In stock:  <span th:text="${product.stock}"></span></h4>
                             </div>
-                            <a class="buynow" href="#">See More</a>
+                            <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
                             <a class="buynow" href="#">Add to Cart</a>
                         </div>
                     </div>
