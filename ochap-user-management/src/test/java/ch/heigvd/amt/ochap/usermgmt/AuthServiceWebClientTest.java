@@ -17,7 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-@SpringBootTest(properties = {"spring.main.lazy-initialization=true"})
+@SpringBootTest
 @ContextConfiguration(initializers = AuthServiceWebClientTest.ContextInitializer.class)
 public class AuthServiceWebClientTest {
   static final MockWebServer mockWebServer = new MockWebServer();
