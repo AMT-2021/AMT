@@ -50,7 +50,7 @@
                         <div class="title">
                             <h2> Categories</h2>
                             <ul class="categiri">
-                                <li  th:each="category: ${categories}"><a href="/all-products?category=test" th:text="${category}">Electronics</a></li>
+                                <li  th:each="category: ${categories}"><a th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a></li>
                             </ul>
                         </div>
                     </div>
