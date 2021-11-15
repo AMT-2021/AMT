@@ -1,0 +1,53 @@
+/*!
+ * Common CSS of the Ô Chap' user management application.
+ */
+
+.center-elems {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-viewport {
+  height: 100vh;
+  width: 100vw;
+}
+
+.survey-form > form > * {
+  padding: 1em;
+}
+
+.form-aligned-fields {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.form-aligned-fields > label {
+  grid-column: 1;
+  margin-right: 1em;
+}
+
+.form-aligned-fields > input,.field-validation-error {
+  grid-column: 2;
+}
+
+.form-aligned-fields > * {
+  margin: 0.5em;
+}
+
+.survey-form {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding: 2em;
+}
+
+.survey-form h4 {
+  align-self: center;
+}
+
+.survey-form .button-row {
+  width: fit-content;
+  position: relative;
+  margin-right: 1em;
+}
