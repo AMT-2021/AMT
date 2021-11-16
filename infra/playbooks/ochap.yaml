@@ -1,5 +1,20 @@
 ---
 - hosts: '*-appserver'
+  pre_tasks:
+    - name: Find web archives to deploy
+      set_fact:
+        wars_to_deploy: "{{ wars_to_deploy | default([]) }} + ['{{ item }}']"
+      with_fileglob: '../artifacts/*.war'
+    - fail:
+        msg: >-
+          I could not find the web application archives to deploy.
+          Please place the WAR files to deploy under the $INFRA_ROOT/artifacts
+          directory. The 'INFRA_ROOT' directory is the directory that contains
+          the 'playbooks' directory.
+      when: "{{ wars_to_deploy | default([]) | length == 0 }}"
+    - debug:
+        msg: "This playbook will deploy the following WARs: {{ wars_to_deploy }}"
   roles:
     - wildfly
     - postgres-for-ochap
+    - ochap-apps
