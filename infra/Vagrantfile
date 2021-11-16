@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/debian10"
+
+  # Copy SSH key to root account.
+  config.vm.provision "shell" do |s|
+    ssh_pub_key = ""
+    if File.file?("#{Dir.home}/.ssh/id_rsa.pub")
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    else
+      puts "Failed to locate an SSH key to install in the VM."
+    end
+    s.inline = <<-SHELL
+      mkdir -p /root/.ssh
+      chmod 700 /root/.ssh
+      chown root:root /root/.ssh
+      if grep -sq "#{ssh_pub_key}" /root/.ssh/authorized_keys; then
+        echo "SSH keys already provisioned."
+      else
+        touch /root/.ssh/authorized_keys
+        echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+        chmod 644 /root/.ssh/authorized_keys
+        echo "SSH key provisionend."
+      fi
+      # Hostname will be populated by hostmanager
+      sed '/127.0.1.1/d' -i /etc/hosts
+    SHELL
+  end
+
+  config.vm.define "amtvg0" do |node|
+    node.vm.network "private_network", ip: "192.168.144.240"
+    node.vm.network "forwarded_port", guest: 8080, host: 48080
+    node.vm.hostname = "amtvg0"
+  end
+end
