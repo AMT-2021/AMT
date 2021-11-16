@@ -66,8 +66,15 @@
     src: /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service
     dest: /etc/systemd/system/wildfly.service
 
+- name: Add admin user for wildfly
+  command:
+    cmd: /opt/wildfly/bin/add-user.sh -u "{{ wildfly_admin_user }}" -p "{{ wildfly_admin_pass }}"
+  register: wildfly_admin_create_out
+- debug:
+    msg: "{{ wildfly_admin_create_out.stdout }}"
+
 - name: Enable WildFly service and set to start at boot
   service:
     name: wildfly
     enabled: yes
-    state: started
+    state: restarted
