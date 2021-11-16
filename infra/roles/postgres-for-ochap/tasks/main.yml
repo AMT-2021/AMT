@@ -1,0 +1,32 @@
+---
+- name: Install postgresql
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name: postgresql
+
+- name: Install pre-reqs for ansible
+  apt:
+    pkg:
+      - python3-psycopg2
+      - acl
+
+- name: Ensure postgresql is enabled and started
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Ensure postgresql database user for ochap-backend is present
+  postgresql_user:
+    name: "{{ ochap_backend_db_user }}"
+    password: "{{ ochap_backend_db_pass }}"
+  become: true
+  become_user: postgres
+
+- name: Ensure postgresql database for ochap-backend is present
+  postgresql_db:
+    name: "{{ ochap_backend_db_name }}"
+    owner: "{{ ochap_backend_db_user }}"
+  become: true
+  become_user: postgres
