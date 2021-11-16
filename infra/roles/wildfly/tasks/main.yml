@@ -1,0 +1,73 @@
+- name: Install wildfly dependencies & tools (this may take about 5 min)
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    pkg:
+      - default-jdk
+      - unzip
+
+- name: Add group "wildfly"
+  group:
+    name: wildfly
+
+- name: Add user "wildfly"
+  user:
+    name: wildfly
+    group: wildfly
+    home: /opt/wildfly-user-home
+    shell: /sbin/nologin
+
+- name: Download WildFly 25.0.1 release
+  get_url:
+    url: https://github.com/wildfly/wildfly/releases/download/25.0.1.Final/wildfly-25.0.1.Final.zip
+    dest: /opt/wildfly-25.0.1.Final.zip
+
+- name: Extract archive
+  command:
+    chdir: /opt
+    cmd: /usr/bin/unzip -q /opt/wildfly-25.0.1.Final.zip
+    creates: /opt/wildfly-25.0.1.Final
+
+- name: Set ownership of WildFly installation
+  file:
+    path: /opt/wildfly-25.0.1.Final
+    owner: wildfly
+    group: wildfly
+    state: directory
+    recurse: yes
+
+- name: Link wildfly installation
+  file:
+    src: /opt/wildfly-25.0.1.Final
+    dest: /opt/wildfly
+    state: link
+
+- name: Create wildfly service configuration directory
+  file:
+    path: /etc/wildfly
+    state: directory
+
+- name: Create wildfly service configuration
+  copy:
+    remote_src: true
+    src: /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf
+    dest: /etc/wildfly/wildfly.conf
+
+- name: Install wildfly launch helper
+  copy:
+    remote_src: true
+    src: /opt/wildfly/docs/contrib/scripts/systemd/launch.sh
+    dest: /opt/wildfly/bin/launch.sh
+    mode: a+x
+
+- name: Install wildfly service
+  copy:
+    remote_src: true
+    src: /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service
+    dest: /etc/systemd/system/wildfly.service
+
+- name: Enable WildFly service and set to start at boot
+  service:
+    name: wildfly
+    enabled: yes
+    state: started
