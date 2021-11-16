@@ -1,0 +1,43 @@
+---
+- name: Create ochap-backend configuration directories
+  file:
+    path: /opt/wildfly/modules/ch/heigvd/amt/ochap_backend/configuration/main
+    state: directory
+
+- name: Install ochap-backend configuration module
+  template:
+    src: ochap_backend.module.xml
+    dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_backend/configuration/main/module.xml
+
+- name: Install ochap-backend application.properties
+  template:
+    src: ochap_backend.application.properties
+    dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_backend/configuration/main/application.properties
+
+- name: Create ochap-usermgmt configuration directories
+  file:
+    path: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main
+    state: directory
+
+- name: Install ochap-usermgmt configuration module
+  template:
+    src: ochap_usermgmt.module.xml
+    dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main/module.xml
+
+- name: Install ochap-usermgmt application.properties
+  template:
+    src: ochap_usermgmt.application.properties
+    dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main/application.properties
+
+- name: "Copy Ô Chap' WARs"
+  copy:
+    src: "{{ item }}"
+    dest: /opt/wildfly/standalone/deployments
+    owner: wildfly
+    mode: 0444
+  with_items: "{{ wars_to_deploy }}"
+
+- name: Enable WildFly service and set to start at boot
+  service:
+    name: wildfly
+    state: restarted
