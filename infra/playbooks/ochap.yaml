@@ -2,3 +2,4 @@
 - hosts: '*-appserver'
   roles:
     - wildfly
+    - postgres-for-ochap
