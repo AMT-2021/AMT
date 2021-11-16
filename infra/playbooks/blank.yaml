@@ -1,0 +1,4 @@
+# This playbook runs no roles and is provided as a setup option for Vagrant vms.
+---
+- hosts: '*'
+  roles: []
