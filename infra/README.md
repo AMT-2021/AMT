@@ -29,8 +29,9 @@ A _role_ is a 'feature' that is to be provided, such as 'web server' or
 'database'; roles are made out of _tasks_, which are units of configuration,
 such as 'install nginx', or 'copy the configuration file'.
 
-Playbooks may be run (from within the `playbooks` directory) using the following
-command:
+Playbooks may be run (from within the `playbooks` directory) using the command
+command below. Please make sure to **read the README file under the 'playbooks/'
+directory** first.:
 
 ```
 ansible-playbook -i ../inventories/vagrant ochap.yaml
