@@ -23,8 +23,7 @@ public class Product {
     model.addAttribute("name", product.getName());
     model.addAttribute("price", product.getPrice());
     model.addAttribute("description", product.getDescription());
-    model.addAttribute(
-        "image", "https://via.placeholder.com/720x480?text=This+image+is+not+contractual");
+    model.addAttribute("image", "/icon/p1.png");
     return "product";
   }
 }
