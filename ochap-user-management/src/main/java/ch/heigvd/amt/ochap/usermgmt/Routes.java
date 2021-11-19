@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +26,8 @@ import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;
 import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.IncorrectCredentialsException;
+import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.PropertyError;
+import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UnacceptableRegistrationException;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UsernameAlreadyExistsException;
 
 @Controller
@@ -93,12 +97,41 @@ public class Routes {
     String password = registerDTO.getPassword();
 
     try {
-      AccountInfoDTO registration =
-          authServer.register(username, password).timeout(Duration.ofSeconds(10)).block();
-    } catch (UsernameAlreadyExistsException e) {
-      // Let the view know the chosen username is not available.
-      // Perhaphs they would like to log in.
-      throw new RuntimeException("Not implemented.");
+      authServer.register(username, password).block(Duration.ofSeconds(10));
+    } catch (RuntimeException re) {
+      var e = re.getCause();
+      if (UsernameAlreadyExistsException.class.isInstance(e)) {
+        bindingResult.addError(new FieldError("registerDTO", "username",
+            "This username is not available. Please choose a different username."));
+        return "register";
+      } else if (UnacceptableRegistrationException.class.isInstance(e)) {
+        var errors = ((UnacceptableRegistrationException) e).getErrors();
+        if (errors.size() == 0) {
+          model.addAttribute("explaination",
+              "A server further in the processing chain returned an error.");
+          model.addAttribute("backUrl", "/register");
+          return "simple-error";
+        }
+        for (PropertyError error : errors) {
+          String msg = error.getMessage();
+          String prop = error.getProperty().toLowerCase();
+          switch (prop) {
+            case "username":
+              bindingResult.addError(new FieldError("registerDTO", prop, msg));
+              break;
+            case "password":
+              bindingResult.addError(new FieldError("registerDTO", prop, msg));
+              break;
+            default:
+              bindingResult.addError(new ObjectError("globalError", prop + ": " + msg));
+          }
+        }
+        return "register";
+      }
+      model.addAttribute("explaination",
+          "An unexpected error occured while processing your request.");
+      model.addAttribute("backUrl", "/register");
+      return "simple-error";
     }
 
     try {
