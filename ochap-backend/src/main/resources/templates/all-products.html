@@ -59,7 +59,7 @@
                 <!-- news brand -->
                 <div id="brand"  class="brand-bg">
                     <h3>Products</h3>
-                    <div class="row">
+                    <div class="row" th:if="${#lists.size(products) != 0}">
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
                             <div class="brand-box">
                                 <i> <img src="icon/p1.png"/> </i>
@@ -71,6 +71,7 @@
                             <a class="buynow" href="#">Add to Cart</a>
                         </div>
                     </div>
+                    <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
                 </div>
                 <a class="seemore" href="#">See more</a>
                 <!-- end news brand -->
