@@ -4,17 +4,27 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
+import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
+import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
+import reactor.core.publisher.Mono;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ViewsTests {
   @Autowired
   private MockMvc mvc;
+
+  @MockBean
+  private AmtAuthService authServer;
 
   @Test
   public void testOupsPage() throws Exception {
@@ -32,20 +42,32 @@ public class ViewsTests {
 
   @Test
   public void loginActionRedirectsAndSetsCookie() throws Exception {
+    String username = "test-username";
+    String password = "test-password";
+    TokenDTO token = new TokenDTO("some access token", new AccountInfoDTO());
+    Mockito.when(authServer.login(username, password)).thenReturn(Mono.just(token));
+
     this.mvc
         .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", "test-username").param("password", "test-password"))
+            .param("username", username).param("password", password))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("Authorization", "invalid-login-not-implemented"));
+        .andExpect(cookie().value("Authorization", "Bearer " + token.getToken()));
   }
 
   @Test
   public void registerActionRedirectsAndSetsCookie() throws Exception {
+    String username = "test-username";
+    String password = "test-password";
+    AccountInfoDTO info = new AccountInfoDTO();
+    TokenDTO token = new TokenDTO("some access token", info);
+    Mockito.when(authServer.register(username, password)).thenReturn(Mono.just(info));
+    Mockito.when(authServer.login(username, password)).thenReturn(Mono.just(token));
+
     this.mvc
         .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", "test-username").param("password", "test-password"))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("Authorization", "invalid-register-not-implemented"));
+        .andExpect(cookie().value("Authorization", "Bearer " + token.getToken()));
   }
 
   @Test
