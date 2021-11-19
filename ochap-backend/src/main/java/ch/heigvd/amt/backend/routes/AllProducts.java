@@ -27,12 +27,12 @@ public class AllProducts {
   @GetMapping("/all-products")
   public String allProduct(Model model, @RequestParam(required = false) String category) {
     Optional<List<Product>> hasProducts;
-    Product[] products = new Product[]{};
+    Product[] products = new Product[] {};
     if (category != null) {
-      Optional<Category> cat  = categoryDAO.getCategoryById(Integer.parseInt(category));
-      if (cat.isPresent()){
+      Optional<Category> cat = categoryDAO.getCategoryById(Integer.parseInt(category));
+      if (cat.isPresent()) {
         Optional<List<Product>> testProduct = productDAO.getProductsByCategory(cat.get());
-        if (testProduct.isPresent()){
+        if (testProduct.isPresent()) {
           products = testProduct.get().toArray(new Product[0]);
         }
       }
