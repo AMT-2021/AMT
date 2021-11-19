@@ -1,5 +1,7 @@
 package ch.heigvd.amt.ochap.usermgmt.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;
 import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -21,6 +24,12 @@ public class AmtAuthService {
   }
 
   public static class UsernameAlreadyExistsException extends Exception {
+  }
+
+  @AllArgsConstructor
+  public static class UnacceptableRegistrationException extends Exception {
+    @Getter
+    private List<PropertyError> errors;
   }
 
   @Autowired
@@ -41,8 +50,14 @@ public class AmtAuthService {
     String password;
   }
 
-  public Mono<TokenDTO> login(String username, String password)
-      throws IncorrectCredentialsException {
+  @Data
+  @AllArgsConstructor
+  public static class PropertyError {
+    private String property;
+    private String message;
+  }
+
+  public Mono<TokenDTO> login(String username, String password) {
     var cmd = new AuthLoginCommand(username, password);
     return httpClient.post().uri("/auth/login").contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON).body(Mono.just(cmd), AuthLoginCommand.class).retrieve()
@@ -50,13 +65,14 @@ public class AmtAuthService {
         .bodyToMono(TokenDTO.class);
   }
 
-  public Mono<AccountInfoDTO> register(String username, String password)
-      throws UsernameAlreadyExistsException {
+  public Mono<AccountInfoDTO> register(String username, String password) {
     var cmd = new AccountRegisterCommand(username, password);
     return httpClient.post().uri("/accounts/register").contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON).body(Mono.just(cmd), AccountRegisterCommand.class)
         .retrieve()
         .onStatus(HttpStatus.CONFLICT::equals, r -> Mono.error(UsernameAlreadyExistsException::new))
+        .onStatus(HttpStatus.UNPROCESSABLE_ENTITY::equals,
+            r -> r.bodyToMono(UnacceptableRegistrationException.class).flatMap(Mono::error))
         .bodyToMono(AccountInfoDTO.class);
   }
 }
