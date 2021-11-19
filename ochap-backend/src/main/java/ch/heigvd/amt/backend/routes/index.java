@@ -5,10 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class BasicTemplate {
-  @GetMapping("/basic-template")
-  public String basicTemplate(Model model) {
-    model.addAttribute("title", "Basic Template");
-    return "basic-template";
+public class index {
+  @GetMapping("/")
+  public String index(Model model) {
+    return "index";
   }
 }
