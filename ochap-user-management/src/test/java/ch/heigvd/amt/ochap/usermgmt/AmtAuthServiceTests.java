@@ -46,9 +46,11 @@ public class AmtAuthServiceTests {
     var username = "test-ochap-" + LocalDateTime.now().format(tsFormat);
     var password = "0"; // Unacceptable
 
-    var ex = assertThrows(UnacceptableRegistrationException.class,
+    var re = assertThrows(RuntimeException.class,
         () -> amtAuthServer.register(username, password).block());
 
+    assertTrue(UnacceptableRegistrationException.class.isInstance(re.getCause()));
+    var ex = (UnacceptableRegistrationException) re.getCause();
     List<PropertyError> errors = ex.getErrors();
     assertNotNull(errors);
     assertTrue(errors.size() > 0);

@@ -16,6 +16,7 @@ import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -27,6 +28,7 @@ public class AmtAuthService {
   }
 
   @AllArgsConstructor
+  @NoArgsConstructor
   public static class UnacceptableRegistrationException extends Exception {
     @Getter
     private List<PropertyError> errors;
@@ -52,6 +54,7 @@ public class AmtAuthService {
 
   @Data
   @AllArgsConstructor
+  @NoArgsConstructor
   public static class PropertyError {
     private String property;
     private String message;
