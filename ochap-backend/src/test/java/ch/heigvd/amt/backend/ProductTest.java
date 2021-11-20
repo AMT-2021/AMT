@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Assertions;
 
+import javax.transaction.Transactional;
+
 @SpringBootTest
 public class ProductTest {
 
@@ -19,6 +21,7 @@ public class ProductTest {
   private ProductDAO productRepository;
 
   @Test
+  @Transactional
   void canCreateAProductInACategory() {
     Category c = new Category();
     c.setName("Fedora");
