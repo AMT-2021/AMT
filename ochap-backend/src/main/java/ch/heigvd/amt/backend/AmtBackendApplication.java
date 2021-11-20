@@ -17,6 +17,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @SpringBootApplication
 @EnableWebSecurity
@@ -56,5 +59,14 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
       // @formatter:on
       http.addFilterBefore(jwtFilter, BasicAuthenticationFilter.class);
     }
+  }
+
+  @Bean
+  public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver,
+      SpringSecurityDialect sec) {
+    final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.setTemplateResolver(templateResolver);
+    templateEngine.addDialect(sec); // "sec" tags
+    return templateEngine;
   }
 }
