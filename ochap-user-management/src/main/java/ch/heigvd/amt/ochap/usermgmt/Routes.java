@@ -1,6 +1,7 @@
 package ch.heigvd.amt.ochap.usermgmt;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -161,5 +162,25 @@ public class Routes {
       model.addAttribute("backUrl", "/login");
       return "simple-error";
     }
+  }
+
+  @GetMapping("/logout")
+  public void doLogout(@RequestParam Map<String, String> queryParams, HttpServletRequest request,
+      HttpServletResponse response) {
+    String backUrl = queryParams.getOrDefault("back", "/");
+    response.setHeader("Location", backUrl);
+    response.setStatus(302);
+
+    var cookies = request.getCookies();
+    if (cookies == null)
+      return;
+
+    var tokenCookie = Arrays.stream(cookies).filter(c -> "token".equals(c.getName())).peek(c -> {
+      c.setMaxAge(0);
+      c.setValue(null);
+      c.setPath("/");
+    }).findAny();
+    if (tokenCookie.isPresent())
+      response.addCookie(tokenCookie.get());
   }
 }

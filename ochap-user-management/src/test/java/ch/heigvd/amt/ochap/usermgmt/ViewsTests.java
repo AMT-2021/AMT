@@ -59,6 +59,19 @@ public class ViewsTests {
             .param("username", username).param("password", password))
         .andExpect(view().name("redirect:/foo"))
         .andExpect(cookie().value("token", token.getToken()));
+
+  @Test
+  public void logoutActionExpiresCookie() throws Exception {
+    String username = "test-username";
+    String password = "test-password";
+    TokenDTO token = new TokenDTO("some access token", new AccountInfoDTO());
+    Mockito.when(authServer.login(username, password)).thenReturn(Mono.just(token));
+    Cookie authCookie = new Cookie("token", "test-value");
+    authCookie.setPath("/");
+    authCookie.setHttpOnly(true);
+
+    this.mvc.perform(get("/logout").cookie(authCookie)).andExpect(cookie().path("token", "/"))
+        .andExpect(cookie().maxAge("token", 0));
   }
 
   @Test
