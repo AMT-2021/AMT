@@ -7,27 +7,22 @@ import javax.persistence.*;
 @Entity
 @Data
 public class Product {
-
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-
-  @Column
+  @Column(nullable = false)
   private String name;
 
-  @Column
+  @Column(nullable = false)
   private int price;
 
-
-  @Column
+  @Column(nullable = false)
   private String description;
 
-
-  @Column
+  @Column(nullable = false)
   private int stock;
 
   @ManyToOne
-  @JoinColumn(name = "category_id")
   private Category category;
 }
