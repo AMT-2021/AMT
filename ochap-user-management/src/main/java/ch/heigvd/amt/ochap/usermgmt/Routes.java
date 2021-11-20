@@ -49,8 +49,7 @@ public class Routes {
     return "login";
   }
 
-  private String tryLoginAndMakeAuth(String username, String password)
-      throws IncorrectCredentialsException {
+  private String tryLoginAndMakeAuth(String username, String password) {
     TokenDTO upstreamLogin =
         authServer.login(username, password).timeout(Duration.ofSeconds(10)).block();
     return "Bearer " + upstreamLogin.getToken();
@@ -71,9 +70,17 @@ public class Routes {
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
       response.addCookie(new Cookie("Authorization", auth));
       return "redirect:" + callbackUrl;
-    } catch (IncorrectCredentialsException e) {
-      // Let the user know the specified credentials were not valid.
-      throw new RuntimeException("Not implemented.");
+    } catch (RuntimeException re) {
+      var e = re.getCause();
+      if (IncorrectCredentialsException.class.isInstance(e)) {
+        bindingResult.addError(new ObjectError("globalError",
+            "We could not authenticate you with the provided username and password."));
+        return "login";
+      }
+      model.addAttribute("explaination",
+          "An unexpected error occured while processing your request.");
+      model.addAttribute("backUrl", "/login");
+      return "simple-error";
     }
   }
 
@@ -139,9 +146,13 @@ public class Routes {
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
       response.addCookie(new Cookie("Authorization", auth));
       return "redirect:" + callbackUrl;
-    } catch (IncorrectCredentialsException e) {
-      // This should not happen, show a nice message...
-      throw new RuntimeException("Not implemented.");
+    } catch (RuntimeException e) {
+      model.addAttribute("explaination",
+          "You account seems to have been succesfully created but we were "
+              + "unable to automatically log you in. "
+              + "Please try going back and loging in manually.");
+      model.addAttribute("backUrl", "/login");
+      return "simple-error";
     }
   }
 }

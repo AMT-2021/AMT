@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
 import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
+import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.IncorrectCredentialsException;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.PropertyError;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UnacceptableRegistrationException;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UsernameAlreadyExistsException;
@@ -140,6 +141,34 @@ public class ViewsTests {
         .andExpect(
             content().string(containsString("account seems to have been succesfully created")))
         .andExpect(content().string(containsString("unable to automatically log you in")))
+        .andExpect(view().name("simple-error"));
+  }
+
+  @Test
+  public void loginIncorrectCredentialsYieldsErrorMessage() throws Exception {
+    String username = "test-username";
+    String password = "test-password";
+    Mockito.when(authServer.login(username, password))
+        .thenReturn(Mono.error(new IncorrectCredentialsException()));
+
+    this.mvc
+        .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("username", username).param("password", password))
+        .andExpect(content().string(containsString("could not authenticate you")))
+        .andExpect(view().name("login"));
+  }
+
+  @Test
+  public void loginUpstreamErrorDisplayOops() throws Exception {
+    String username = "test-username";
+    String password = "test-password";
+    Mockito.when(authServer.login(username, password))
+        .thenReturn(Mono.error(new RuntimeException()));
+
+    this.mvc
+        .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("username", username).param("password", password))
+        .andExpect(content().string(containsString("error occured")))
         .andExpect(view().name("simple-error"));
   }
 }
