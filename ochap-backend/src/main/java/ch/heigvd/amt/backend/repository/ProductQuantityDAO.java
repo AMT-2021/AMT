@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface ProductQuantityDAO extends JpaRepository<ProductQuantity, Integer> {
 
-    @Query(value = "SELECT p from ProductQuantity p WHERE p.shoppingCart.id = ?1")
-    Optional<List<ProductQuantity>> findByShoppingCartId(Integer shoppingCartId);
+  @Query(value = "SELECT p from ProductQuantity p WHERE p.shoppingCart.id = ?1")
+  Optional<List<ProductQuantity>> findByShoppingCartId(Integer shoppingCartId);
 }
