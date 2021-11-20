@@ -9,14 +9,13 @@ Deploys the ochap WARs and configuration files.
 
 ## Role variables
 
-Variable                                | Description                                              | Type     |
---------                                | -----------                                              | ----     |
-`ochap_backend_db_name`                 | Name of the database used for ochap-backend              | String   |
-`ochap_backend_db_user`                 | Username of the database user for ochap-backend          | String   |
-`ochap_backend_db_pass`                 | Password of the database user for ochap-backend          | String   |
-`ochap_usermgmt_auth_service_url`       | Base URL where the authentication service may be reached | String   |
-`ochap_usermgmt_auth_service_admin_jwt` | JWT token with admin privileges in the auth service      | String   |
-`wars_to_deploy`                        | Path to web application archives to deploy               | [String] |
+Variable                          | Description                                              | Type     |
+--------                          | -----------                                              | ----     |
+`ochap_backend_db_name`           | Name of the database used for ochap-backend              | String   |
+`ochap_backend_db_user`           | Username of the database user for ochap-backend          | String   |
+`ochap_backend_db_pass`           | Password of the database user for ochap-backend          | String   |
+`ochap_usermgmt_auth_service_url` | Base URL where the authentication service may be reached | String   |
+`wars_to_deploy`                  | Path to web application archives to deploy               | [String] |
 
 ### Variables with acceptable default values
 
