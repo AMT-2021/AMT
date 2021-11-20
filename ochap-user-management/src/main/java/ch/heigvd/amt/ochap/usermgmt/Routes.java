@@ -59,9 +59,7 @@ public class Routes {
   }
 
   private String tryLoginAndMakeAuth(String username, String password) {
-    TokenDTO upstreamLogin =
-        authServer.login(username, password).timeout(Duration.ofSeconds(10)).block();
-    return "Bearer " + upstreamLogin.getToken();
+    return authServer.login(username, password).block(Duration.ofSeconds(10)).getToken();
   }
 
   @PostMapping(path = "/login")
@@ -77,7 +75,7 @@ public class Routes {
     try {
       String auth = tryLoginAndMakeAuth(loginDTO.getUsername(), loginDTO.getPassword());
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-      response.addCookie(new Cookie("Authorization", auth));
+      response.addCookie(new Cookie("token", auth));
       return "redirect:" + callbackUrl;
     } catch (RuntimeException re) {
       var e = re.getCause();
@@ -153,7 +151,7 @@ public class Routes {
     try {
       String auth = tryLoginAndMakeAuth(username, password);
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-      response.addCookie(new Cookie("Authorization", auth));
+      response.addCookie(new Cookie("token", auth));
       return "redirect:" + callbackUrl;
     } catch (RuntimeException e) {
       model.addAttribute("explaination",

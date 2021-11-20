@@ -58,7 +58,7 @@ public class ViewsTests {
         .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", username).param("password", password))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("Authorization", "Bearer " + token.getToken()));
+        .andExpect(cookie().value("token", token.getToken()));
   }
 
   @Test
@@ -74,7 +74,7 @@ public class ViewsTests {
         .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", "test-username").param("password", "test-password"))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("Authorization", "Bearer " + token.getToken()));
+        .andExpect(cookie().value("token", token.getToken()));
   }
 
   @Test
