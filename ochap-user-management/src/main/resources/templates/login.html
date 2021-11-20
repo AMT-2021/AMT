@@ -48,6 +48,8 @@
         accept-charset="utf-8"
         th:action="@{*{cancelUrl}?: '/'}"
         method="GET">
+        <input name="back" type="hidden" th:value="${#request.getParameter('callback')}">
+      </form>
     </div>
   </main>
 </body>

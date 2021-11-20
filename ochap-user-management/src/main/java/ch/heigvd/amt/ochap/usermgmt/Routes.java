@@ -35,6 +35,15 @@ public class Routes {
   @Autowired
   AmtAuthService authServer;
 
+  // Send strayed users back to the homepage.
+  @GetMapping(value = "/")
+  public void method(@RequestParam Map<String, String> queryParams,
+      HttpServletResponse httpServletResponse) {
+    String backUrl = queryParams.getOrDefault("back", "/");
+    httpServletResponse.setHeader("Location", backUrl);
+    httpServletResponse.setStatus(302);
+  }
+
   @GetMapping("/test-oups-page")
   public String oups(Model model) {
     model.addAttribute("problemTitle", "Test oups page.");
