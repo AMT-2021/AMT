@@ -5,40 +5,9 @@
 </head>
 <body>
     <header>
-    <div class="head_top">
-        <div class="header">
-
-            <div class="container-fluid">
-
-                <div class="row">
-                    <div class="col-lg-3 logo_section">
-                        <div class="full">
-                            <div class="center-desk">
-                                <div class="logo">
-                                    <a href="/"><img src="images/logo.png" alt="#"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-9">
-                        <div class="right_header_info">
-                            <ul>
-                                <li class="menu_iconb">
-                                    <a href="#">Log in <img style="margin-right: 15px;" src="icon/5.png" alt="#" /> </a>
-                                </li>
-                                <li class="menu_iconb">
-                                    <a href="#">Signup<img style="margin-left: 15px;" src="icon/6.png" alt="#" /></a>
-                                </li>
-                                <li class="tytyu">
-                                    <a href="/shopping-cart"> <img style="margin-right: 15px;" src="icon/2.png" alt="#" /></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="head_top">
+          <div th:replace="fragments/inner-header-div :: div"></div>
         </div>
-    </div>
     </header>
 </body>
 </html>
