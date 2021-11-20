@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,9 @@ public class ViewsTests {
         .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", username).param("password", password))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("token", token.getToken()));
+        .andExpect(cookie().value("token", token.getToken()))
+        .andExpect(cookie().httpOnly("token", true)).andExpect(cookie().path("token", "/"));
+  }
 
   @Test
   public void logoutActionExpiresCookie() throws Exception {

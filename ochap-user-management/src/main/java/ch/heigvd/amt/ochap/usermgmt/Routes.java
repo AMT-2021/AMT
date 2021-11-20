@@ -59,8 +59,12 @@ public class Routes {
     return "login";
   }
 
-  private String tryLoginAndMakeAuth(String username, String password) {
-    return authServer.login(username, password).block(Duration.ofSeconds(10)).getToken();
+  private Cookie tryLogin(String username, String password) {
+    var dto = authServer.login(username, password).block(Duration.ofSeconds(10));
+    Cookie authCookie = new Cookie("token", dto.getToken());
+    authCookie.setHttpOnly(true);
+    authCookie.setPath("/");
+    return authCookie;
   }
 
   @PostMapping(path = "/login")
@@ -74,9 +78,9 @@ public class Routes {
     }
 
     try {
-      String auth = tryLoginAndMakeAuth(loginDTO.getUsername(), loginDTO.getPassword());
+      var authCookie = tryLogin(loginDTO.getUsername(), loginDTO.getPassword());
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-      response.addCookie(new Cookie("token", auth));
+      response.addCookie(authCookie);
       return "redirect:" + callbackUrl;
     } catch (RuntimeException re) {
       var e = re.getCause();
@@ -150,9 +154,9 @@ public class Routes {
     }
 
     try {
-      String auth = tryLoginAndMakeAuth(username, password);
+      var authCookie = tryLogin(username, password);
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-      response.addCookie(new Cookie("token", auth));
+      response.addCookie(authCookie);
       return "redirect:" + callbackUrl;
     } catch (RuntimeException e) {
       model.addAttribute("explaination",
