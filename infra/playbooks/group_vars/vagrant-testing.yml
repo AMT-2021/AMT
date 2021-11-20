@@ -7,4 +7,3 @@ ansible_ssh_common_args: >-
 
 # There's no way to reach this service on a local deployment.
 ochap_usermgmt_auth_service_url: http://unexistent
-ochap_usermgmt_auth_service_admin_jwt: invalid
