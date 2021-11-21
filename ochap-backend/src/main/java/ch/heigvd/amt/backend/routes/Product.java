@@ -14,16 +14,9 @@ public class Product {
 
   @GetMapping("/products/{id}")
   public String basicTemplate(Model model, @PathVariable int id) {
-    var productOptional = productDAO.getProductById(id);
-    if (productOptional.isEmpty()) {
-      return "productNotFound";
-    }
+    var product = productDAO.getProductById(id).orElse(null);
 
-    var product = productOptional.get();
-    model.addAttribute("id", product.getId());
-    model.addAttribute("name", product.getName());
-    model.addAttribute("price", product.getPrice());
-    model.addAttribute("description", product.getDescription());
+    model.addAttribute("product", product);
     model.addAttribute("image", "/icon/p1.png");
     return "product";
   }
