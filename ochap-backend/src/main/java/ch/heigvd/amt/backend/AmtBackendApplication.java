@@ -26,9 +26,9 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 public class AmtBackendApplication extends SpringBootServletInitializer {
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
-    return app.sources(AmtBackendApplication.class);
   public static void main(String[] args) {
-    SpringApplication.run(AmtBackendApplication.class, args);
+
+++ b/ochap-backend/src/main/java/ch/heigvd/amt/backend/repository/CategoryDAO.java
   @Bean
   public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
     return JWT.require(Algorithm.HMAC256(secret)).build();
