@@ -24,29 +24,24 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @SpringBootApplication
 @EnableWebSecurity
 public class AmtBackendApplication extends SpringBootServletInitializer {
+  @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
+    return app.sources(AmtBackendApplication.class);
+  }
+  public static void main(String[] args) {
+    SpringApplication.run(AmtBackendApplication.class, args);
+  }
+  @Bean
+  public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
+    return JWT.require(Algorithm.HMAC256(secret)).build();
+  }
+  @Configuration
+  public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    public JwtFilter jwtFilter;
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
-        return app.sources(AmtBackendApplication.class);
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(AmtBackendApplication.class, args);
-    }
-
-    @Bean
-    public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
-        return JWT.require(Algorithm.HMAC256(secret)).build();
-    }
-
-    @Configuration
-    public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-        @Autowired
-        public JwtFilter jwtFilter;
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            // @formatter:off
-            http
+    public void configure(HttpSecurity http) throws Exception {
+      // @formatter:off
                     .authorizeRequests()
                     .antMatchers("/**/*").permitAll()
                     .and()
@@ -57,9 +52,7 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             ;
             // @formatter:on
-            http.addFilterBefore(jwtFilter, BasicAuthenticationFilter.class);
-        }
-    }
+      http.addFilterBefore(jwtFilter, BasicAuthenticationFilter.class);
 
     @Bean
     public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver,
