@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class Product {
-  @Autowired private ProductDAO productDAO;
+  @Autowired
+  private ProductDAO productDAO;
 
   @GetMapping("/products/{id}")
   public String basicTemplate(Model model, @PathVariable int id) {
