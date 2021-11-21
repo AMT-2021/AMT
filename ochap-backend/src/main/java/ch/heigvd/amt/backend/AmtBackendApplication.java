@@ -28,6 +28,7 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {
 
 
+
 ++ b/ochap-backend/src/main/java/ch/heigvd/amt/backend/repository/CategoryDAO.java
   @Bean
   public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
