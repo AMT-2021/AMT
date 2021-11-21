@@ -40,7 +40,8 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
 
   @Configuration
   public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired public JwtFilter jwtFilter;
+    @Autowired
+    public JwtFilter jwtFilter;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -60,8 +61,8 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
   }
 
   @Bean
-  public SpringTemplateEngine templateEngine(
-      ITemplateResolver templateResolver, SpringSecurityDialect sec) {
+  public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver,
+      SpringSecurityDialect sec) {
     final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.setTemplateResolver(templateResolver);
     templateEngine.addDialect(sec); // "sec" tags
