@@ -1,6 +1,7 @@
 package ch.heigvd.amt.ochap.usermgmt;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -58,10 +59,12 @@ public class Routes {
     return "login";
   }
 
-  private String tryLoginAndMakeAuth(String username, String password) {
-    TokenDTO upstreamLogin =
-        authServer.login(username, password).timeout(Duration.ofSeconds(10)).block();
-    return "Bearer " + upstreamLogin.getToken();
+  private Cookie tryLogin(String username, String password) {
+    var dto = authServer.login(username, password).block(Duration.ofSeconds(10));
+    Cookie authCookie = new Cookie("token", dto.getToken());
+    authCookie.setHttpOnly(true);
+    authCookie.setPath("/");
+    return authCookie;
   }
 
   @PostMapping(path = "/login")
@@ -75,9 +78,9 @@ public class Routes {
     }
 
     try {
-      String auth = tryLoginAndMakeAuth(loginDTO.getUsername(), loginDTO.getPassword());
+      var authCookie = tryLogin(loginDTO.getUsername(), loginDTO.getPassword());
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-      response.addCookie(new Cookie("Authorization", auth));
+      response.addCookie(authCookie);
       return "redirect:" + callbackUrl;
     } catch (RuntimeException re) {
       var e = re.getCause();
@@ -151,9 +154,9 @@ public class Routes {
     }
 
     try {
-      String auth = tryLoginAndMakeAuth(username, password);
+      var authCookie = tryLogin(username, password);
       request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-      response.addCookie(new Cookie("Authorization", auth));
+      response.addCookie(authCookie);
       return "redirect:" + callbackUrl;
     } catch (RuntimeException e) {
       model.addAttribute("explaination",
@@ -163,5 +166,25 @@ public class Routes {
       model.addAttribute("backUrl", "/login");
       return "simple-error";
     }
+  }
+
+  @GetMapping("/logout")
+  public void doLogout(@RequestParam Map<String, String> queryParams, HttpServletRequest request,
+      HttpServletResponse response) {
+    String backUrl = queryParams.getOrDefault("back", "/");
+    response.setHeader("Location", backUrl);
+    response.setStatus(302);
+
+    var cookies = request.getCookies();
+    if (cookies == null)
+      return;
+
+    var tokenCookie = Arrays.stream(cookies).filter(c -> "token".equals(c.getName())).peek(c -> {
+      c.setMaxAge(0);
+      c.setValue(null);
+      c.setPath("/");
+    }).findAny();
+    if (tokenCookie.isPresent())
+      response.addCookie(tokenCookie.get());
   }
 }

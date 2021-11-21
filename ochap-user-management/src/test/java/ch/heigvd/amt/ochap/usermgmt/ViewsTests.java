@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,22 @@ public class ViewsTests {
         .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", username).param("password", password))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("Authorization", "Bearer " + token.getToken()));
+        .andExpect(cookie().value("token", token.getToken()))
+        .andExpect(cookie().httpOnly("token", true)).andExpect(cookie().path("token", "/"));
+  }
+
+  @Test
+  public void logoutActionExpiresCookie() throws Exception {
+    String username = "test-username";
+    String password = "test-password";
+    TokenDTO token = new TokenDTO("some access token", new AccountInfoDTO());
+    Mockito.when(authServer.login(username, password)).thenReturn(Mono.just(token));
+    Cookie authCookie = new Cookie("token", "test-value");
+    authCookie.setPath("/");
+    authCookie.setHttpOnly(true);
+
+    this.mvc.perform(get("/logout").cookie(authCookie)).andExpect(cookie().path("token", "/"))
+        .andExpect(cookie().maxAge("token", 0));
   }
 
   @Test
@@ -74,7 +91,7 @@ public class ViewsTests {
         .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("username", "test-username").param("password", "test-password"))
         .andExpect(view().name("redirect:/foo"))
-        .andExpect(cookie().value("Authorization", "Bearer " + token.getToken()));
+        .andExpect(cookie().value("token", token.getToken()));
   }
 
   @Test
