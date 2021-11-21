@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryDAO extends JpaRepository<Category, Integer> {
-    @Query(value = "SELECT p from Category p")
-    Optional<List<Category>> getAllCategory();
-
+  @Query(value = "SELECT p from Category p")
+  Optional<List<Category>> getAllCategory();
     Optional<Category> getCategoryById(Integer id);
 }
