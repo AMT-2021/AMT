@@ -149,7 +149,7 @@
                                         <div class="row d-flex justify-content-between align-items-center">
                                             <label style="visibility: collapse">
                                                 <input name="id" hidden="true" th:field="*{id}"
-                                                       th:value="${product.product.id}" type="value">
+                                                       th:value="${product.id}" type="value">
                                             </label>
                                             <label> count
                                                 <input style="width: 60px"
@@ -167,15 +167,20 @@
                                     <form method="post" th:action="@{/shopping-cart/remove}" th:object="${product}">
                                         <label>
                                             <input name="id" hidden="true" th:field="*{id}"
-                                                   th:value="${product.product.id}" type="value">
+                                                   th:value="${product.id}" type="value">
                                         </label>
                                         <button type="submit" class="rounded p-1 m-1"> remove</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <button class="rounded p-1 m-1 alert-danger"> clear cart</button>
-                        <button class="rounded p-1 m-1"> save changes</button>
+                        <form method="post" th:action="@{/shopping-cart/clear-cart}" th:object="${cart}">
+                            <label style="visibility: collapse">
+                                <input name="id" hidden="true" th:field="*{id}"
+                                       th:value="${cart.id}" type="value">
+                            </label>
+                            <button type="submit" class="rounded p-1 m-1 alert-danger"> clear cart</button>
+                        </form>
                     </div>
                 </div>
             </div>

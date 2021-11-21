@@ -19,17 +19,15 @@ import java.util.Optional;
 @Controller
 public class ShoppingCartTemplate {
 
-  @Autowired
-  private ShoppingCartDAO shoppingCartDAO;
-  @Autowired
-  private ProductQuantityDAO productQuantityDAO;
-  @Autowired
-  private EntityManager em;
+  @Autowired private ShoppingCartDAO shoppingCartDAO;
+  @Autowired private ProductQuantityDAO productQuantityDAO;
+  @Autowired private EntityManager em;
 
   @GetMapping("/shopping-cart")
   public String basicTemplate(Model model) {
-
-    List<ProductQuantity> shoppingCart = getProductQuantitesByClientId(1).getBody();
+    int clientId = 2;
+    List<ProductQuantity> shoppingCart = getProductQuantitesByClientId(clientId).getBody();
+    ShoppingCart cart = getShoppingCartByClientId(clientId).getBody();
 
     ProductQuantity[] items;
     if (shoppingCart != null) {
@@ -40,7 +38,7 @@ public class ShoppingCartTemplate {
 
     model.addAttribute("products", items);
     model.addAttribute("postAddress", "/shopping-cart");
-    model.addAttribute("shoppingCart", shoppingCart);
+    model.addAttribute("cart", cart);
     return "shopping-cart-template";
   }
 
@@ -53,42 +51,61 @@ public class ShoppingCartTemplate {
     }
   }
 
+  private ResponseEntity<ShoppingCart> getShoppingCartByClientId(Integer clientId) {
+    Optional<ShoppingCart> cart = shoppingCartDAO.findByClientId(clientId);
+    return cart.map(shoppingCart -> ResponseEntity.ok().body(shoppingCart))
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
   private ResponseEntity<List<ProductQuantity>> getProductQuantitiesByShoppingCartId(
       Integer shoppingCartId) {
     Optional<List<ProductQuantity>> products =
         productQuantityDAO.findByShoppingCartId(shoppingCartId);
-    return products.map(value -> ResponseEntity.ok().body(value))
+    return products
+        .map(value -> ResponseEntity.ok().body(value))
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @PostMapping(path = "/shopping-cart/update")
   public String updateProduct(@Valid ProductQuantity updatedProduct) {
+    System.out.println(updatedProduct);
     Optional<ProductQuantity> pQ =
         productQuantityDAO.getProductQuantityById(updatedProduct.getId());
     if (pQ.isPresent()) {
       ProductQuantity item = pQ.get();
       if (item.getProduct().getStock() > updatedProduct.getQuantity()) {
-        item.setQuantity(updatedProduct.getQuantity());
-        productQuantityDAO.save(item);
-        em.detach(item); // Discard this entity's cache.
+        if (updatedProduct.getQuantity() <= 0) {
+          removeOneProduct(item);
+        } else {
+          item.setQuantity(updatedProduct.getQuantity());
+          productQuantityDAO.save(item);
+          em.detach(item); // Discard this entity's cache.
+        }
       }
     }
+    System.out.println("aaarrrggghhhh (1)");
     return "redirect:/shopping-cart";
   }
 
   @PostMapping(path = "/shopping-cart/remove")
   public String removeProduct(@Valid ProductQuantity productToRemove) {
-    Optional<ProductQuantity> pQ =
-        productQuantityDAO.getProductQuantityById(productToRemove.getId());
-    pQ.ifPresent(productQuantity -> productQuantityDAO.delete(productQuantity));
+    System.out.println(productToRemove);
+    removeOneProduct(productToRemove);
     return "redirect:/shopping-cart";
   }
 
-  @PostMapping(path = "/shopping-cart/clearCart")
-  public String clearCart(@Valid ProductQuantity productToRemove) {
-    Optional<ProductQuantity> pQ =
-        productQuantityDAO.getProductQuantityById(productToRemove.getId());
-    pQ.ifPresent(productQuantity -> productQuantityDAO.delete(productQuantity));
+  @PostMapping(path = "/shopping-cart/clear-cart")
+  public String clearCart(@Valid ShoppingCart toClear) {
+    List<ProductQuantity> shoppingCart =
+        getProductQuantitiesByShoppingCartId(toClear.getId()).getBody();
+    for (ProductQuantity item : shoppingCart) {
+      removeOneProduct(item);
+    }
     return "redirect:/shopping-cart";
+  }
+
+  private void removeOneProduct(@Valid ProductQuantity item) {
+    Optional<ProductQuantity> pQ = productQuantityDAO.getProductQuantityById(item.getId());
+    pQ.ifPresent(productQuantity -> productQuantityDAO.delete(productQuantity));
   }
 }
