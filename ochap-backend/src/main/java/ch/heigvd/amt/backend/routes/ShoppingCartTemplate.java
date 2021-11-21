@@ -19,9 +19,12 @@ import java.util.Optional;
 @Controller
 public class ShoppingCartTemplate {
 
-  @Autowired private ShoppingCartDAO shoppingCartDAO;
-  @Autowired private ProductQuantityDAO productQuantityDAO;
-  @Autowired private EntityManager em;
+  @Autowired
+  private ShoppingCartDAO shoppingCartDAO;
+  @Autowired
+  private ProductQuantityDAO productQuantityDAO;
+  @Autowired
+  private EntityManager em;
 
   @GetMapping("/shopping-cart")
   public String basicTemplate(Model model) {
@@ -61,8 +64,7 @@ public class ShoppingCartTemplate {
       Integer shoppingCartId) {
     Optional<List<ProductQuantity>> products =
         productQuantityDAO.findByShoppingCartId(shoppingCartId);
-    return products
-        .map(value -> ResponseEntity.ok().body(value))
+    return products.map(value -> ResponseEntity.ok().body(value))
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
