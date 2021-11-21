@@ -25,8 +25,8 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @EnableWebSecurity
 public class AmtBackendApplication extends SpringBootServletInitializer {
   @Override
-  protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
   public static void main(String[] args) {
+
 
 ++ b/ochap-backend/src/main/java/ch/heigvd/amt/backend/repository/CategoryDAO.java
   @Bean
