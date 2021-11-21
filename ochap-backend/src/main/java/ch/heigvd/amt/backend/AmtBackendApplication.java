@@ -25,41 +25,46 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @EnableWebSecurity
 public class AmtBackendApplication extends SpringBootServletInitializer {
   @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
+    return app.sources(AmtBackendApplication.class);
+  }
+
   public static void main(String[] args) {
+    SpringApplication.run(AmtBackendApplication.class, args);
+  }
 
-
-
-
-
-
-++ b/ochap-backend/src/main/java/ch/heigvd/amt/backend/repository/CategoryDAO.java
   @Bean
   public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
     return JWT.require(Algorithm.HMAC256(secret)).build();
+  }
+
   @Configuration
   public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
+    @Autowired public JwtFilter jwtFilter;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
       // @formatter:off
-                    .authorizeRequests()
-                    .antMatchers("/**/*").permitAll()
-                    .and()
-                    .formLogin().disable()
-                    .httpBasic().disable()
-                    .logout().disable()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            ;
-            // @formatter:on
+      http
+        .authorizeRequests()
+          .antMatchers("/**/*").permitAll()
+          .and()
+        .formLogin().disable()
+        .httpBasic().disable()
+        .logout().disable()
+        .sessionManagement()
+          .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+      // @formatter:on
       http.addFilterBefore(jwtFilter, BasicAuthenticationFilter.class);
+    }
+  }
 
-    @Bean
-    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver,
-        SpringSecurityDialect sec) {
-      final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-      templateEngine.setTemplateResolver(templateResolver);
-      templateEngine.addDialect(sec); // "sec" tags
-      return templateEngine;
+  @Bean
+  public SpringTemplateEngine templateEngine(
+      ITemplateResolver templateResolver, SpringSecurityDialect sec) {
+    final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.setTemplateResolver(templateResolver);
+    templateEngine.addDialect(sec); // "sec" tags
+    return templateEngine;
+  }
 }
-++ b/ochap-backend/src/main/java/ch/heigvd/amt/backend/repository/CategoryDAO.java
