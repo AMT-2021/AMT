@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface ShoppingCartDAO extends JpaRepository<ShoppingCart, Integer> {
-    @Query(value = "SELECT sc FROM ShoppingCart sc WHERE sc.clientId = ?1")
-    Optional<ShoppingCart> findByClientId(Integer clientId);
+  @Query(value = "SELECT sc FROM ShoppingCart sc WHERE sc.clientId = ?1")
+  Optional<ShoppingCart> findByClientId(Integer clientId);
 
-    Optional<ShoppingCart> getShoppingCartById(Integer id);
+  Optional<ShoppingCart> getShoppingCartById(Integer id);
 }
