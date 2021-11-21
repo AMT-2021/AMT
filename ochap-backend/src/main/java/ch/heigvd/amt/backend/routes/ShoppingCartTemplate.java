@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class ShoppingCartTemplate {
+public class ShoppingCart {
 
   @Autowired
   private ShoppingCartDAO shoppingCartDAO;
@@ -27,7 +27,7 @@ public class ShoppingCartTemplate {
   private EntityManager em;
 
   @GetMapping("/shopping-cart")
-  public String basicTemplate(Model model) {
+  public String viewShoppingCart(Model model) {
     int clientId = 2;
     List<ProductQuantity> shoppingCart = getProductQuantitesByClientId(clientId).getBody();
     ShoppingCart cart = getShoppingCartByClientId(clientId).getBody();
@@ -45,8 +45,8 @@ public class ShoppingCartTemplate {
     return "shopping-cart-template";
   }
 
-  private ResponseEntity<List<ProductQuantity>> getProductQuantitesByClientId(Integer clientId) {
-    Optional<ShoppingCart> cart = shoppingCartDAO.findByClientId(clientId);
+  private List<ProductQuantity> getProductQuantitesByClientId(Integer clientId) {
+    return shoppingCartDAO.findByClientId(clientId).getOrElse(new List());
     if (cart.isPresent()) {
       return getProductQuantitiesByShoppingCartId(cart.get().getId());
     } else {
@@ -70,10 +70,10 @@ public class ShoppingCartTemplate {
 
   @PostMapping(path = "/shopping-cart/update")
   public String updateProduct(@Valid ProductQuantity updatedProduct) {
-    System.out.println(updatedProduct);
     Optional<ProductQuantity> pQ =
         productQuantityDAO.getProductQuantityById(updatedProduct.getId());
-    if (pQ.isPresent()) {
+    if (!pQ.isPresent())
+      return "redirect:/shopping-cart";
       ProductQuantity item = pQ.get();
       if (item.getProduct().getStock() > updatedProduct.getQuantity()) {
         if (updatedProduct.getQuantity() <= 0) {
@@ -85,13 +85,11 @@ public class ShoppingCartTemplate {
         }
       }
     }
-    System.out.println("aaarrrggghhhh (1)");
     return "redirect:/shopping-cart";
   }
 
   @PostMapping(path = "/shopping-cart/remove")
   public String removeProduct(@Valid ProductQuantity productToRemove) {
-    System.out.println(productToRemove);
     removeOneProduct(productToRemove);
     return "redirect:/shopping-cart";
   }
