@@ -23,8 +23,6 @@ public class ShoppingCartPage {
   private ShoppingCartDAO shoppingCartDAO;
   @Autowired
   private ProductQuantityDAO productQuantityDAO;
-  @Autowired
-  private EntityManager em;
 
   @GetMapping("/shopping-cart")
   public String viewShoppingCart(Model model) {
@@ -71,7 +69,6 @@ public class ShoppingCartPage {
       } else {
         item.setQuantity(updatedProduct.getQuantity());
         productQuantityDAO.save(item);
-        em.detach(item);
       }
     }
     return "redirect:/shopping-cart";
