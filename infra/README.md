@@ -90,3 +90,98 @@ guide.
 
 You can test your machines are up and running with the following command:
 `vagrant ssh vg-ochap-appserver`.
+
+## Production deployment
+
+### Prerequisites
+
+Before you begin, make sure the target machine on AWS is accessible as `amt-app`
+without user interaction.
+
+That is, the command `ssh amt-app` should succeed without password or any other
+prompt.
+
+This can be achieved in GNU/Linux by adding the following sections to your ssh
+configuration file (`~/.ssh/config`).
+
+```
+Host amt-dmz
+  Hostname ${IP_ADDRESS_OF_BASTION}
+  User OCHAP
+  IdentityFile ~/.ssh/amt/AMT-DMZ-OCHAP.pem
+
+Host amt-app
+  ProxyJump amt-dmz
+  Hostname ${IP_ADDRESS_OF_VM_WITHIN_PRIVATE_NETWORK}
+  User admin
+  IdentityFile ~/.ssh/amt/AMT-OCHAP.pem
+```
+
+### Differences in the production deployment
+
+The deployment procedure in production is very similar to the one on vagrant
+with two minor differences:
+
+- The inventory to use is `aws-ochap`.
+- The `aws-ochap` inventory is encrypted with [ansible vault][] for vault with
+  id `aws-amt` using a vault key.
+  The vault key is not present in this repository.
+
+[ansible vault]: https://docs.ansible.com/ansible/latest/user_guide/vault.html
+
+> The vault key provides unrestricted access to the secrets.
+> Make sure to store it in a suitable location, preferably in removable storage.
+
+**Before** performing a deployment in production it is strongly recommended that
+you validate the viability of the playbook and inventory.
+This may be done using the `--check` flag.
+See the following section for details.
+
+If you find yourself in need to visualizing a variable, you can use the
+following command to display all of the inventory variables:
+
+```console
+$ ansible -i ../inventories/aws-ochap all -m debug -a var='vars' \
+  --vault-id aws-amt@/path/to/aws-ansible-vault.key
+```
+
+> To add a new variable, first you need to encrypt its value.
+> Then you may add encrypted result to the inventory file.
+>
+> For example:
+>
+> ```console
+> $ date | ansible-vault encrypt_string --vault-id aws-amt@/path/to/aws-ansible-vault.key
+> Reading plaintext input from stdin. (ctrl-d to end input, twice if your content does not already have a newline)
+> !vault |
+>           $ANSIBLE_VAULT;1.2;AES256;aws-amt
+>           35383263366134636463386537663764383437343932356666303435316264356431343035393138
+>           3365623661623834333031623930623039363265386435620a343932346565343133636239323232
+>           31363864346237316534616133373932326435376165643661653762646265393731383630386135
+>           6363363361633965340a306466313838643763653936643539363831383463316239376461653237
+>           65636331633161356432333133653231346339383239666330646236386438666338653135373230
+>           3765666436353938383430326566643365303236653066633730
+> Encryption successful
+> ```
+
+### Deployment procedure
+
+After the deployment has been validated on the vagrant-provisioned inventory,
+a deployment in production may proceed.
+
+**Check** the viability of the playbook and inventory.
+Note that the vault key MUST be provided for this command to succeed.
+
+```console
+$ ansible-playbook -i ../inventories/aws-ochap ochap.yaml \
+  --vault-id aws-amt@/path/to/aws-ansible-vault.key --check
+```
+
+If everything goes well, ansible is able to reach the destination inventory and
+should have all the required information.
+You may continue with the deployment:
+
+```console
+$ ansible-playbook -i ../inventories/aws-ochap ochap.yaml \
+  --vault-id aws-amt@/path/to/aws-ansible-vault.key
+```
