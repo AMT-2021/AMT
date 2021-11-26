@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class ShoppingCartPage {
@@ -27,32 +28,17 @@ public class ShoppingCartPage {
   @GetMapping("/shopping-cart")
   public String viewShoppingCart(Model model) {
     int clientId = 2;
-    List<ProductQuantity> products = getProductQuantitesByClientId(clientId);
     ShoppingCart cart = getShoppingCartByClientId(clientId);
+    Set<ProductQuantity> products = cart.getProducts();
 
     model.addAttribute("products", products);
     model.addAttribute("cart", cart);
     return "shopping-cart";
   }
 
-  private List<ProductQuantity> getProductQuantitesByClientId(Integer clientId) {
-    Optional<ShoppingCart> cart = shoppingCartDAO.findByClientId(clientId);
-    if (cart.isPresent()) {
-      return getProductQuantitiesByShoppingCartId(cart.get().getId());
-    } else {
-      return new ArrayList<>();
-    }
-  }
-
   private ShoppingCart getShoppingCartByClientId(Integer clientId) {
     Optional<ShoppingCart> cart = shoppingCartDAO.findByClientId(clientId);
     return cart.orElse(new ShoppingCart());
-  }
-
-  private List<ProductQuantity> getProductQuantitiesByShoppingCartId(Integer shoppingCartId) {
-    Optional<List<ProductQuantity>> products =
-        productQuantityDAO.findByShoppingCartId(shoppingCartId);
-    return products.orElse(new ArrayList<>());
   }
 
   @PostMapping(path = "/shopping-cart/update")
@@ -82,7 +68,7 @@ public class ShoppingCartPage {
 
   @PostMapping(path = "/shopping-cart/clear-cart")
   public String clearCart(@Valid ShoppingCart toClear) {
-    List<ProductQuantity> shoppingCart = getProductQuantitiesByShoppingCartId(toClear.getId());
+    List<ProductQuantity> shoppingCart = productQuantityDAO.findByShoppingCartId(toClear.getId());
     for (ProductQuantity item : shoppingCart) {
       removeOneProduct(item);
     }

@@ -15,6 +15,6 @@ public class ShoppingCart {
   @Column(unique = true)
   private Integer clientId;
 
-  @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private Set<ProductQuantity> products;
 }
