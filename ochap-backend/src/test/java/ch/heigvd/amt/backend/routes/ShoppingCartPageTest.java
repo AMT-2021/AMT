@@ -12,11 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ShoppingCartPageTest {
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    @Test
-    public void test() throws Exception {
-        mvc.perform(get("/shopping-cart")).andExpect(status().isOk());
-    }
+  @Test
+  public void test() throws Exception {
+    mvc.perform(get("/shopping-cart")).andExpect(status().isOk());
+  }
 }
