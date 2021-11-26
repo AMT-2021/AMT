@@ -1,4 +1,4 @@
-package ch.heigvd.amt.backend;
+package ch.heigvd.amt.backend.entities;
 
 import ch.heigvd.amt.backend.entities.Category;
 import ch.heigvd.amt.backend.entities.Product;

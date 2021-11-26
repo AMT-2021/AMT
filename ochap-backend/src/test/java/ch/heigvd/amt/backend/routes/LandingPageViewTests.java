@@ -1,4 +1,4 @@
-package ch.heigvd.amt.backend;
+package ch.heigvd.amt.backend.routes;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
