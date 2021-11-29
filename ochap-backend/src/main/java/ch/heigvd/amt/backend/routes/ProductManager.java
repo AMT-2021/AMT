@@ -16,22 +16,19 @@ import java.util.List;
 import java.util.Optional;
 
 /*
-routes pour :
-- affichage de tous les produits (GET)
-  - btn update, delete, add qui redirige sur les bons trucs
-- affichage update (GET)
-- affichage add (même template que update) (GET)
-- une route pour modif d'un produit (POST)
-- une route pour add (POST)
-- une route pour delete (POST)
-
+ * routes pour : - affichage de tous les produits (GET) - btn update, delete, add qui redirige sur
+ * les bons trucs - affichage update (GET) - affichage add (même template que update) (GET) - une
+ * route pour modif d'un produit (POST) - une route pour add (POST) - une route pour delete (POST)
+ * 
  */
 
 @Controller
 public class ProductManager {
-  @Autowired private ProductDAO productDAO;
+  @Autowired
+  private ProductDAO productDAO;
 
-  @Autowired private CategoryDAO categoryDAO;
+  @Autowired
+  private CategoryDAO categoryDAO;
 
   @GetMapping("/product-manager/all")
   public String allProduct(Model model) {
