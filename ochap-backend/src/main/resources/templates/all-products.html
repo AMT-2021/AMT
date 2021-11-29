@@ -19,12 +19,13 @@
     <!-- Responsive-->
     <link rel="stylesheet" href="css/responsive.css">
     <!-- fevicon -->
-    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+    <link rel="icon" href="images/fevicon.png" type="image/gif"/>
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
     <!-- Tweaks for older IEs-->
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+          media="screen">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -34,50 +35,55 @@
 <body class="main-layout">
 <!-- loader  -->
 <div class="loader_bg">
-    <div class="loader"><img src="images/loading.gif" alt="#" /></div>
+    <div class="loader"><img src="images/loading.gif" alt="#"/></div>
 </div>
 
 
-    <div id="content">
-        <!-- header -->
-        <div th:replace="fragments/header :: header"></div>
+<div id="content">
+    <!-- header -->
+    <div th:replace="fragments/header :: header"></div>
 
-        <!-- Categories -->
-        <div class="Categories">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="title">
-                            <h2> Categories</h2>
-                            <ul class="categiri">
-                                <li  th:each="category: ${categories}"><a th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a></li>
-                            </ul>
-                        </div>
+    <!-- Categories -->
+    <div class="Categories">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title">
+                        <h2> Categories</h2>
+                        <ul class="categiri">
+                            <li th:each="category: ${categories}"><a
+                                    th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <!-- news brand -->
-                <div id="brand"  class="brand-bg">
-                    <h3>Products</h3>
-                    <div class="row" th:if="${#lists.size(products) != 0}">
-                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
-                            <div class="brand-box">
-                                <i> <img src="icon/p1.png"/> </i>
-                                <h4 th:text="${product.name}"></h4>
-                                <h4>Price: CHF <span th:text="${product.price}"></span></h4>
-                                <h4>In stock:  <span th:text="${product.stock}"></span></h4>
-                            </div>
-                            <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
-                            <a class="buynow" href="#">Add to Cart</a>
+            <!-- news brand -->
+            <div id="brand" class="brand-bg">
+                <h3>Products</h3>
+                <div class="row" th:if="${#lists.size(products) != 0}">
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
+                        <div class="brand-box">
+                            <i> <img src="icon/p1.png"/> </i>
+                            <h4 th:text="${product.name}"></h4>
+                            <h4>Price: CHF <span th:text="${product.price}"></span></h4>
+                            <h4>In stock: <span th:text="${product.stock}"></span></h4>
                         </div>
+                        <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
+                        <a class="buynow" href="#">Add to Cart</a>
                     </div>
-                    <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
                 </div>
-                <a class="seemore" href="#">See more</a>
-                <!-- end news brand -->
+                <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
+            </div>
+            <a class="seemore" href="#">See more</a>
+            <!-- end news brand -->
+        </div>
+    </div>
     <!--  footer -->
-                <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="fragments/footer :: footer"></div>
     <!-- end footer -->
+</div>
 
 
 </div>
@@ -95,17 +101,17 @@
 <script src="js/custom.js"></script>
 <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"
         });
 
-        $('#dismiss, .overlay').on('click', function() {
+        $('#dismiss, .overlay').on('click', function () {
             $('#sidebar').removeClass('active');
             $('.overlay').removeClass('active');
         });
 
-        $('#sidebarCollapse').on('click', function() {
+        $('#sidebarCollapse').on('click', function () {
             $('#sidebar').addClass('active');
             $('.overlay').addClass('active');
             $('.collapse.in').toggleClass('in');
@@ -115,16 +121,16 @@
 </script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(".fancybox").fancybox({
             openEffect: "none",
             closeEffect: "none"
         });
 
-        $(".zoom").hover(function() {
+        $(".zoom").hover(function () {
 
             $(this).addClass('transition');
-        }, function() {
+        }, function () {
 
             $(this).removeClass('transition');
         });
