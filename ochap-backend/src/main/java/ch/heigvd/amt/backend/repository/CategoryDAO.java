@@ -13,4 +13,6 @@ public interface CategoryDAO extends JpaRepository<Category, Integer> {
   Optional<List<Category>> getAllCategory();
 
   Optional<Category> getCategoryById(Integer id);
+  @Override
+  void delete(Category category);
 }
