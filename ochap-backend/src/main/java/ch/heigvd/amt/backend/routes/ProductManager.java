@@ -17,14 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 /*
- * routes pour :
- * - affichage de tous les produits (GET)
- *    - btn update, delete, add qui redirige sur les bons trucs
- * - affichage update (GET)
- * - affichage add (même template que update) (GET)
- * - une route pour modif d'un produit (POST)
- * - une route pour add (POST)
- * - une route pour delete (POST)
+ * routes pour : - affichage de tous les produits (GET) - btn update, delete, add qui redirige sur
+ * les bons trucs - affichage update (GET) - affichage add (même template que update) (GET) - une
+ * route pour modif d'un produit (POST) - une route pour add (POST) - une route pour delete (POST)
  * 
  */
 
@@ -78,14 +73,14 @@ public class ProductManager {
   @PostMapping("/product-manager/update")
   public String updateProduct(@RequestBody Product updatedProduct) {
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
-    if(!existingProduct.isEmpty()) {
+    if (!existingProduct.isEmpty()) {
       Product p = existingProduct.get();
       productDAO.save(assignProduct(p, updatedProduct));
     }
     return "redirect:/product-manager";
   }
 
-  public Product assignProduct(Product p1, Product p2){
+  public Product assignProduct(Product p1, Product p2) {
     p1.setName(p2.getName());
     p1.setDescription(p2.getDescription());
     p1.setStock(p2.getStock());
@@ -96,8 +91,8 @@ public class ProductManager {
 
   @PostMapping(path = "/product-manager/remove")
   public String removeProduct(@Valid Product productToRemove) {
-    //TODO
+    // TODO
     return "redirect:/product-manager";
   }
-  
+
 }
