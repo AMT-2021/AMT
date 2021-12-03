@@ -22,23 +22,16 @@
         <div th:replace="fragments/header :: header"></div>
 
         <main class="container">
-            <p th:if="${error == '1'}" class="alert-danger">This category already exists!</p>
-            <div class="row pb-2 pt-2" style="border-bottom: solid black 1px">
-                <form th:action="@{/category-manager/create}" method="post" th:object="${newCategory}">
-                    <input type="text" required name="name" th:field="*{name}">
-                    <button type="submit" class="btn btn-primary">Create Category</button>
-                </form>
+            <h3>The products below contain the category : <span th:text="${category.name}"></span></h3>
+            <div class="row" th:each="product: ${products}" style="border-bottom: black 1px solid">
+                <p class="col-6" th:text="${product.id}"></p>
+                <p class="col-6" th:text="${product.name}"></p>
             </div>
-            <div class="row pb-2 pt-2" th:each="category, itemStat : ${categories}" style="border-bottom: black 1px solid"  th:object="${newCategory}">
-                <p class="col-2" th:text="${categories[__${itemStat.index}__].id}"></p>
-                <p class="col-9" th:text="${categories[__${itemStat.index}__].name}"></p>
-                <div class="col-1">
-                    <form method="post" th:action="@{/category-manager/remove}">
-                        <input type="hidden" name="id" id="id" th:value="${categories[__${itemStat.index}__].id}"/>
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                    </form>
-
-                </div>
+            <div>
+                <form th:action="@{/category-manager/remove?hasProduct=true}" method="post" th:object="${newCategory}">
+                    <input type="hidden" name="id" id="id" th:value="category.id">
+                    <button type="submit" class="btn btn-primary">Delete Aniway</button>
+                </form>
             </div>
         </main>
         <!--  footer -->
