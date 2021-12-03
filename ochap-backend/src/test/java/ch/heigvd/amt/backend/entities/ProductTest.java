@@ -1,7 +1,5 @@
 package ch.heigvd.amt.backend.entities;
 
-import ch.heigvd.amt.backend.entities.Category;
-import ch.heigvd.amt.backend.entities.Product;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import org.junit.jupiter.api.Test;
@@ -10,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Assertions;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootTest
 public class ProductTest {
@@ -35,7 +36,7 @@ public class ProductTest {
     p.setCategory(c);
     productRepository.save(p);
     Assertions.assertNotNull(p.getId());
-    Assertions.assertNotNull(productRepository.getProductById(p.getId()).get().getCategory());
-
+    Assertions.assertNotNull(productRepository.getProductById(p.getId()).get().getCategories());
+    Assertions.assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 1);
   }
 }
