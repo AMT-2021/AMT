@@ -57,12 +57,26 @@ public class CategoryManager {
 
     @PostMapping("/category-manager/remove")
     public String removeCategory(@Valid Category c) {
+<<<<<<< HEAD
         Product[] products = productDAO.getProductsByCategoryId(c.getId()).get().toArray(new Product[0]);
         if(products.length != 0){
             return "redirect:/category-manager/confirm-delete?categoryId=" + c.getId();
         } else {
             Category category = categoryDAO.getCategoryById(c.getId()).get();
             categoryDAO.delete(category);
+=======
+        Optional<Category> cat = categoryDAO.getCategoryById(c.getId());
+        if (cat.isPresent()) {
+            Category category = cat.get();
+            Product[] products = productDAO.getProductsByCategory(category).get().toArray(new Product[0]);
+            if(products.length != 0){
+                return "redirect:/category-manager/confirm-delete?categoryId=" + category.getId();
+            } else {
+                categoryDAO.delete(c);
+                return "redirect:/category-manager";
+            }
+        } else {
+>>>>>>> 73a7c56 (add delete)
             return "redirect:/category-manager";
         }
     }

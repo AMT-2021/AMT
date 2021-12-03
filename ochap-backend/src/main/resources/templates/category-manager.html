@@ -21,7 +21,6 @@
         <main class="container">
             <p th:if="${error == '1'}" class="alert-danger">This category already exists!</p>
             <div class="row pb-2 pt-2" style="border-bottom: solid black 1px">
-
                 <form th:action="@{/category-manager/create}" method="post" th:object="${newCategory}">
                     <input type="text" required name="name" th:field="*{name}">
                     <button type="submit" class="btn btn-primary">Create Category</button>
