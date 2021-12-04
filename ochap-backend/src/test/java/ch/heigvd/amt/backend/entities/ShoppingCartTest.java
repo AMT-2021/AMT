@@ -1,9 +1,5 @@
 package ch.heigvd.amt.backend.entities;
 
-import ch.heigvd.amt.backend.entities.Category;
-import ch.heigvd.amt.backend.entities.Product;
-import ch.heigvd.amt.backend.entities.ProductQuantity;
-import ch.heigvd.amt.backend.entities.ShoppingCart;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import ch.heigvd.amt.backend.repository.ProductQuantityDAO;
@@ -11,16 +7,17 @@ import ch.heigvd.amt.backend.repository.ShoppingCartDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
+
 public class ShoppingCartTest {
 
   @Autowired
@@ -42,15 +39,19 @@ public class ShoppingCartTest {
   void canCreateAShoppingCartWithProductQuantity() {
 
     Category c = new Category();
-    c.setName("Fedora");
+    c.setName("Hello");
     categoryRepository.save(c);
 
+    Category c2 = new Category();
+    c.setName("Fedora2");
+    categoryRepository.save(c2);
+
     Product p1 = new Product();
-    p1.setName("Mafia");
-    p1.setDescription("Godfather Hat");
+    p1.setName("Happy");
+    p1.setDescription("Fairy Hat");
     p1.setStock(1);
     p1.setPrice(3);
-    p1.setCategory(c);
+    p1.setCategories(new HashSet<>(Arrays.asList(c, c2)));
     productRepository.save(p1);
 
     Product p2 = new Product();
@@ -58,7 +59,7 @@ public class ShoppingCartTest {
     p2.setDescription("Godfather Hat2");
     p2.setStock(1);
     p2.setPrice(3);
-    p2.setCategory(c);
+    p2.setCategories(new HashSet<>(List.of(c2)));
     productRepository.save(p2);
 
     ShoppingCart sC = new ShoppingCart();
@@ -87,3 +88,5 @@ public class ShoppingCartTest {
     Assertions.assertEquals(2, sC.getProducts().size());
   }
 }
+
+

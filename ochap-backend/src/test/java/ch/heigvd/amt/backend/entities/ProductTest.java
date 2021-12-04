@@ -34,7 +34,8 @@ public class ProductTest {
     productRepository.save(p);
     Assertions.assertNotNull(p.getId());
     Assertions.assertNotNull(productRepository.getProductById(p.getId()).get().getCategories());
-    Assertions.assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 0);
+    Assertions
+        .assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 0);
   }
 
   @Test
@@ -55,7 +56,8 @@ public class ProductTest {
     productRepository.save(p);
     Assertions.assertNotNull(p.getId());
     Assertions.assertNotNull(productRepository.getProductById(p.getId()).get().getCategories());
-    Assertions.assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 1);
+    Assertions
+        .assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 1);
   }
 
   @Test
@@ -86,6 +88,7 @@ public class ProductTest {
     productRepository.save(p);
     Assertions.assertNotNull(p.getId());
     Assertions.assertNotNull(productRepository.getProductById(p.getId()).get().getCategories());
-    Assertions.assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 3);
+    Assertions
+        .assertEquals(productRepository.getProductById(p.getId()).get().getCategories().size(), 3);
   }
 }
