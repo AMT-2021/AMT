@@ -3,6 +3,7 @@ package ch.heigvd.amt.backend.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -23,6 +24,6 @@ public class Product {
   @Column(nullable = false)
   private int stock;
 
-  @ManyToOne
-  private Category category;
+  @ManyToMany(mappedBy = "products")
+  private Set<Category> categories;
 }

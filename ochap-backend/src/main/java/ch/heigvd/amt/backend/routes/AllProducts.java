@@ -31,7 +31,7 @@ public class AllProducts {
     if (category != null) {
       Optional<Category> cat = categoryDAO.getCategoryById(Integer.parseInt(category));
       if (cat.isPresent()) {
-        Optional<List<Product>> testProduct = productDAO.getProductsByCategory(cat.get());
+        Optional<List<Product>> testProduct = productDAO.getProductsByCategoryId(cat.get().getId());
         if (testProduct.isPresent()) {
           products = testProduct.get().toArray(new Product[0]);
         }
