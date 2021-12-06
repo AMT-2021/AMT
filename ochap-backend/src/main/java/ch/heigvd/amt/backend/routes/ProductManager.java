@@ -85,7 +85,7 @@ public class ProductManager {
     p1.setDescription(p2.getDescription());
     p1.setStock(p2.getStock());
     p1.setPrice(p2.getPrice());
-    p1.setCategory(p2.getCategory());
+    //p1.setCategory(p2.getCategory());
     return p1;
   }
 
