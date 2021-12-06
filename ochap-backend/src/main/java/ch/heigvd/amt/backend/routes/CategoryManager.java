@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class CategoryManager {
@@ -56,17 +57,12 @@ public class CategoryManager {
 
     @PostMapping("/category-manager/remove")
     public String removeCategory(@Valid Category c) {
-        Optional<Category> cat = categoryDAO.getCategoryById(c.getId());
-        if (cat.isPresent()) {
-            Category category = cat.get();
-            Product[] products = productDAO.getProductsByCategory(category).get().toArray(new Product[0]);
-            if(products.length != 0){
-                return "redirect:/category-manager/confirm-delete?categoryId=" + category.getId();
-            } else {
-                categoryDAO.delete(c);
-                return "redirect:/category-manager";
-            }
+        Product[] products = productDAO.getProductsByCategoryId(c.getId()).get().toArray(new Product[0]);
+        if(products.length != 0){
+            return "redirect:/category-manager/confirm-delete?categoryId=" + c.getId();
         } else {
+            Category category = categoryDAO.getCategoryById(c.getId()).get();
+            categoryDAO.delete(category);
             return "redirect:/category-manager";
         }
     }
@@ -74,24 +70,21 @@ public class CategoryManager {
     @PostMapping("//category-manager/remove-confirmed")
     public String removeConfirmedCategory(@Valid Category c){
         Category category = categoryDAO.getCategoryById(c.getId()).get();
-        List<Product> products = productDAO.getProductsByCategory(category).get();
-        // TODO: get category by product
-        // TODO: update category without the removed category
+        List<Product> products = productDAO.getProductsByCategoryId(c.getId()).get();
+        for (Product product : products) {
+            Set<Category> categories = product.getCategories();
+            categories.remove(category);
+            product.setCategories(categories);
+            productDAO.save(product); // verify if update or create
+        }
         return "redirect:/category-manager";
     }
 
     @GetMapping("/category-manager/confirm-delete")
     public String confirmDelete(Model model, @RequestParam String categoryId) {
-        Product[] products = new Product[0];
-        Category category = new Category();
-        Optional<Category> c = categoryDAO.getCategoryById(Integer.parseInt(categoryId));
-        if (c.isPresent()) {
-            category = c.get();
-            Optional<List<Product>> productList = productDAO.getProductsByCategory(category);
-            if (productList.isPresent()) {
-                products = productList.get().toArray(new Product[0]);
-            }
-        }
+        int catId = Integer.parseInt(categoryId);
+        Category category = categoryDAO.getCategoryById(catId).get();
+        Product[] products = productDAO.getProductsByCategoryId(catId).get().toArray(new Product[0]);
         model.addAttribute("products", products);
         model.addAttribute("category", category);
         model.addAttribute("newCategory", new Category());
