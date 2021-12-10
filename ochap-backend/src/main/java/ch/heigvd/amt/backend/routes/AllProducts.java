@@ -42,7 +42,7 @@ public class AllProducts {
     List<Category> categories = categoryDAO.getAllCategory().get();
     List<Category> catToRemove = new ArrayList<Category>();
     for (Category c : categories) {
-      if ( c.getProducts().size() == 0 ) {
+      if (c.getProducts().size() == 0) {
         catToRemove.add(c);
       }
     }
