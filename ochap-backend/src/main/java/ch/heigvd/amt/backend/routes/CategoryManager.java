@@ -65,7 +65,7 @@ public class CategoryManager {
     }
   }
 
-  @PostMapping("//category-manager/remove-confirmed")
+  @PostMapping("/category-manager/remove-confirmed")
   public String removeConfirmedCategory(@Valid Category c) {
     Category category = categoryDAO.getCategoryById(c.getId()).get();
     List<Product> products = category.getProducts();
@@ -75,6 +75,7 @@ public class CategoryManager {
       product.setCategories(categories);
       productDAO.save(product); // verify if update or create
     }
+    categoryDAO.delete(category);
     return "redirect:/category-manager";
   }
 

@@ -19,16 +19,17 @@
         <div th:replace="fragments/header :: header"></div>
 
         <main class="container">
-            <h3>The products below contain the category : <span th:text="${category.name}"></span></h3>
-            <div class="row" th:each="product: ${products}" style="border-bottom: black 1px solid">
+            <h3 class="mb-2">The products below contain the category : <span th:text="${category.name}"></span></h3>
+            <div class="row pt-2 pb-2" th:each="product: ${products}" style="border-bottom: black 1px solid">
                 <p class="col-6" th:text="${product.id}"></p>
                 <p class="col-6" th:text="${product.name}"></p>
             </div>
-            <div>
-                <form th:action="@{/category-manager/remove?hasProduct=true}" method="post" th:object="${newCategory}">
-                    <input type="hidden" name="id" id="id" th:value="category.id">
-                    <button type="submit" class="btn btn-primary">Delete Aniway</button>
+            <div class="row mb-4 mt-2" >
+                <form th:action="@{/category-manager/remove-confirmed}" method="post" th:object="${newCategory}">
+                    <input type="hidden" name="id" id="id" th:value="${category.id}">
+                    <button type="submit" class="btn btn-primary mr-2">Delete Aniway</button>
                 </form>
+                <a th:href="@{/category-manager}" class="btn btn-secondary">Cancel</a>
             </div>
         </main>
         <!--  footer -->

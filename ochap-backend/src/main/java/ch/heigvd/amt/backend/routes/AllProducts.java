@@ -25,11 +25,11 @@ public class AllProducts {
   private CategoryDAO categoryDAO;
 
   @GetMapping("/all-products")
-  public String allProduct(Model model, @RequestParam(required = false) String categoryId) {
+  public String allProduct(Model model, @RequestParam(required = false) String category) {
     Optional<List<Product>> hasProducts;
     List<Product> products = new ArrayList<>();
-    if (categoryId != null) {
-      Category c = categoryDAO.getCategoryById(Integer.parseInt(categoryId)).get();
+    if (category != null) {
+      Category c = categoryDAO.getCategoryById(Integer.parseInt(category)).get();
       products = c.getProducts();
 
     } else {
@@ -49,6 +49,7 @@ public class AllProducts {
     categories.removeAll(catToRemove);
 
     model.addAttribute("title", "All Products");
+    model.addAttribute("categories", categories);
     model.addAttribute("products", products);
     return "all-products";
   }
