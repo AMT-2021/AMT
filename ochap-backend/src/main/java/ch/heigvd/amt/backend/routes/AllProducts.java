@@ -44,8 +44,15 @@ public class AllProducts {
       }
     }
 
-    Optional<List<Category>> cats = categoryDAO.getAllCategory();
-    cats.ifPresent(categories -> model.addAttribute("categories", categories));
+    List<Category> categories = categoryDAO.getAllCategory().get();
+    List<Category> catToRemove = new ArrayList<Category>();
+    for (Category c : categories) {
+      if ( productDAO.getProductsByCategoryId(c.getId()).get().size() == 0 ) {
+        catToRemove.add(c);
+      }
+    }
+    categories.removeAll(catToRemove);
+
     model.addAttribute("title", "All Products");
     model.addAttribute("products", products);
     return "all-products";
