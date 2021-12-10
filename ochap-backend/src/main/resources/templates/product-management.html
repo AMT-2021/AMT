@@ -47,37 +47,18 @@
     <div class="Categories">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="title">
-                        <h2> Categories</h2>
-                        <ul class="categiri">
-                            <li th:each="category: ${categories}"><a
-                                    th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="title">
+                    <h2> Shopping Cart</h2>
                 </div>
             </div>
-
-            <!-- news brand -->
-            <div id="brand" class="brand-bg">
-                <h3>Products</h3>
-                <div class="row" th:if="${#lists.size(products) != 0}">
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
-                        <div class="brand-box">
-                            <i> <img src="icon/p1.png"/> </i>
-                            <h4 th:text="${product.name}"></h4>
-                            <h4>Price: CHF <span th:text="${product.price}"></span></h4>
-                            <h4>In stock: <span th:text="${product.stock}"></span></h4>
-                        </div>
-                        <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
-                        <a class="buynow" href="#">Add to Cart</a>
-                    </div>
+            <div class="col">
+                <div class="row" th:each="product: ${products}">
+                    <label th:text="${product.name}"></label>
+                    <label th:text="${product.description}"></label>
+                    <label th:text="${product.stock}"></label>
+                    <label th:text="${product.price}"></label>
                 </div>
-                <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
             </div>
-            <a class="seemore" href="#">See more</a>
-            <!-- end news brand -->
         </div>
     </div>
     <!--  footer -->
@@ -136,30 +117,4 @@
         });
     });
 </script>
-<script>
-    // This example adds a marker to indicate the position of Bondi Beach in Sydney,
-    // Australia.
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 11,
-            center: {
-                lat: 40.645037,
-                lng: -73.880224
-            },
-        });
-
-        var image = 'images/maps-and-flags.png';
-        var beachMarker = new google.maps.Marker({
-            position: {
-                lat: 40.645037,
-                lng: -73.880224
-            },
-            map: map,
-            icon: image
-        });
-    }
-</script>
-<!-- google map js -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
-<!-- end google map js -->
 </body>

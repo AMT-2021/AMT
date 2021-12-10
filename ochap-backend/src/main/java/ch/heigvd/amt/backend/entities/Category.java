@@ -3,7 +3,8 @@ package ch.heigvd.amt.backend.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,5 +19,5 @@ public class Category {
   @ManyToMany
   @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "category_id"),
       inverseJoinColumns = @JoinColumn(name = "product_id"))
-  private Set<Product> products;
+  private List<Product> products = new ArrayList<>();
 }
