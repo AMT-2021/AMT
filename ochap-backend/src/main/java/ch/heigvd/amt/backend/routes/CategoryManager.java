@@ -57,12 +57,10 @@ public class CategoryManager {
 
   @PostMapping("/category-manager/remove")
   public String removeCategory(@Valid Category c) {
-    Product[] products =
-        productDAO.getProductsByCategoryId(c.getId()).get().toArray(new Product[0]);
-    if (products.length != 0) {
-      return "redirect:/category-manager/confirm-delete?categoryId=" + c.getId();
+    Category category = categoryDAO.getCategoryById(c.getId()).get();
+    if (category.getProducts().size() != 0) {
+      return "redirect:/category-manager/confirm-delete?categoryId=" + category.getId();
     } else {
-      Category category = categoryDAO.getCategoryById(c.getId()).get();
       categoryDAO.delete(category);
       return "redirect:/category-manager";
     }
@@ -71,7 +69,7 @@ public class CategoryManager {
   @PostMapping("//category-manager/remove-confirmed")
   public String removeConfirmedCategory(@Valid Category c) {
     Category category = categoryDAO.getCategoryById(c.getId()).get();
-    List<Product> products = productDAO.getProductsByCategoryId(c.getId()).get();
+    List<Product> products = category.getProducts();
     for (Product product : products) {
       List<Category> categories = product.getCategories();
       categories.remove(category);
@@ -83,9 +81,9 @@ public class CategoryManager {
 
   @GetMapping("/category-manager/confirm-delete")
   public String confirmDelete(Model model, @RequestParam String categoryId) {
-    int catId = Integer.parseInt(categoryId);
-    Category category = categoryDAO.getCategoryById(catId).get();
-    Product[] products = productDAO.getProductsByCategoryId(catId).get().toArray(new Product[0]);
+    Category category = categoryDAO.getCategoryById(Integer.parseInt(categoryId)).get();
+    List<Product> products = category.getProducts();
+
     model.addAttribute("products", products);
     model.addAttribute("category", category);
     model.addAttribute("newCategory", new Category());
