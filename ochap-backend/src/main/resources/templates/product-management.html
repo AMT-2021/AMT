@@ -26,9 +26,6 @@
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
           media="screen">
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <!-- body -->
 
@@ -52,11 +49,40 @@
                 </div>
             </div>
             <div class="col">
-                <div class="row" th:each="product: ${products}">
-                    <label th:text="${product.name}"></label>
-                    <label th:text="${product.description}"></label>
-                    <label th:text="${product.stock}"></label>
-                    <label th:text="${product.price}"></label>
+                <form method="get" th:action="@{/product-add-form}">
+                    <button type="submit" > add </button>
+                </form>
+                <div th:each="p : ${products}">
+                    <form class="row d-flex justify-content-between align-items-center" method="post" th:action="@{/product-update-form}" th:object="${p}" >
+                        <label hidden>
+                            <input name="name" th:field="*{name}" th:value="${p.name}" type="value"/>
+                        </label>
+                        <label hidden>
+                            <input name="description" th:field="*{description}" th:value="${p.description}" type="value"/>
+                        </label>
+                        <label hidden>
+                            <input name="stock" th:field="*{stock}" th:value="${p.stock}" type="value"/>
+                        </label>
+                        <label hidden>
+                            <input name="price" th:field="*{price}" th:value="${p.price}" type="value"/>
+                        </label>
+                        <label hidden>
+                            <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
+                        </label>
+
+                        <label th:text=" ${p.name} " ></label>
+                        <label th:text=" ${p.description} " ></label>
+                        <label th:text=" ${p.stock} " ></label>
+                        <label th:text=" ${p.price} " ></label>
+
+                        <button type="submit" > update </button>
+                    </form>
+                    <form method="post" th:action="@{/product-manager/remove}" th:object="${p}">
+                        <label hidden>
+                            <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
+                        </label>
+                        <button type="submit" > remove </button>
+                    </form>
                 </div>
             </div>
         </div>
