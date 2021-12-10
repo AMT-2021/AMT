@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +31,7 @@ public class AllProducts {
     if (category != null) {
       Optional<Category> cat = categoryDAO.getCategoryById(Integer.parseInt(category));
       if (cat.isPresent()) {
-        Optional<List<Product>> testProduct = productDAO.getProductsByCategoryId(cat.get().getId());
-        if (testProduct.isPresent()) {
-          products = testProduct.get();
-        }
+        products = cat.get().getProducts();
       }
     } else {
       hasProducts = productDAO.getAllProducts();
@@ -47,7 +43,7 @@ public class AllProducts {
     List<Category> categories = categoryDAO.getAllCategory().get();
     List<Category> catToRemove = new ArrayList<Category>();
     for (Category c : categories) {
-      if ( productDAO.getProductsByCategoryId(c.getId()).get().size() == 0 ) {
+      if ( c.getProducts().size() == 0 ) {
         catToRemove.add(c);
       }
     }

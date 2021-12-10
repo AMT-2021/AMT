@@ -73,7 +73,7 @@ public class CategoryManager {
     Category category = categoryDAO.getCategoryById(c.getId()).get();
     List<Product> products = productDAO.getProductsByCategoryId(c.getId()).get();
     for (Product product : products) {
-      Set<Category> categories = product.getCategories();
+      List<Category> categories = product.getCategories();
       categories.remove(category);
       product.setCategories(categories);
       productDAO.save(product); // verify if update or create
