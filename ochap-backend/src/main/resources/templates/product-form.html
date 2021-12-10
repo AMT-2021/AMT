@@ -42,32 +42,36 @@
 
     <!-- Categories -->
     <div class="p-5">
-        <form method="post" th:action="@{/product-manager/add}" th:object="${product}">
+
+        <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"> <!--  -->
             <div class="row">
                 <div class="flex-column">
                     <p> name </p>
                     <label>
-                        <input name="name" th:field="*{name}">
+                        <input name="name" th:field="*{name}" th:value="${product.name}">
                     </label>
                 </div>
                 <div class="flex-column">
                     <p> description </p>
                     <label>
-                        <input name="description" th:field="*{description}" required>
+                        <input name="description" th:field="*{description}" required th:value="${product.description}">
                     </label>
                 </div>
                 <div class="flex-column">
                     <p> price </p>
                     <label>
-                        <input name="price " th:field="*{price}" required>
+                        <input name="price " th:field="*{price}" required th:value="${product.price}">
                     </label>
                 </div>
                 <div class="flex-column">
                     <p> stock </p>
                     <label>
-                        <input name="stock" th:field="*{stock}">
+                        <input name="stock" th:field="*{stock}" th:value="${product.stock}">
                     </label>
                 </div>
+                <label hidden>
+                    <input name="id" th:field="*{id}" th:value="${product.id}">
+                </label>
                 <div class="flex-column">
                     <p> image </p>
                     <p> coming soon... </p>
@@ -87,8 +91,6 @@
     <!--  footer -->
     <div th:replace="fragments/footer :: footer"></div>
     <!-- end footer -->
-
-</div>
 
 </div>
 

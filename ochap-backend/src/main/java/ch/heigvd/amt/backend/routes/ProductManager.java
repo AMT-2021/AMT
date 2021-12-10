@@ -48,37 +48,39 @@ public class ProductManager {
 
   @GetMapping("/product-add-form")
   public String addProductForm(Model model) {
-    Category[] categories = categoryDAO.getAllCategory().get().toArray(new Category[0]);
+    Optional<List<Category>> cats = categoryDAO.getAllCategory();
+    cats.ifPresent(categories -> model.addAttribute("categories", categories));
     model.addAttribute("product", new Product());
-    model.addAttribute("categories", categories);
-
+    model.addAttribute("route","add");
     return "product-form";
   }
 
-  @GetMapping("/product-update-form")
-  public String updateProductForm(Model model, @RequestBody Product product) {
-    Category[] categories = categoryDAO.getAllCategory().get().toArray(new Category[0]);
+  @PostMapping("/product-update-form")
+  public String updateProductForm(Model model, @Valid Product product) {
+    Optional<List<Category>> cats = categoryDAO.getAllCategory();
+    cats.ifPresent(categories -> model.addAttribute("categories", categories));
     model.addAttribute("product", product);
-    model.addAttribute("categories", categories);
-
+    model.addAttribute("route","update");
     return "product-form";
   }
 
+  //TODO: Do all operations between Product and Category from the Category table
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
       @RequestParam(value = "categories") int[] categoriesId) {
     List<Category> categories = new ArrayList<>();
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
-      c.ifPresent(categories::add);
+     /* c.ifPresent(categories::add);
+      newProduct.setCategories(categories);*/
+      c.ifPresent(cat -> newProduct.getCategories().add(cat));
     }
-    newProduct.setCategories(categories);
     productDAO.save(newProduct);
     return "redirect:/product-manager";
   }
 
   @PostMapping("/product-manager/update")
-  public String updateProduct(@RequestBody Product updatedProduct) {
+  public String updateProduct(@Valid Product updatedProduct) {
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
@@ -92,13 +94,14 @@ public class ProductManager {
     p1.setDescription(p2.getDescription());
     p1.setStock(p2.getStock());
     p1.setPrice(p2.getPrice());
+    List<Category> categories = p2.getCategories();
     p1.setCategories(p2.getCategories());
     return p1;
   }
 
   @PostMapping(path = "/product-manager/remove")
   public String removeProduct(@Valid Product productToRemove) {
-    // TODO
+    productDAO.deleteById(productToRemove.getId());
     return "redirect:/product-manager";
   }
 
