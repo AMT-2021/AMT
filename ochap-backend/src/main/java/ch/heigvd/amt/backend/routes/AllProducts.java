@@ -25,14 +25,13 @@ public class AllProducts {
   private CategoryDAO categoryDAO;
 
   @GetMapping("/all-products")
-  public String allProduct(Model model, @RequestParam(required = false) String category) {
+  public String allProduct(Model model, @RequestParam(required = false) String categoryId) {
     Optional<List<Product>> hasProducts;
     List<Product> products = new ArrayList<>();
-    if (category != null) {
-      Optional<Category> cat = categoryDAO.getCategoryById(Integer.parseInt(category));
-      if (cat.isPresent()) {
-        products = cat.get().getProducts();
-      }
+    if (categoryId != null) {
+      Category c = categoryDAO.getCategoryById(Integer.parseInt(categoryId)).get();
+      products = c.getProducts();
+
     } else {
       hasProducts = productDAO.getAllProducts();
       if (hasProducts.isPresent()) {
