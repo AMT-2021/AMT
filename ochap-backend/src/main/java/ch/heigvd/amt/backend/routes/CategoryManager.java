@@ -39,7 +39,6 @@ public class CategoryManager {
     return "category-manager";
   }
 
-
   @PostMapping("/category-manager/create")
   public String createCategory(@Valid Category category) {
     Category[] categories = new Category[0];
