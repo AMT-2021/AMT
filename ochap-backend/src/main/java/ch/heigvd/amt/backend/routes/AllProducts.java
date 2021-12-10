@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,15 @@ public class AllProducts {
       }
     }
 
-    Category[] categories = categoryDAO.getAllCategory().get().toArray(new Category[0]);
+    List<Category> categories = categoryDAO.getAllCategory().get();
+    List<Category> catToRemove = new ArrayList<Category>();
+    for (Category c : categories) {
+      if ( productDAO.getProductsByCategoryId(c.getId()).get().size() == 0 ) {
+        catToRemove.add(c);
+      }
+    }
+    categories.removeAll(catToRemove);
+
     model.addAttribute("title", "All Products");
     model.addAttribute("categories", categories);
     model.addAttribute("products", products);
