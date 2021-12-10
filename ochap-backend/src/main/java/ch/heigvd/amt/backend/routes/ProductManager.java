@@ -2,7 +2,6 @@ package ch.heigvd.amt.backend.routes;
 
 import ch.heigvd.amt.backend.entities.Category;
 import ch.heigvd.amt.backend.entities.Product;
-import ch.heigvd.amt.backend.entities.ProductQuantity;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,16 +65,22 @@ public class ProductManager {
   }
 
   @PostMapping("/product-manager/add")
-  public String addProduct(@Valid Product newProduct) {
-    Product p = new Product();
-    productDAO.save(assignProduct(p, newProduct));
+  public String addProduct(@Valid Product newProduct,
+      @RequestParam(value = "categories") int[] categoriesId) {
+    List<Category> categories = new ArrayList<>();
+    for (int id : categoriesId) {
+      Optional<Category> c = categoryDAO.findCategoryById(id);
+      c.ifPresent(categories::add);
+    }
+    newProduct.setCategories(categories);
+    productDAO.save(newProduct);
     return "redirect:/product-manager";
   }
 
   @PostMapping("/product-manager/update")
   public String updateProduct(@RequestBody Product updatedProduct) {
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
-    if (!existingProduct.isEmpty()) {
+    if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
       productDAO.save(assignProduct(p, updatedProduct));
     }
@@ -85,7 +92,7 @@ public class ProductManager {
     p1.setDescription(p2.getDescription());
     p1.setStock(p2.getStock());
     p1.setPrice(p2.getPrice());
-    //p1.setCategory(p2.getCategory());
+    p1.setCategories(p2.getCategories());
     return p1;
   }
 

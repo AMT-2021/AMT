@@ -41,7 +41,7 @@
     <div th:replace="fragments/header :: header"></div>
 
     <!-- Categories -->
-    <div class="p-5" >
+    <div class="p-5">
         <form method="post" th:action="@{/product-manager/add}" th:object="${product}">
             <div class="row">
                 <div class="flex-column">
@@ -74,13 +74,10 @@
                 </div>
                 <div class="flex-column">
                     <p> category </p>
-                    <label>
-                        <select name="category">
-                            <th:block th:field="*{category}" th:each="cat : ${categories}">
-                                <option th:value="${cat.id}" th:text="${cat.name}"></option>
-                            </th:block>
-                        </select>
-                    </label>
+                    <th:block th:each="cat : ${categories}">
+                        <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
+                        <label for="cat" th:text="${cat.name}"></label>
+                    </th:block>
                 </div>
             </div>
             <button type="submit" class="rounded p-1 m-1 alert-danger"> submit</button>
