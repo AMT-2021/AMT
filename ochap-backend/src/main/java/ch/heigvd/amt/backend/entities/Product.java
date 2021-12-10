@@ -3,7 +3,8 @@ package ch.heigvd.amt.backend.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,5 +26,5 @@ public class Product {
   private int stock;
 
   @ManyToMany(mappedBy = "products")
-  private Set<Category> categories;
+  private List<Category> categories = new ArrayList<>();
 }

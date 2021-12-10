@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +52,7 @@ public class ShoppingCartTest {
     p1.setDescription("Fairy Hat");
     p1.setStock(1);
     p1.setPrice(3);
-    p1.setCategories(new HashSet<>(Arrays.asList(c, c2)));
+    p1.setCategories(new ArrayList<>(Arrays.asList(c, c2)));
     productRepository.save(p1);
 
     Product p2 = new Product();
@@ -59,7 +60,7 @@ public class ShoppingCartTest {
     p2.setDescription("Godfather Hat2");
     p2.setStock(1);
     p2.setPrice(3);
-    p2.setCategories(new HashSet<>(List.of(c2)));
+    p2.setCategories(new ArrayList<>(List.of(c2)));
     productRepository.save(p2);
 
     ShoppingCart sC = new ShoppingCart();

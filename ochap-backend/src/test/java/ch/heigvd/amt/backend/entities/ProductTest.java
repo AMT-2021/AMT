@@ -8,9 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Assertions;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootTest
 public class ProductTest {
@@ -30,7 +28,7 @@ public class ProductTest {
     p.setDescription("Godfather Hat");
     p.setStock(1);
     p.setPrice(3);
-    p.setCategories(new HashSet<>());
+    p.setCategories(new ArrayList<>());
     productRepository.save(p);
     Assertions.assertNotNull(p.getId());
     Assertions.assertNotNull(productRepository.getProductById(p.getId()).get().getCategories());
@@ -50,7 +48,7 @@ public class ProductTest {
     p.setDescription("Godfather Hat");
     p.setStock(1);
     p.setPrice(3);
-    HashSet<Category> cats = new HashSet<>();
+    List<Category> cats = new ArrayList<>();
     cats.add(c);
     p.setCategories(cats);
     productRepository.save(p);
@@ -83,7 +81,7 @@ public class ProductTest {
     p.setDescription("Godfather Hat");
     p.setStock(1);
     p.setPrice(3);
-    p.setCategories(new HashSet<>(Arrays.asList(c, c2)));
+    p.setCategories(new ArrayList<>(Arrays.asList(c, c2)));
     p.getCategories().add(c3);
     productRepository.save(p);
     Assertions.assertNotNull(p.getId());
