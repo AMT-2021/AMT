@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>Product</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body class="main-layout">
+
+<div class="wrapper">
+    <div id="content">
+        <div th:replace="fragments/header :: header"></div>
+
+        <main class="container">
+            <p th:if="${error == '1'}" class="alert-danger">This category already exists!</p>
+            <div class="row pb-2 pt-2" style="border-bottom: solid black 1px">
+                <form th:action="@{/category-manager/create}" method="post" th:object="${newCategory}">
+                    <input type="text" required name="name" th:field="*{name}">
+                    <button type="submit" class="btn btn-primary">Create Category</button>
+                </form>
+            </div>
+            <div class="row pb-2 pt-2" th:each="category, itemStat : ${categories}" style="border-bottom: black 1px solid"  th:object="${newCategory}">
+                <p class="col-2" th:text="${categories[__${itemStat.index}__].id}"></p>
+                <p class="col-9" th:text="${categories[__${itemStat.index}__].name}"></p>
+                <div class="col-1">
+                    <form method="post" th:action="@{/category-manager/remove}">
+                        <input type="hidden" name="id" id="id" th:value="${categories[__${itemStat.index}__].id}"/>
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+
+                </div>
+            </div>
+        </main>
+        <!--  footer -->
+        <div th:replace="fragments/footer :: footer"></div>
+        <!-- end footer -->
+
+    </div>
+</div>
+</body>
+
+</html>
