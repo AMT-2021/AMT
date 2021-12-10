@@ -51,7 +51,7 @@ public class ProductManager {
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
     model.addAttribute("product", new Product());
-    model.addAttribute("route","add");
+    model.addAttribute("route", "add");
     return "product-form";
   }
 
@@ -60,19 +60,20 @@ public class ProductManager {
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
     model.addAttribute("product", product);
-    model.addAttribute("route","update");
+    model.addAttribute("route", "update");
     return "product-form";
   }
 
-  //TODO: Do all operations between Product and Category from the Category table
+  // TODO: Do all operations between Product and Category from the Category table
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
       @RequestParam(value = "categories") int[] categoriesId) {
     List<Category> categories = new ArrayList<>();
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
-     /* c.ifPresent(categories::add);
-      newProduct.setCategories(categories);*/
+      /*
+       * c.ifPresent(categories::add); newProduct.setCategories(categories);
+       */
       c.ifPresent(cat -> newProduct.getCategories().add(cat));
     }
     productDAO.save(newProduct);
