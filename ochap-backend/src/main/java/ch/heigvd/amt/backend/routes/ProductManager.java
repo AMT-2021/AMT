@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -21,10 +20,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+
+// TODO : remove images when update or delete, show image name when product already have image, put
+// default template
+// when no image selected
 
 @Controller
 public class ProductManager {
@@ -82,6 +85,7 @@ public class ProductManager {
         return "redirect:/product-add-form?error=1";
       }
     }
+
     String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
     newProduct.setImageRef(fileName);
     Product p = productDAO.save(newProduct);
@@ -93,6 +97,7 @@ public class ProductManager {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
       c.ifPresent(cat -> {
@@ -120,7 +125,8 @@ public class ProductManager {
   }
 
   @PostMapping("/product-manager/update")
-  public String updateProduct(@Valid Product updatedProduct) {
+  public String updateProduct(@Valid Product updatedProduct,
+      @RequestParam(required = false, value = "file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
       if (p.getName().equals(updatedProduct.getName())
@@ -128,9 +134,22 @@ public class ProductManager {
         return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
       }
     }
+
+    String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
+
+      // save image and save path in product
+      p.setImageRef(fileName);
+      String uploadDir = "uploads/" + p.getId();
+      try {
+        saveFile(uploadDir, fileName, file);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
       productDAO.save(assignProduct(p, updatedProduct));
 
       // Clear the product of all categories
