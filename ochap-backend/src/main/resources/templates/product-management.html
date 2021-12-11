@@ -48,37 +48,10 @@
                     <p class="col-2">price</p>
                 </div>
                 <div th:each="p : ${products}" class="row">
-                    <!--
-                    <form class="row d-flex justify-content-between align-items-center" method="post" th:action="@{/product-update-form}" th:object="${p}" >
-                        <label hidden>
-                            <input name="name" th:field="*{name}" th:value="${p.name}" type="value"/>
-                        </label>
-                        <label hidden>
-                            <input name="description" th:field="*{description}" th:value="${p.description}" type="value"/>
-                        </label>
-                        <label hidden>
-                            <input name="stock" th:field="*{stock}" th:value="${p.stock}" type="value"/>
-                        </label>
-                        <label hidden>
-                            <input name="price" th:field="*{price}" th:value="${p.price}" type="value"/>
-                        </label>
-                        <label hidden>
-                            <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
-                        </label>
--->
                         <p th:text=" ${p.name} " class="col-2"></p>
                         <p th:text=" ${p.description} "  class="col-2"></p>
                         <p th:text=" ${p.stock} "  class="col-2"></p>
                         <p th:text=" ${p.price} "  class="col-2"></p>
-                    <!--
-                        <label th:text=" ${p.name} " ></label>
-                        <label th:text=" ${p.description} " ></label>
-                        <label th:text=" ${p.stock} " ></label>
-                        <label th:text=" ${p.price} " ></label>
-
-                        <button type="submit" > update </button>
-                    </form>
-                    -->
                     <div class="col-2">
                         <a th:href="@{/product-update-form(id=${p.id})}" class="btn btn-primary">Update</a>
                     </div>
