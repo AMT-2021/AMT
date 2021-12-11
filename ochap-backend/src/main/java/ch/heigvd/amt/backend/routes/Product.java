@@ -13,10 +13,11 @@ public class Product {
   private ProductDAO productDAO;
 
   @GetMapping("/products/{id}")
-  public String basicTemplate(Model model, @PathVariable int id) {
+  public String viewProduct(Model model, @PathVariable int id) {
     var product = productDAO.getProductById(id).orElse(null);
 
     model.addAttribute("product", product);
+    model.addAttribute("quantity", 1);
     model.addAttribute("image", "/icon/p1.png");
     return "product";
   }

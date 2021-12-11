@@ -24,12 +24,29 @@
     grid-row: 3;
 }
 .product .product-add-to-shopping-cart {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    row-gap: 16px;
+}
+.product .product-add-to-shopping-cart .product-quantity-label {
+    grid-column: 1;
+    grid-row: 1;
+}
+.product .product-add-to-shopping-cart .product-quantity {
+    grid-column: 2;
+    grid-row: 1;
+}
+.product .product-add-to-shopping-cart .product-submit {
     background: #ee3e0f;
+    border: 0 solid transparent;
     color: #fff;
     cursor: pointer;
+    grid-column: 1 / span 2;
+    grid-row: 2;
     padding: 7px 26px;
 }
-.product .product-add-to-shopping-cart:hover {
+.product .product-add-to-shopping-cart .product-submit:hover {
     background: #fff;
     border-radius: 20px;
     color: #000;
