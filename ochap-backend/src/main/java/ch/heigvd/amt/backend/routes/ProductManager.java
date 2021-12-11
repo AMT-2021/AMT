@@ -75,14 +75,13 @@ public class ProductManager {
 
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
-      @RequestParam("categories") int[] categoriesId, @RequestParam("file") MultipartFile file) {
+      @RequestParam(value = "categories") int[] categoriesId, @RequestParam("file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
       if (p.getName().equals(newProduct.getName())) {
         return "redirect:/product-add-form?error=1";
       }
     }
-
     String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
     newProduct.setImageRef(fileName);
     Product p = productDAO.save(newProduct);
