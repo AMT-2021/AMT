@@ -50,7 +50,8 @@ public class ProductManager {
   }
 
   @GetMapping("/product-update-form")
-  public String updateProductForm(Model model, @RequestParam String id, @RequestParam(required = false) String error) {
+  public String updateProductForm(Model model, @RequestParam String id,
+      @RequestParam(required = false) String error) {
     Product product = productDAO.getProductById(Integer.parseInt(id)).get();
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
