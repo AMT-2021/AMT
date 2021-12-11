@@ -78,7 +78,8 @@ public class ProductManager {
 
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
-      @RequestParam(value = "categories") int[] categoriesId, @RequestParam("file") MultipartFile file) {
+      @RequestParam(value = "categories") int[] categoriesId,
+      @RequestParam("file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
       if (p.getName().equals(newProduct.getName())) {
@@ -108,8 +109,7 @@ public class ProductManager {
     return "redirect:/product-manager";
   }
 
-  void saveFile(String uploadDir, String fileName,
-                MultipartFile multipartFile) throws IOException {
+  void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
     Path uploadPath = Paths.get(uploadDir);
 
     if (!Files.exists(uploadPath)) {
