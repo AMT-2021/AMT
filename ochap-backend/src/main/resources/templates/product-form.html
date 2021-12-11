@@ -69,7 +69,7 @@
                     <div class="flex-column">
                         <p> name </p>
                         <label>
-                            <input name="name" th:field="*{name}" th:value="${product.name}" th:attrappend="disabled=${route == update}?true">
+                            <input name="name" th:field="*{name}" th:value="${product.name}" th:attrappend="disabled=${route == update}?true" required>
                         </label>
                     </div>
                     <div class="flex-column">
@@ -88,7 +88,7 @@
                     <div class="flex-column">
                         <p> stock </p>
                         <label>
-                            <input name="stock" th:field="*{stock}" th:value="${product.stock}">
+                            <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
                         </label>
                     </div>
                     <label hidden>
