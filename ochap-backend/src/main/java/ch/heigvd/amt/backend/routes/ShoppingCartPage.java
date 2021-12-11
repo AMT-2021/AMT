@@ -51,7 +51,7 @@ public class ShoppingCartPage {
   }
 
   @PostMapping(path = "/shopping-cart/add",
-          consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+      consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
   public String addProduct(@RequestParam Map<String, String> productQuantityToAdd) {
     int clientId = 2;
     int id = Integer.parseInt(productQuantityToAdd.get("id"));
@@ -78,7 +78,7 @@ public class ShoppingCartPage {
     }
 
     if (quantity > 0
-            && productQuantity.getProduct().getStock() > quantity + productQuantity.getQuantity()) {
+        && productQuantity.getProduct().getStock() > quantity + productQuantity.getQuantity()) {
       productQuantity.setQuantity(productQuantity.getQuantity() + quantity);
       productQuantityDAO.save(productQuantity);
       shoppingCartDAO.save(cart);
@@ -89,7 +89,7 @@ public class ShoppingCartPage {
   @PostMapping(path = "/shopping-cart/update")
   public String updateProduct(@Valid ProductQuantity updatedProduct) {
     Optional<ProductQuantity> pQ =
-            productQuantityDAO.getProductQuantityById(updatedProduct.getId());
+        productQuantityDAO.getProductQuantityById(updatedProduct.getId());
     if (pQ.isEmpty()) {
       return "redirect:/shopping-cart";
     }
