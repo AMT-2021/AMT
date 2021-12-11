@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
@@ -21,16 +20,14 @@ import java.util.Optional;
  * routes pour : - affichage de tous les produits (GET) - btn update, delete, add qui redirige sur
  * les bons trucs - affichage update (GET) - affichage add (même template que update) (GET) - une
  * route pour modif d'un produit (POST) - une route pour add (POST) - une route pour delete (POST)
- * 
+ *
  */
 
 @Controller
 public class ProductManager {
-  @Autowired
-  private ProductDAO productDAO;
+  @Autowired private ProductDAO productDAO;
 
-  @Autowired
-  private CategoryDAO categoryDAO;
+  @Autowired private CategoryDAO categoryDAO;
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
@@ -66,17 +63,21 @@ public class ProductManager {
 
   // TODO: Do all operations between Product and Category from the Category table
   @PostMapping("/product-manager/add")
-  public String addProduct(@Valid Product newProduct,
-      @RequestParam(value = "categories") int[] categoriesId) {
+  public String addProduct(
+      @Valid Product newProduct, @RequestParam(value = "categories") int[] categoriesId) {
     List<Category> categories = new ArrayList<>();
+    productDAO.save(newProduct);
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
       /*
        * c.ifPresent(categories::add); newProduct.setCategories(categories);
        */
-      c.ifPresent(cat -> newProduct.getCategories().add(cat));
+      c.ifPresent(
+          cat -> {
+            cat.getProducts().add(newProduct);
+            categoryDAO.save(cat);
+          });
     }
-    productDAO.save(newProduct);
     return "redirect:/product-manager";
   }
 
@@ -86,6 +87,18 @@ public class ProductManager {
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
       productDAO.save(assignProduct(p, updatedProduct));
+
+      // Clear the product of all categories
+      for (Category existingCat : p.getCategories()) {
+        existingCat.getProducts().remove(p);
+        categoryDAO.save(existingCat);
+      }
+
+      // add news
+      for (Category newCat : updatedProduct.getCategories()) {
+        newCat.getProducts().add(p);
+        categoryDAO.save(newCat);
+      }
     }
     return "redirect:/product-manager";
   }
@@ -95,15 +108,20 @@ public class ProductManager {
     p1.setDescription(p2.getDescription());
     p1.setStock(p2.getStock());
     p1.setPrice(p2.getPrice());
-    List<Category> categories = p2.getCategories();
-    p1.setCategories(p2.getCategories());
     return p1;
   }
 
   @PostMapping(path = "/product-manager/remove")
   public String removeProduct(@Valid Product productToRemove) {
-    productDAO.deleteById(productToRemove.getId());
+    Optional<Product> existingProduct = productDAO.getProductById(productToRemove.getId());
+    if (existingProduct.isPresent()) {
+      Product p = existingProduct.get();
+      for (Category existingCat : p.getCategories()) {
+        existingCat.getProducts().remove(p);
+        categoryDAO.save(existingCat);
+      }
+      productDAO.deleteById(p.getId());
+    }
     return "redirect:/product-manager";
   }
-
 }
