@@ -122,6 +122,13 @@ public class ShoppingCartPage {
 
   private void removeOneProduct(@Valid ProductQuantity item) {
     Optional<ProductQuantity> pQ = productQuantityDAO.getProductQuantityById(item.getId());
-    pQ.ifPresent(productQuantity -> productQuantityDAO.delete(productQuantity));
+    pQ.ifPresent(productQuantity -> {
+      int clientId = 2;
+      ShoppingCart cart = getShoppingCartByClientId(clientId);
+      List<ProductQuantity> products = cart.getProducts();
+      products.removeIf(p -> p.getId().equals(item.getId()));
+      cart.setProducts(products);
+      productQuantityDAO.delete(productQuantity);
+    });
   }
 }
