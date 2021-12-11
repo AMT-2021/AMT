@@ -88,7 +88,8 @@ public class ProductManager {
   public String updateProduct(@Valid Product updatedProduct) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
-      if (p.getName().equals(updatedProduct.getName()) && !p.getId().equals(updatedProduct.getId())) {
+      if (p.getName().equals(updatedProduct.getName())
+          && !p.getId().equals(updatedProduct.getId())) {
         return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
       }
     }
