@@ -20,126 +20,99 @@
     <link rel="stylesheet" href="css/responsive.css">
     <!-- fevicon -->
     <link rel="icon" href="images/fevicon.png" type="image/gif"/>
-    <!-- Scrollbar Custom CSS -->
-    <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-    <!-- Tweaks for older IEs-->
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
-          media="screen">
 </head>
-<!-- body -->
 
 <body class="main-layout">
-<!-- loader  -->
-<div class="loader_bg">
-    <div class="loader"><img src="images/loading.gif" alt="#"/></div>
+
+<!-- end loader -->
+<div class="sidebar">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <div id="dismiss">
+            <i class="fa fa-arrow-left"></i>
+        </div>
+
+        <ul class="list-unstyled components">
+
+            <li class="active">
+                <a href="index.html">Home</a>
+            </li>
+            <li>
+                <a href="#brand">Brands</a>
+            </li>
+            <li>
+                <a href="#shoes">Shoes</a>
+            </li>
+            <li>
+                <a href="#jewellery">Jewellery</a>
+            </li>
+            <li>
+                <a href="#kids">Kids and Babies</a>
+            </li>
+        </ul>
+
+    </nav>
 </div>
 
+<div class="wrapper">
 
-<div id="content">
-    <!-- header -->
-    <div th:replace="fragments/header :: header"></div>
+    <div id="content">
+        <!-- header -->
+        <div th:replace="fragments/header :: header"></div>
 
-    <!-- Categories -->
-    <div class="p-5">
+        <!-- Categories -->
+        <div class="p-5">
 
-        <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"> <!--  -->
-            <div class="row">
-                <div class="flex-column">
-                    <p> name </p>
-                    <label>
-                        <input name="name" th:field="*{name}" th:value="${product.name}">
+            <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"> <!--  -->
+                <div class="row">
+                    <div class="flex-column">
+                        <p> name </p>
+                        <label>
+                            <input name="name" th:field="*{name}" th:value="${product.name}">
+                        </label>
+                    </div>
+                    <div class="flex-column">
+                        <p> description </p>
+                        <label>
+                            <input name="description" th:field="*{description}" required
+                                   th:value="${product.description}">
+                        </label>
+                    </div>
+                    <div class="flex-column">
+                        <p> price </p>
+                        <label>
+                            <input name="price " th:field="*{price}" required th:value="${product.price}">
+                        </label>
+                    </div>
+                    <div class="flex-column">
+                        <p> stock </p>
+                        <label>
+                            <input name="stock" th:field="*{stock}" th:value="${product.stock}">
+                        </label>
+                    </div>
+                    <label hidden>
+                        <input name="id" th:field="*{id}" th:value="${product.id}">
                     </label>
+                    <div class="flex-column">
+                        <p> image </p>
+                        <p> coming soon... </p>
+                    </div>
+                    <div class="flex-column">
+                        <p> category </p>
+                        <th:block th:each="cat : ${categories}">
+                            <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
+                            <label for="cat" th:text="${cat.name}"></label>
+                        </th:block>
+                    </div>
                 </div>
-                <div class="flex-column">
-                    <p> description </p>
-                    <label>
-                        <input name="description" th:field="*{description}" required th:value="${product.description}">
-                    </label>
-                </div>
-                <div class="flex-column">
-                    <p> price </p>
-                    <label>
-                        <input name="price " th:field="*{price}" required th:value="${product.price}">
-                    </label>
-                </div>
-                <div class="flex-column">
-                    <p> stock </p>
-                    <label>
-                        <input name="stock" th:field="*{stock}" th:value="${product.stock}">
-                    </label>
-                </div>
-                <label hidden>
-                    <input name="id" th:field="*{id}" th:value="${product.id}">
-                </label>
-                <div class="flex-column">
-                    <p> image </p>
-                    <p> coming soon... </p>
-                </div>
-                <div class="flex-column">
-                    <p> category </p>
-                    <th:block th:each="cat : ${categories}">
-                        <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
-                        <label for="cat" th:text="${cat.name}"></label>
-                    </th:block>
-                </div>
-            </div>
-            <button type="submit" class="rounded p-1 m-1 alert-danger"> submit</button>
-        </form>
+                <button type="submit" class="rounded p-1 m-1 alert-danger"> submit</button>
+            </form>
+        </div>
+
+        <!--  footer -->
+        <div th:replace="fragments/footer :: footer"></div>
+        <!-- end footer -->
     </div>
-
-    <!--  footer -->
-    <div th:replace="fragments/footer :: footer"></div>
-    <!-- end footer -->
-
 </div>
-
-<div class="overlay"></div>
-
-<!-- Javascript files-->
-<script src="js/jquery.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/jquery-3.0.0.min.js"></script>
-
-<!-- sidebar -->
-<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="js/custom.js"></script>
-<script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#sidebar").mCustomScrollbar({
-            theme: "minimal"
-        });
-
-        $('#dismiss, .overlay').on('click', function () {
-            $('#sidebar').removeClass('active');
-            $('.overlay').removeClass('active');
-        });
-
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').addClass('active');
-            $('.overlay').addClass('active');
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        $(".fancybox").fancybox({
-            openEffect: "none",
-            closeEffect: "none"
-        });
-
-        $(".zoom").hover(function () {
-
-            $(this).addClass('transition');
-        }, function () {
-
-            $(this).removeClass('transition');
-        });
-    });
-</script>
 </body>
