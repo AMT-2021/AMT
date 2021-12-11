@@ -94,7 +94,6 @@ public class ProductManager {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
       c.ifPresent(cat -> {
