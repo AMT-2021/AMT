@@ -28,6 +28,13 @@ public class Product {
   @Column
   private String imageRef;
 
+  @Transient
+  public String getImageRef() {
+    if (imageRef == null || id == null) return null;
+
+    return "/uploads/" + id + "/" + imageRef;
+  }
+
   @ManyToMany(mappedBy = "products")
   private List<Category> categories = new ArrayList<>();
 }
