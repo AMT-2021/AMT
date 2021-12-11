@@ -3,7 +3,7 @@ package ch.heigvd.amt.backend.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,5 +16,5 @@ public class ShoppingCart {
   private Integer clientId;
 
   @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private Set<ProductQuantity> products;
+  private List<ProductQuantity> products;
 }

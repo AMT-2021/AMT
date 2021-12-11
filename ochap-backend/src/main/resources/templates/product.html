@@ -17,19 +17,22 @@
     <div id="content">
         <div th:replace="fragments/header :: header"></div>
 
-        <main th:if="${product ne null}">
-            <article th:object="${product}" class="product">
-                <h1 th:text="*{name}"></h1>
-                <img alt="Product image" th:src="${image}" />
-                <p class="product-price">CHF <th:block th:text="*{price}"></th:block></p>
-                <form class="newtetter">
-                    <button class="product-add-to-shopping-cart">Add to shopping cart</button>
-                </form>
-                <p class="product-description" th:text="*{description}"></p>
-            </article>
-        </main>
-        <main th:if="${product == null}">
-            <h1>The product you are looking for could not be found</h1>
+        <main>
+            <form th:action="@{/shopping-cart/add}" th:if="${product ne null}" method="post" th:object="${product}">
+                <article class="product">
+                    <input name="id" type="hidden" th:value="*{id}" />
+                    <h1 class="product-name" th:text="*{name}"></h1>
+                    <img alt="Product image" th:src="${image}" />
+                    <p class="product-price">CHF <th:block th:text="*{price}" /></p>
+                    <section class="product-add-to-shopping-cart">
+                        <label class="product-quantity-label" for="product-quantity">Quantity</label>
+                        <input th:disabled="*{stock == 0}" id="product-quantity" th:max="*{stock}" min="1" name="quantity" type="number" th:value="${quantity}" />
+                        <input class="product-submit" type="submit" value="Add to shopping cart"/>
+                    </section>
+                    <p class="product-description" th:text="*{description}"></p>
+                </article>
+            </form>
+            <h1 th:if="${product == null}">The product you are looking for could not be found</h1>
         </main>
 
         <!--  footer -->
@@ -125,6 +128,14 @@
         <!-- end footer -->
 
     </div>
+
+    <div class="overlay"></div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.0.0.min.js"></script>
+    <script src="/js/custom.js"></script>
 </div>
 </body>
 
