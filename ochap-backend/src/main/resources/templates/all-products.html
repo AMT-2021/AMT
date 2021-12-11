@@ -49,16 +49,17 @@
                         <div class="brand-box">
                             <i> <img src="icon/p1.png"/> </i>
                             <h4 th:text="${product.name}"></h4>
-                            <h4>Price: CHF <span th:text="${product.price}"></span></h4>
+                            <h4 th:if="${product.price != null}">Price: CHF <span th:text="${product.price}"></span></h4>
+                            <h4 th:unless="${product.price != null}">Not to Sale</h4>
                             <h4>In stock: <span th:text="${product.stock}"></span></h4>
                         </div>
                         <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
-                        <a class="buynow" href="#">Add to Cart</a>
+                        <a class="buynow" href="#" th:if="${product.stock > 0 && product.price != null}">Add to Cart</a>
+                        <h4 th:unless="${product.stock > 0 && product.price != null}" class="mt-5" style="text-align: center">Unavailable</h4>
                     </div>
                 </div>
                 <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
             </div>
-            <a class="seemore" href="#">See more</a>
             <!-- end news brand -->
         </div>
     </div>

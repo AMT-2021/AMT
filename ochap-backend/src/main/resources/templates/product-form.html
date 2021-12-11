@@ -63,13 +63,13 @@
 
         <!-- Categories -->
         <div class="p-5">
-
+            <p th:if="${error == '1'}" class="alert-danger">A product has this name!</p>
             <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"> <!--  -->
                 <div class="row">
                     <div class="flex-column">
                         <p> name </p>
                         <label>
-                            <input name="name" th:field="*{name}" th:value="${product.name}">
+                            <input name="name" th:field="*{name}" th:value="${product.name}" th:attrappend="disabled=${route == update}?true" required>
                         </label>
                     </div>
                     <div class="flex-column">
@@ -82,13 +82,13 @@
                     <div class="flex-column">
                         <p> price </p>
                         <label>
-                            <input name="price " th:field="*{price}" required th:value="${product.price}">
+                            <input name="price " th:field="*{price}" th:value="${product.price}">
                         </label>
                     </div>
                     <div class="flex-column">
                         <p> stock </p>
                         <label>
-                            <input name="stock" th:field="*{stock}" th:value="${product.stock}">
+                            <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
                         </label>
                     </div>
                     <label hidden>

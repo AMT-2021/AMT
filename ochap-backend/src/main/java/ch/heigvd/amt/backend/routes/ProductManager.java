@@ -38,18 +38,26 @@ public class ProductManager {
   }
 
   @GetMapping("/product-add-form")
-  public String addProductForm(Model model) {
+  public String addProductForm(Model model, @RequestParam(required = false) String error) {
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
+    if (error != null) {
+      model.addAttribute("error", error);
+    }
     model.addAttribute("product", new Product());
     model.addAttribute("route", "add");
     return "product-form";
   }
 
-  @PostMapping("/product-update-form")
-  public String updateProductForm(Model model, @Valid Product product) {
+  @GetMapping("/product-update-form")
+  public String updateProductForm(Model model, @RequestParam String id,
+      @RequestParam(required = false) String error) {
+    Product product = productDAO.getProductById(Integer.parseInt(id)).get();
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
+    if (error != null) {
+      model.addAttribute("error", error);
+    }
     model.addAttribute("product", product);
     model.addAttribute("route", "update");
     return "product-form";
@@ -58,6 +66,12 @@ public class ProductManager {
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
       @RequestParam(value = "categories") int[] categoriesId) {
+    List<Product> allProducts = productDAO.getAllProducts().get();
+    for (Product p : allProducts) {
+      if (p.getName().equals(newProduct.getName())) {
+        return "redirect:/product-add-form?error=1";
+      }
+    }
     List<Category> categories = new ArrayList<>();
     productDAO.save(newProduct);
     for (int id : categoriesId) {
@@ -72,6 +86,13 @@ public class ProductManager {
 
   @PostMapping("/product-manager/update")
   public String updateProduct(@Valid Product updatedProduct) {
+    List<Product> allProducts = productDAO.getAllProducts().get();
+    for (Product p : allProducts) {
+      if (p.getName().equals(updatedProduct.getName())
+          && !p.getId().equals(updatedProduct.getId())) {
+        return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
+      }
+    }
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
