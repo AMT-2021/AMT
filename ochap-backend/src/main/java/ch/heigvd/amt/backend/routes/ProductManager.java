@@ -25,9 +25,11 @@ import java.util.Optional;
 
 @Controller
 public class ProductManager {
-  @Autowired private ProductDAO productDAO;
+  @Autowired
+  private ProductDAO productDAO;
 
-  @Autowired private CategoryDAO categoryDAO;
+  @Autowired
+  private CategoryDAO categoryDAO;
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
@@ -63,8 +65,8 @@ public class ProductManager {
 
   // TODO: Do all operations between Product and Category from the Category table
   @PostMapping("/product-manager/add")
-  public String addProduct(
-      @Valid Product newProduct, @RequestParam(value = "categories") int[] categoriesId) {
+  public String addProduct(@Valid Product newProduct,
+      @RequestParam(value = "categories") int[] categoriesId) {
     List<Category> categories = new ArrayList<>();
     productDAO.save(newProduct);
     for (int id : categoriesId) {
@@ -72,11 +74,10 @@ public class ProductManager {
       /*
        * c.ifPresent(categories::add); newProduct.setCategories(categories);
        */
-      c.ifPresent(
-          cat -> {
-            cat.getProducts().add(newProduct);
-            categoryDAO.save(cat);
-          });
+      c.ifPresent(cat -> {
+        cat.getProducts().add(newProduct);
+        categoryDAO.save(cat);
+      });
     }
     return "redirect:/product-manager";
   }
