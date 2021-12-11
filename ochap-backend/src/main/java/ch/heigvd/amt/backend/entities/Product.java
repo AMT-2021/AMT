@@ -25,6 +25,9 @@ public class Product {
   @Column(nullable = false)
   private int stock;
 
+  @Column
+  private String imageRef;
+
   @ManyToMany(mappedBy = "products")
   private List<Category> categories = new ArrayList<>();
 }
