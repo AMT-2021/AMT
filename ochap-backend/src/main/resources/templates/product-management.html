@@ -39,9 +39,16 @@
             </div>
             <div class="col">
                 <form method="get" th:action="@{/product-add-form}">
-                    <button type="submit" > add </button>
+                    <button type="submit" class="btn btn-primary"> Add Product</button>
                 </form>
-                <div th:each="p : ${products}">
+                <div class="row mb-2 pb-2 mt-4" style="border-bottom: black 1px solid">
+                    <p class="col-2">Name</p>
+                    <p class="col-2">description</p>
+                    <p class="col-2">stock</p>
+                    <p class="col-2">price</p>
+                </div>
+                <div th:each="p : ${products}" class="row">
+                    <!--
                     <form class="row d-flex justify-content-between align-items-center" method="post" th:action="@{/product-update-form}" th:object="${p}" >
                         <label hidden>
                             <input name="name" th:field="*{name}" th:value="${p.name}" type="value"/>
@@ -58,7 +65,12 @@
                         <label hidden>
                             <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
                         </label>
-
+-->
+                        <p th:text=" ${p.name} " class="col-2"></p>
+                        <p th:text=" ${p.description} "  class="col-2"></p>
+                        <p th:text=" ${p.stock} "  class="col-2"></p>
+                        <p th:text=" ${p.price} "  class="col-2"></p>
+                    <!--
                         <label th:text=" ${p.name} " ></label>
                         <label th:text=" ${p.description} " ></label>
                         <label th:text=" ${p.stock} " ></label>
@@ -66,12 +78,18 @@
 
                         <button type="submit" > update </button>
                     </form>
-                    <form method="post" th:action="@{/product-manager/remove}" th:object="${p}">
-                        <label hidden>
-                            <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
-                        </label>
-                        <button type="submit" > remove </button>
-                    </form>
+                    -->
+                    <div class="col-2">
+                        <a th:href="@{/product-update-form(id=${p.id})}" class="btn btn-primary">Update</a>
+                    </div>
+                    <div class="col-2">
+                        <form method="post" th:action="@{/product-manager/remove}" th:object="${p}">
+                            <label hidden>
+                                <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
+                            </label>
+                            <button type="submit" class="btn btn-primary"> remove </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

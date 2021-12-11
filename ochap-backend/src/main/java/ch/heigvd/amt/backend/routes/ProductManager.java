@@ -49,10 +49,14 @@ public class ProductManager {
     return "product-form";
   }
 
-  @PostMapping("/product-update-form")
-  public String updateProductForm(Model model, @Valid Product product) {
+  @GetMapping("/product-update-form")
+  public String updateProductForm(Model model, @RequestParam String id, @RequestParam(required = false) String error) {
+    Product product = productDAO.getProductById(Integer.parseInt(id)).get();
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
+    if (error != null) {
+      model.addAttribute("error", error);
+    }
     model.addAttribute("product", product);
     model.addAttribute("route", "update");
     return "product-form";
@@ -81,6 +85,12 @@ public class ProductManager {
 
   @PostMapping("/product-manager/update")
   public String updateProduct(@Valid Product updatedProduct) {
+    List<Product> allProducts = productDAO.getAllProducts().get();
+    for (Product p : allProducts) {
+      if (p.getName().equals(updatedProduct.getName())) {
+        return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
+      }
+    }
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
