@@ -16,13 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/*
- * routes pour : - affichage de tous les produits (GET) - btn update, delete, add qui redirige sur
- * les bons trucs - affichage update (GET) - affichage add (même template que update) (GET) - une
- * route pour modif d'un produit (POST) - une route pour add (POST) - une route pour delete (POST)
- *
- */
-
 @Controller
 public class ProductManager {
   @Autowired
@@ -33,7 +26,6 @@ public class ProductManager {
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
-    // TODO
     Optional<List<Product>> hasProducts;
     Product[] products = new Product[] {};
 
@@ -63,7 +55,6 @@ public class ProductManager {
     return "product-form";
   }
 
-  // TODO: Do all operations between Product and Category from the Category table
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
       @RequestParam(value = "categories") int[] categoriesId) {
@@ -71,9 +62,6 @@ public class ProductManager {
     productDAO.save(newProduct);
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
-      /*
-       * c.ifPresent(categories::add); newProduct.setCategories(categories);
-       */
       c.ifPresent(cat -> {
         cat.getProducts().add(newProduct);
         categoryDAO.save(cat);
