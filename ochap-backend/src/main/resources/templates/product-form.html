@@ -64,7 +64,7 @@
         <!-- Categories -->
         <div class="p-5">
             <p th:if="${error == '1'}" class="alert-danger">A product has this name!</p>
-            <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"> <!--  -->
+            <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}" enctype="multipart/form-data"> <!--  -->
                 <div class="row">
                     <div class="flex-column">
                         <p> name </p>
@@ -96,7 +96,7 @@
                     </label>
                     <div class="flex-column">
                         <p> image </p>
-                        <p> coming soon... </p>
+                        <input type="file" name="file" class="form-control-file">
                     </div>
                     <div class="flex-column">
                         <p> category </p>

@@ -25,6 +25,17 @@ public class Product {
   @Column(nullable = false)
   private int stock;
 
+  @Column
+  private String imageRef;
+
+  @Transient
+  public String getImageRef() {
+    if (imageRef == null || id == null || imageRef.equals("default.png"))
+      return "/uploads/default.png";
+
+    return "/uploads/" + id + "/" + imageRef;
+  }
+
   @ManyToMany(mappedBy = "products")
   private List<Category> categories = new ArrayList<>();
 }

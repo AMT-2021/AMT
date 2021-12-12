@@ -7,13 +7,21 @@ import ch.heigvd.amt.backend.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -65,15 +73,32 @@ public class ProductManager {
 
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
-      @RequestParam(value = "categories") int[] categoriesId) {
+      @RequestParam(value = "categories") int[] categoriesId,
+      @RequestParam("file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
       if (p.getName().equals(newProduct.getName())) {
         return "redirect:/product-add-form?error=1";
       }
     }
-    List<Category> categories = new ArrayList<>();
-    productDAO.save(newProduct);
+
+    if (!file.isEmpty()) {
+      String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+      newProduct.setImageRef(fileName);
+      Product p = productDAO.save(newProduct);
+
+      String uploadDir = "uploads/" + p.getId();
+
+      try {
+        saveFile(uploadDir, fileName, file);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    } else {
+      newProduct.setImageRef("default.png");
+      productDAO.save(newProduct);
+    }
+
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
       c.ifPresent(cat -> {
@@ -84,8 +109,24 @@ public class ProductManager {
     return "redirect:/product-manager";
   }
 
+  void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
+    Path uploadPath = Paths.get(uploadDir);
+
+    if (!Files.exists(uploadPath)) {
+      Files.createDirectories(uploadPath);
+    }
+
+    try (InputStream inputStream = multipartFile.getInputStream()) {
+      Path filePath = uploadPath.resolve(fileName);
+      Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException ioe) {
+      throw new IOException("Could not save image file: " + fileName, ioe);
+    }
+  }
+
   @PostMapping("/product-manager/update")
-  public String updateProduct(@Valid Product updatedProduct) {
+  public String updateProduct(@Valid Product updatedProduct,
+      @RequestParam(required = false, value = "file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
       if (p.getName().equals(updatedProduct.getName())
@@ -93,9 +134,25 @@ public class ProductManager {
         return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
       }
     }
+
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
+
+      // save image and save path in product
+      if (!file.isEmpty()) {
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        p.setImageRef(fileName);
+        String uploadDir = "uploads/" + p.getId();
+        try {
+          saveFile(uploadDir, fileName, file);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        p.setImageRef("default.png");
+      }
+
       productDAO.save(assignProduct(p, updatedProduct));
 
       // Clear the product of all categories
