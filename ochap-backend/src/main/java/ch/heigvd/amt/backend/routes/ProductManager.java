@@ -26,9 +26,11 @@ import java.util.Optional;
 
 @Controller
 public class ProductManager {
-  @Autowired private ProductDAO productDAO;
+  @Autowired
+  private ProductDAO productDAO;
 
-  @Autowired private CategoryDAO categoryDAO;
+  @Autowired
+  private CategoryDAO categoryDAO;
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
@@ -56,8 +58,8 @@ public class ProductManager {
   }
 
   @GetMapping("/product-update-form")
-  public String updateProductForm(
-      Model model, @RequestParam String id, @RequestParam(required = false) String error) {
+  public String updateProductForm(Model model, @RequestParam String id,
+      @RequestParam(required = false) String error) {
     Product product = productDAO.getProductById(Integer.parseInt(id)).get();
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
@@ -70,8 +72,7 @@ public class ProductManager {
   }
 
   @PostMapping("/product-manager/add")
-  public String addProduct(
-      @Valid Product newProduct,
+  public String addProduct(@Valid Product newProduct,
       @RequestParam(value = "categories") int[] categoriesId,
       @RequestParam("file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
@@ -93,18 +94,17 @@ public class ProductManager {
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }  else {
+    } else {
       newProduct.setImageRef("default.png");
       productDAO.save(newProduct);
     }
 
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
-      c.ifPresent(
-          cat -> {
-            cat.getProducts().add(newProduct);
-            categoryDAO.save(cat);
-          });
+      c.ifPresent(cat -> {
+        cat.getProducts().add(newProduct);
+        categoryDAO.save(cat);
+      });
     }
     return "redirect:/product-manager";
   }
@@ -125,8 +125,7 @@ public class ProductManager {
   }
 
   @PostMapping("/product-manager/update")
-  public String updateProduct(
-      @Valid Product updatedProduct,
+  public String updateProduct(@Valid Product updatedProduct,
       @RequestParam(required = false, value = "file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
