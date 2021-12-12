@@ -31,7 +31,7 @@ public class Product {
   @Transient
   public String getImageRef() {
     if (imageRef == null || id == null)
-      return null;
+      return "/uploads/default.png";
 
     return "/uploads/" + id + "/" + imageRef;
   }
