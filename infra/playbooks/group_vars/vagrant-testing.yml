@@ -1,0 +1,10 @@
+---
+# Vagrant host keys are lost everytime they are destroyed.
+# No host key verification is acceptable since this is a local connection
+ansible_ssh_common_args: >-
+  -o UserKnownHostsFile=/dev/null
+  -o StrictHostKeyChecking=no
+
+# There's no way to reach this service on a local deployment.
+ochap_usermgmt_auth_service_url: http://unexistent
+ochap_auth_service_jwt_secret: invalid

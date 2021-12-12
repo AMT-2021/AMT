@@ -1,0 +1,118 @@
+<html lang="en">
+
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>lion</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- fevicon -->
+    <link rel="icon" href="images/fevicon.png" type="image/gif"/>
+</head>
+
+<body class="main-layout">
+
+<!-- end loader -->
+<div class="sidebar">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <div id="dismiss">
+            <i class="fa fa-arrow-left"></i>
+        </div>
+
+        <ul class="list-unstyled components">
+
+            <li class="active">
+                <a href="index.html">Home</a>
+            </li>
+            <li>
+                <a href="#brand">Brands</a>
+            </li>
+            <li>
+                <a href="#shoes">Shoes</a>
+            </li>
+            <li>
+                <a href="#jewellery">Jewellery</a>
+            </li>
+            <li>
+                <a href="#kids">Kids and Babies</a>
+            </li>
+        </ul>
+
+    </nav>
+</div>
+
+<div class="wrapper">
+
+    <div id="content">
+        <!-- header -->
+        <div th:replace="fragments/header :: header"></div>
+
+        <!-- Categories -->
+        <div class="p-5">
+            <p th:if="${error == '1'}" class="alert-danger">A product has this name!</p>
+            <form method="post" th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}" enctype="multipart/form-data"> <!--  -->
+                <div class="row">
+                    <div class="flex-column">
+                        <p> name </p>
+                        <label>
+                            <input name="name" th:field="*{name}" th:value="${product.name}" th:attrappend="disabled=${route == update}?true" required>
+                        </label>
+                    </div>
+                    <div class="flex-column">
+                        <p> description </p>
+                        <label>
+                            <input name="description" th:field="*{description}" required
+                                   th:value="${product.description}">
+                        </label>
+                    </div>
+                    <div class="flex-column">
+                        <p> price </p>
+                        <label>
+                            <input name="price " th:field="*{price}" th:value="${product.price}">
+                        </label>
+                    </div>
+                    <div class="flex-column">
+                        <p> stock </p>
+                        <label>
+                            <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
+                        </label>
+                    </div>
+                    <label hidden>
+                        <input name="id" th:field="*{id}" th:value="${product.id}">
+                    </label>
+                    <div class="flex-column">
+                        <p> image </p>
+                        <input type="file" name="file" class="form-control-file">
+                    </div>
+                    <div class="flex-column">
+                        <p> category </p>
+                        <th:block th:each="cat : ${categories}">
+                            <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
+                            <label for="cat" th:text="${cat.name}"></label>
+                        </th:block>
+                    </div>
+                </div>
+                <button type="submit" class="rounded p-1 m-1 alert-danger"> submit</button>
+            </form>
+        </div>
+
+        <!--  footer -->
+        <div th:replace="fragments/footer :: footer"></div>
+        <!-- end footer -->
+    </div>
+</div>
+</body>

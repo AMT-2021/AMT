@@ -9,7 +9,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - run: mvn formatter:format
+      - run: mvn formatter:format -pl '!:ochap-java-components'
       - run: git diff
       - run: |
           [ -z "$(git status --porcelain)" ]
@@ -34,48 +34,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-result
-          path: target
-  unit-test:
-    name: Unit tests
-    runs-on: ubuntu-latest
-    needs: Build
-    services:
-        # Label used to access the service container
-        postgres:
-          # Docker Hub image
-          image: postgres
-          # Provide the password for postgres
-          env:
-            POSTGRES_PASSWORD: admin
-          # Set health checks to wait until postgres has started
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: build-result
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-      - name: Restore Maven cache
-        uses: skjolber/maven-cache-github-action@v1
-        
-        with:
-          step: restore
-      - run: mvn test
-        env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
+          path: '**/target'
   Package:
     runs-on: ubuntu-latest
     needs: Build
-    
     steps:
       - uses: actions/checkout@v2
       - name: Download build artifacts
@@ -90,8 +52,8 @@ jobs:
         uses: skjolber/maven-cache-github-action@v1
         with:
           step: restore
-      - run: mvn package
-      - run: cp target/backend-0.0.1-SNAPSHOT.war AMT-backend.war
+      - run: mvn package -Dmaven.test.skip=true
+      - run: cp ochap-backend/target/ochap-backend-*.war AMT-backend.war
       - name: Upload package artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -101,27 +63,32 @@ jobs:
     name: Integration tests
     runs-on: ubuntu-latest
     needs: Package
-      # Service containers to run with `container-job`
-      services:
-        # Label used to access the service container
-        postgres:
-          # Docker Hub image
-          image: postgres
-          # Provide the password for postgres
-          env:
-            POSTGRES_PASSWORD: admin
-          # Set health checks to wait until postgres has started
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ochap-backend-user
+          POSTGRES_PASSWORD: ochap-backend-integration-tests-password
+          POSTGRES_DB: ochap-backend
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
-      - name: Download package artifacts
+      - uses: actions/checkout@v2
+      - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          path: AMT-backend.war
+          name: build-result
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Restore Maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
       - run: mvn verify
-        env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432

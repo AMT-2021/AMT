@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>lion</title>
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- fevicon -->
+    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+</head>
+<!-- body -->
+
+<body class="main-layout">
+<div id="content">
+    <!-- header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Categories -->
+    <div class="Categories">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title">
+                        <h2> Categories</h2>
+                        <ul class="categiri">
+                            <li th:each="category: ${categories}"><a
+                                    th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- news brand -->
+            <div id="brand" class="brand-bg">
+                <h3>Products</h3>
+                <form th:action="@{/shopping-cart/add}" class="row" th:if="${#lists.size(products) != 0}" method="post">
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
+                        <div class="brand-box">
+                            <i> <img th:src="@{{ir}(ir=${product.getImageRef()})}"  alt="hat image"/> </i>
+                            <h4 th:text="${product.name}"></h4>
+                            <h4 th:if="${product.price != null}">Price: CHF <span th:text="${product.price}"></span></h4>
+                            <h4 th:unless="${product.price != null}">Not to Sale</h4>
+                            <h4>In stock: <span th:text="${product.stock}"></span></h4>
+                        </div>
+                        <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
+                        <input name="id" type="hidden" th:value="${product.id}" />
+                        <input name="quantity" type="hidden" value="1" />
+                        <input class="buynow" th:if="${product.stock > 0 && product.price != null}" type="submit" value="Add to Cart" />
+                        <h4 th:unless="${product.stock > 0 && product.price != null}" class="mt-5" style="text-align: center">Unavailable</h4>
+                    </div>
+                </form>
+                <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
+            </div>
+            <!-- end news brand -->
+        </div>
+    </div>
+    <!--  footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+    <!-- end footer -->
+</div>
+</body>

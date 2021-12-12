@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/debian10"
+
+  # Disable the new default behavior introduced in Vagrant 1.7, to
+  # ensure that all Vagrant machines will use the same SSH key pair.
+  # See https://github.com/mitchellh/vagrant/issues/5005
+  config.ssh.insert_key = false
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/blank.yaml"
+    ansible.groups = {
+      "vagrant-testing" => [ "vg-ochap-appserver" ],
+    }
+  end
+
+  config.vm.define "vg-ochap-appserver" do |node|
+    node.vm.network "private_network", ip: "192.168.144.240"
+    node.vm.network "forwarded_port", guest: 8080, host: 48080
+    node.vm.network "forwarded_port", guest: 9990, guest_ip: "127.0.0.1", host: 49990
+    node.vm.hostname = "vg-ochap-appserver"
+  end
+end
