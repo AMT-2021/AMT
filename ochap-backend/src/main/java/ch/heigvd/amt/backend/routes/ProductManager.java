@@ -24,18 +24,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-
-// TODO : remove images when update or delete, show image name when product already have image, put
-// default template
-// when no image selected
-
 @Controller
 public class ProductManager {
-  @Autowired
-  private ProductDAO productDAO;
+  @Autowired private ProductDAO productDAO;
 
-  @Autowired
-  private CategoryDAO categoryDAO;
+  @Autowired private CategoryDAO categoryDAO;
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
@@ -63,8 +56,8 @@ public class ProductManager {
   }
 
   @GetMapping("/product-update-form")
-  public String updateProductForm(Model model, @RequestParam String id,
-      @RequestParam(required = false) String error) {
+  public String updateProductForm(
+      Model model, @RequestParam String id, @RequestParam(required = false) String error) {
     Product product = productDAO.getProductById(Integer.parseInt(id)).get();
     Optional<List<Category>> cats = categoryDAO.getAllCategory();
     cats.ifPresent(categories -> model.addAttribute("categories", categories));
@@ -77,7 +70,8 @@ public class ProductManager {
   }
 
   @PostMapping("/product-manager/add")
-  public String addProduct(@Valid Product newProduct,
+  public String addProduct(
+      @Valid Product newProduct,
       @RequestParam(value = "categories") int[] categoriesId,
       @RequestParam("file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
@@ -87,24 +81,30 @@ public class ProductManager {
       }
     }
 
-    String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-    newProduct.setImageRef(fileName);
-    Product p = productDAO.save(newProduct);
+    if (!file.isEmpty()) {
+      String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+      newProduct.setImageRef(fileName);
+      Product p = productDAO.save(newProduct);
 
-    String uploadDir = "uploads/" + p.getId();
+      String uploadDir = "uploads/" + p.getId();
 
-    try {
-      saveFile(uploadDir, fileName, file);
-    } catch (IOException e) {
-      e.printStackTrace();
+      try {
+        saveFile(uploadDir, fileName, file);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }  else {
+      newProduct.setImageRef("default.png");
+      productDAO.save(newProduct);
     }
 
     for (int id : categoriesId) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
-      c.ifPresent(cat -> {
-        cat.getProducts().add(newProduct);
-        categoryDAO.save(cat);
-      });
+      c.ifPresent(
+          cat -> {
+            cat.getProducts().add(newProduct);
+            categoryDAO.save(cat);
+          });
     }
     return "redirect:/product-manager";
   }
@@ -125,7 +125,8 @@ public class ProductManager {
   }
 
   @PostMapping("/product-manager/update")
-  public String updateProduct(@Valid Product updatedProduct,
+  public String updateProduct(
+      @Valid Product updatedProduct,
       @RequestParam(required = false, value = "file") MultipartFile file) {
     List<Product> allProducts = productDAO.getAllProducts().get();
     for (Product p : allProducts) {
@@ -135,19 +136,22 @@ public class ProductManager {
       }
     }
 
-    String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
     Optional<Product> existingProduct = productDAO.getProductById(updatedProduct.getId());
     if (existingProduct.isPresent()) {
       Product p = existingProduct.get();
 
       // save image and save path in product
-      p.setImageRef(fileName);
-      String uploadDir = "uploads/" + p.getId();
-      try {
-        saveFile(uploadDir, fileName, file);
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (!file.isEmpty()) {
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        p.setImageRef(fileName);
+        String uploadDir = "uploads/" + p.getId();
+        try {
+          saveFile(uploadDir, fileName, file);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        p.setImageRef("default.png");
       }
 
       productDAO.save(assignProduct(p, updatedProduct));
