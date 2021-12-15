@@ -34,14 +34,7 @@ public class ProductManager {
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
-    Optional<List<Product>> hasProducts;
-    Product[] products = new Product[] {};
-
-    hasProducts = productDAO.getAllProducts();
-    if (hasProducts.isPresent()) {
-      products = hasProducts.get().toArray(new Product[0]);
-    }
-    model.addAttribute("products", products);
+    model.addAttribute("products", productDAO.getAllProducts());
     return "product-management";
   }
 
@@ -73,11 +66,11 @@ public class ProductManager {
 
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
-      @RequestParam(value = "categories") int[] categoriesId,
+      @RequestParam(value = "categories", defaultValue = "") List<Integer> categoryIds,
       @RequestParam("file") MultipartFile file) {
-    List<Product> allProducts = productDAO.getAllProducts().get();
-    for (Product p : allProducts) {
+    for (Product p : productDAO.getAllProducts()) {
       if (p.getName().equals(newProduct.getName())) {
+        // FIXME(@Roos): Use real validation error.
         return "redirect:/product-add-form?error=1";
       }
     }
@@ -99,7 +92,7 @@ public class ProductManager {
       productDAO.save(newProduct);
     }
 
-    for (int id : categoriesId) {
+    for (int id : categoryIds) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
       c.ifPresent(cat -> {
         cat.getProducts().add(newProduct);
@@ -127,10 +120,10 @@ public class ProductManager {
   @PostMapping("/product-manager/update")
   public String updateProduct(@Valid Product updatedProduct,
       @RequestParam(required = false, value = "file") MultipartFile file) {
-    List<Product> allProducts = productDAO.getAllProducts().get();
-    for (Product p : allProducts) {
+    for (Product p : productDAO.getAllProducts()) {
       if (p.getName().equals(updatedProduct.getName())
           && !p.getId().equals(updatedProduct.getId())) {
+        // FIXME(@Roos): Use real validation error.
         return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
       }
     }
