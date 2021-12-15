@@ -67,7 +67,7 @@ public class ProductManager {
   @PostMapping("/product-manager/add")
   public String addProduct(@Valid Product newProduct,
       @RequestParam(value = "categories", defaultValue = "") List<Integer> categoryIds,
-      @RequestParam("file") MultipartFile file) {
+      @RequestParam(required = false) MultipartFile file) {
     for (Product p : productDAO.getAllProducts()) {
       if (p.getName().equals(newProduct.getName())) {
         // FIXME(@Roos): Use real validation error.
@@ -75,7 +75,7 @@ public class ProductManager {
       }
     }
 
-    if (!file.isEmpty()) {
+    if (file != null && !file.isEmpty()) {
       String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
       newProduct.setImageRef(fileName);
       Product p = productDAO.save(newProduct);
