@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,75 +36,75 @@ public class ProductManager {
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
-    Optional<List<Product>> hasProducts;
-    Product[] products = new Product[] {};
-
-    hasProducts = productDAO.getAllProducts();
-    if (hasProducts.isPresent()) {
-      products = hasProducts.get().toArray(new Product[0]);
-    }
-    model.addAttribute("products", products);
+    model.addAttribute("products", productDAO.getAllProducts());
     return "product-management";
   }
 
-  @GetMapping("/product-add-form")
+  @GetMapping("/product-manager/add")
   public String addProductForm(Model model, @RequestParam(required = false) String error) {
-    Optional<List<Category>> cats = categoryDAO.getAllCategory();
-    cats.ifPresent(categories -> model.addAttribute("categories", categories));
-    if (error != null) {
-      model.addAttribute("error", error);
-    }
+    model.addAttribute("categories", categoryDAO.getAllCategories());
     model.addAttribute("product", new Product());
     model.addAttribute("route", "add");
+    model.addAttribute("title", "Add new product");
     return "product-form";
   }
 
-  @GetMapping("/product-update-form")
-  public String updateProductForm(Model model, @RequestParam String id,
+  @GetMapping("/product-manager/update")
+  public String updateProductForm(Model model, @RequestParam Integer id,
       @RequestParam(required = false) String error) {
-    Product product = productDAO.getProductById(Integer.parseInt(id)).get();
-    Optional<List<Category>> cats = categoryDAO.getAllCategory();
-    cats.ifPresent(categories -> model.addAttribute("categories", categories));
-    if (error != null) {
-      model.addAttribute("error", error);
+    if (id == null) {
+      return "redirect:/product-manager";
     }
-    model.addAttribute("product", product);
+    Optional<Product> product = productDAO.getProductById(id);
+    if (product.isEmpty()) {
+      // The user tried to access a non-existing product.
+      return "redirect:/product-manager";
+    }
+
+    model.addAttribute("categories", categoryDAO.getAllCategories());
+    model.addAttribute("product", product.get());
     model.addAttribute("route", "update");
+    model.addAttribute("readonlyName", true);
+    model.addAttribute("title", "Update product");
     return "product-form";
   }
 
   @PostMapping("/product-manager/add")
-  public String addProduct(@Valid Product newProduct,
-      @RequestParam(value = "categories") int[] categoriesId,
-      @RequestParam("file") MultipartFile file) {
-    List<Product> allProducts = productDAO.getAllProducts().get();
-    for (Product p : allProducts) {
-      if (p.getName().equals(newProduct.getName())) {
-        return "redirect:/product-add-form?error=1";
+  public String addProduct(@Valid Product product,
+      @RequestParam(value = "categories", defaultValue = "") List<Integer> categoryIds,
+      @RequestParam(required = false) MultipartFile image, BindingResult bindingResult,
+      Model model) {
+    for (Product p : productDAO.getAllProducts()) {
+      if (p.getName().equals(product.getName())) {
+        bindingResult.addError(
+            new FieldError("product", "name", "A product with this name already exists."));
+        model.addAttribute("route", "add");
+        model.addAttribute("title", "Add new product");
+        return "product-form";
       }
     }
 
-    if (!file.isEmpty()) {
-      String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-      newProduct.setImageRef(fileName);
-      Product p = productDAO.save(newProduct);
+    if (image != null && !image.isEmpty()) {
+      String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+      product.setImageRef(fileName);
+      Product p = productDAO.save(product);
 
       String uploadDir = "uploads/" + p.getId();
 
       try {
-        saveFile(uploadDir, fileName, file);
+        saveFile(uploadDir, fileName, image);
       } catch (IOException e) {
         e.printStackTrace();
       }
     } else {
-      newProduct.setImageRef("default.png");
-      productDAO.save(newProduct);
+      product.setImageRef("default.png");
+      productDAO.save(product);
     }
 
-    for (int id : categoriesId) {
+    for (int id : categoryIds) {
       Optional<Category> c = categoryDAO.findCategoryById(id);
       c.ifPresent(cat -> {
-        cat.getProducts().add(newProduct);
+        cat.getProducts().add(product);
         categoryDAO.save(cat);
       });
     }
@@ -126,12 +128,18 @@ public class ProductManager {
 
   @PostMapping("/product-manager/update")
   public String updateProduct(@Valid Product updatedProduct,
-      @RequestParam(required = false, value = "file") MultipartFile file) {
-    List<Product> allProducts = productDAO.getAllProducts().get();
-    for (Product p : allProducts) {
+      @RequestParam(required = false) MultipartFile image, BindingResult bindingResult,
+      Model model) {
+    for (Product p : productDAO.getAllProducts()) {
       if (p.getName().equals(updatedProduct.getName())
           && !p.getId().equals(updatedProduct.getId())) {
-        return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
+        bindingResult.addError(
+            new FieldError("product", "name", "A product with this name already exists."));
+        model.addAttribute("route", "update");
+        // Explicitly allow the user to fix the issue.
+        model.addAttribute("readonlyName", false);
+        model.addAttribute("title", "Update product");
+        return "product-form";
       }
     }
 
@@ -140,12 +148,13 @@ public class ProductManager {
       Product p = existingProduct.get();
 
       // save image and save path in product
-      if (!file.isEmpty()) {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+      if (image != null && !image.isEmpty()) {
+        String fileName =
+            StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
         p.setImageRef(fileName);
         String uploadDir = "uploads/" + p.getId();
         try {
-          saveFile(uploadDir, fileName, file);
+          saveFile(uploadDir, fileName, image);
         } catch (IOException e) {
           e.printStackTrace();
         }

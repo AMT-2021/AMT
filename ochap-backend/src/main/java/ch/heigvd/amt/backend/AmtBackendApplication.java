@@ -53,6 +53,7 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
         .formLogin().disable()
         .httpBasic().disable()
         .logout().disable()
+        .csrf().disable()
         .sessionManagement()
           .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ;

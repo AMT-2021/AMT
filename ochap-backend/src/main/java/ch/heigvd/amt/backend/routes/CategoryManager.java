@@ -25,14 +25,10 @@ public class CategoryManager {
 
   @GetMapping("/category-manager")
   public String getPage(Model model, @RequestParam(required = false) String error) {
-    Category[] categories = new Category[0];
-    if (categoryDAO.getAllCategory().isPresent()) {
-      categories = categoryDAO.getAllCategory().get().toArray(new Category[0]);
-    }
     if (error != null) {
       model.addAttribute("error", error);
     }
-    model.addAttribute("categories", categories);
+    model.addAttribute("categories", categoryDAO.getAllCategories());
     model.addAttribute("newCategory", new Category());
     model.addAttribute("cat", new Category());
 
@@ -41,12 +37,8 @@ public class CategoryManager {
 
   @PostMapping("/category-manager/create")
   public String createCategory(@Valid Category category) {
-    Category[] categories = new Category[0];
-    if (categoryDAO.getAllCategory().isPresent()) {
-      categories = categoryDAO.getAllCategory().get().toArray(new Category[0]);
-    }
-    for (int i = 0; i < categories.length; ++i) {
-      if (category.getName().equals(categories[i].getName())) {
+    for (Category c : categoryDAO.getAllCategories()) {
+      if (category.getName().equals(c.getName())) {
         return "redirect:/category-manager?error=1";
       }
     }

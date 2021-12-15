@@ -25,21 +25,20 @@ public class AllProducts {
   private CategoryDAO categoryDAO;
 
   @GetMapping("/all-products")
-  public String allProduct(Model model, @RequestParam(required = false) String category) {
-    Optional<List<Product>> hasProducts;
-    List<Product> products = new ArrayList<>();
+  public String allProduct(Model model, @RequestParam(required = false) Integer category) {
+    List<Product> products = null;
     if (category != null) {
-      Category c = categoryDAO.getCategoryById(Integer.parseInt(category)).get();
-      products = c.getProducts();
-
-    } else {
-      hasProducts = productDAO.getAllProducts();
-      if (hasProducts.isPresent()) {
-        products = hasProducts.get();
+      var c = categoryDAO.getCategoryById(category);
+      if (c.isPresent()) {
+        products = c.get().getProducts();
       }
     }
 
-    List<Category> categories = categoryDAO.getAllCategory().get();
+    if (products == null) {
+      products = productDAO.getAllProducts();
+    }
+
+    List<Category> categories = categoryDAO.getAllCategories();
     List<Category> catToRemove = new ArrayList<Category>();
     for (Category c : categories) {
       if (c.getProducts().size() == 0) {
