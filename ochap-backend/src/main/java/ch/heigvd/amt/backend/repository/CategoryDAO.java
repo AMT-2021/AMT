@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface CategoryDAO extends JpaRepository<Category, Integer> {
   @Query(value = "SELECT p from Category p")
-  Optional<List<Category>> getAllCategory();
+  List<Category> getAllCategories();
 
   Optional<Category> getCategoryById(Integer id);
 

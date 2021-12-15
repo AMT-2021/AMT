@@ -42,8 +42,7 @@ public class ProductManager {
 
   @GetMapping("/product-manager/add")
   public String addProductForm(Model model, @RequestParam(required = false) String error) {
-    Optional<List<Category>> cats = categoryDAO.getAllCategory();
-    cats.ifPresent(categories -> model.addAttribute("categories", categories));
+    model.addAttribute("categories", categoryDAO.getAllCategories());
     if (error != null) {
       model.addAttribute("error", error);
     }
@@ -57,8 +56,7 @@ public class ProductManager {
   public String updateProductForm(Model model, @RequestParam String id,
       @RequestParam(required = false) String error) {
     Product product = productDAO.getProductById(Integer.parseInt(id)).get();
-    Optional<List<Category>> cats = categoryDAO.getAllCategory();
-    cats.ifPresent(categories -> model.addAttribute("categories", categories));
+    model.addAttribute("categories", categoryDAO.getAllCategories());
     if (error != null) {
       model.addAttribute("error", error);
     }

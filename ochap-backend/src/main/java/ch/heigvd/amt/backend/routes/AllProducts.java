@@ -38,7 +38,7 @@ public class AllProducts {
       products = productDAO.getAllProducts();
     }
 
-    List<Category> categories = categoryDAO.getAllCategory().get();
+    List<Category> categories = categoryDAO.getAllCategories();
     List<Category> catToRemove = new ArrayList<Category>();
     for (Category c : categories) {
       if (c.getProducts().size() == 0) {
