@@ -59,7 +59,7 @@
   <div id="content">
     <div th:replace="fragments/header :: header"></div>
     <!-- Categories -->
-    <div class="p-5">
+    <div class="p-5 container">
       <form id="product-add"
         accept-charset="utf-8"
         th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"
@@ -67,47 +67,41 @@
         <div class="alert alert-warning"
          th:each="err : ${#fields.globalErrors()}" th:text="${err}"/>
 
-        <div class="row">
+        <div class="form-aligned-fields">
           <input name="id" th:field="*{id}" th:value="${product.id}" hidden>
-          <div class="flex-column">
-            <label for="name">Name</label>
-            <input name="name" th:field="*{name}" th:value="${product.name}"
-             th:readonly="${readonlyName}" required>
-            <div class="alert alert-warning field-validation-error"
-             th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
-          </div>
-          <div class="flex-column">
-            <label for="description">Description</label>
-            <input name="description" th:field="*{description}"
-             th:value="${product.description}" required>
-            <div class="alert alert-warning field-validation-error"
-             th:if="${#fields.hasErrors('description')}" th:errors="*{description}"/>
-          </div>
-          <div class="flex-column">
-            <label for="price">Price</label>
-            <input name="price" th:field="*{price}" th:value="${product.price}">
-            <div class="alert alert-warning field-validation-error"
-             th:if="${#fields.hasErrors('price')}" th:errors="*{price}"/>
-          </div>
-          <div class="flex-column">
-            <label for="stock">Stock</label>
-            <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
-            <div class="alert alert-warning field-validation-error"
-             th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"/>
-          </div>
-          <div class="flex-column">
-            <label for="image">Image</label>
-            <input name="image" type="file" class="form-control-file">
-            <div class="alert alert-warning field-validation-error"
-             th:if="${#fields.hasErrors('imageRef')}" th:errors="*{imageRef}"/>
-          </div>
-          <div class="flex-column">
-            <label for="category">Categories</label>
-            <th:block th:each="cat : ${categories}">
-              <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
-              <label for="cat" th:text="${cat.name}"></label>
-            </th:block>
-          </div>
+
+          <label for="name">Name</label>
+          <input name="name" th:field="*{name}" th:value="${product.name}"
+           th:readonly="${readonlyName}" required>
+          <div class="alert alert-warning field-validation-error"
+           th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
+
+          <label for="description">Description</label>
+          <input name="description" th:field="*{description}"
+           th:value="${product.description}" required>
+          <div class="alert alert-warning field-validation-error"
+           th:if="${#fields.hasErrors('description')}" th:errors="*{description}"/>
+
+          <label for="price">Price</label>
+          <input name="price" th:field="*{price}" th:value="${product.price}">
+          <div class="alert alert-warning field-validation-error"
+           th:if="${#fields.hasErrors('price')}" th:errors="*{price}"/>
+
+          <label for="stock">Stock</label>
+          <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
+          <div class="alert alert-warning field-validation-error"
+           th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"/>
+
+          <label for="image">Image</label>
+          <input name="image" type="file" class="form-control-file">
+          <div class="alert alert-warning field-validation-error"
+           th:if="${#fields.hasErrors('imageRef')}" th:errors="*{imageRef}"/>
+
+          <label for="category">Categories</label>
+          <th:block th:each="cat : ${categories}">
+            <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
+            <label for="cat" th:text="${cat.name}"></label>
+          </th:block>
         </div>
         <button type="submit" class="rounded p-1 m-1 alert-danger"> submit</button>
       </form>

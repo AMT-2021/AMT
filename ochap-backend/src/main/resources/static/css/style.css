@@ -2183,3 +2183,17 @@ a.article:hover {
     background: #6d7fcc !important;
     color: #fff !important;
 }
+
+.form-aligned-fields {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.form-aligned-fields > label {
+  grid-column: 1;
+  margin-right: 1em;
+}
+
+.form-aligned-fields > input,.field-validation-error {
+  grid-column: 2;
+}
