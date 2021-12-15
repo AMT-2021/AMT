@@ -49,6 +49,7 @@ public class ProductManager {
     }
     model.addAttribute("product", new Product());
     model.addAttribute("route", "add");
+    model.addAttribute("title", "Add new product");
     return "product-form";
   }
 
@@ -64,6 +65,7 @@ public class ProductManager {
     model.addAttribute("product", product);
     model.addAttribute("route", "update");
     model.addAttribute("readonlyName", true);
+    model.addAttribute("title", "Update product");
     return "product-form";
   }
 
@@ -77,6 +79,7 @@ public class ProductManager {
         bindingResult.addError(
             new FieldError("product", "name", "A product with this name already exists."));
         model.addAttribute("route", "add");
+        model.addAttribute("title", "Add new product");
         return "product-form";
       }
     }
