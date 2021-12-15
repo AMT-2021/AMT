@@ -43,24 +43,26 @@ public class ProductManager {
   @GetMapping("/product-manager/add")
   public String addProductForm(Model model, @RequestParam(required = false) String error) {
     model.addAttribute("categories", categoryDAO.getAllCategories());
-    if (error != null) {
-      model.addAttribute("error", error);
-    }
     model.addAttribute("product", new Product());
     model.addAttribute("route", "add");
     model.addAttribute("title", "Add new product");
     return "product-form";
   }
 
-  @GetMapping("/product-update-form")
-  public String updateProductForm(Model model, @RequestParam String id,
+  @GetMapping("/product-manager/update")
+  public String updateProductForm(Model model, @RequestParam Integer id,
       @RequestParam(required = false) String error) {
-    Product product = productDAO.getProductById(Integer.parseInt(id)).get();
-    model.addAttribute("categories", categoryDAO.getAllCategories());
-    if (error != null) {
-      model.addAttribute("error", error);
+    if (id == null) {
+      return "redirect:/product-manager";
     }
-    model.addAttribute("product", product);
+    Optional<Product> product = productDAO.getProductById(id);
+    if (product.isEmpty()) {
+      // The user tried to access a non-existing product.
+      return "redirect:/product-manager";
+    }
+
+    model.addAttribute("categories", categoryDAO.getAllCategories());
+    model.addAttribute("product", product.get());
     model.addAttribute("route", "update");
     model.addAttribute("readonlyName", true);
     model.addAttribute("title", "Update product");
@@ -126,12 +128,18 @@ public class ProductManager {
 
   @PostMapping("/product-manager/update")
   public String updateProduct(@Valid Product updatedProduct,
-      @RequestParam(required = false) MultipartFile image) {
+      @RequestParam(required = false) MultipartFile image, BindingResult bindingResult,
+      Model model) {
     for (Product p : productDAO.getAllProducts()) {
       if (p.getName().equals(updatedProduct.getName())
           && !p.getId().equals(updatedProduct.getId())) {
-        // FIXME(@Roos): Use real validation error.
-        return "redirect:/product-update-form?error=1&id=" + updatedProduct.getId();
+        bindingResult.addError(
+            new FieldError("product", "name", "A product with this name already exists."));
+        model.addAttribute("route", "update");
+        // Explicitly allow the user to fix the issue.
+        model.addAttribute("readonlyName", false);
+        model.addAttribute("title", "Update product");
+        return "product-form";
       }
     }
 
