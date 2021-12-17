@@ -5,6 +5,7 @@ import ch.heigvd.amt.backend.entities.Product;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Controller
+@PreAuthorize("hasAuthority('admin')")
 public class ProductManager {
   @Autowired
   private ProductDAO productDAO;
