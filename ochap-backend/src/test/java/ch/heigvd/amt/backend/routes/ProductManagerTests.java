@@ -27,21 +27,21 @@ public class ProductManagerTests {
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "user")
+  @WithMockUser(username = "test-user", roles = "USER")
   public void nonAdminCantManageProduct() throws Exception {
     this.mvc.perform(get("/product-manager")).andExpect(status().is4xxClientError());
   }
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "admin")
+  @WithMockUser(username = "test-user", roles = "ADMIN")
   public void adminCanManageProduct() throws Exception {
     this.mvc.perform(get("/product-manager")).andExpect(status().is2xxSuccessful());
   }
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "admin")
+  @WithMockUser(username = "test-user", roles = "ADMIN")
   public void createNewProduct() throws Exception {
     String name = "test product " + UUID.randomUUID().toString();
     String description = "Description for test product";
@@ -55,7 +55,7 @@ public class ProductManagerTests {
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "admin")
+  @WithMockUser(username = "test-user", roles = "ADMIN")
   public void createDuplicateProduct() throws Exception {
     String name = "test product " + UUID.randomUUID().toString();
     String description = "Description for test product";
@@ -74,7 +74,7 @@ public class ProductManagerTests {
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "admin")
+  @WithMockUser(username = "test-user", roles = "ADMIN")
   public void updateProduct() throws Exception {
     String name = "test product " + UUID.randomUUID().toString();
     String description = "Description for test product";

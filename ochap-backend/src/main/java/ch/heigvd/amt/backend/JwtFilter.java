@@ -52,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
     String role = jwt.getClaim("role").asString();
 
     var auth = new PreAuthenticatedAuthenticationToken(subject, null,
-        Collections.singleton(new SimpleGrantedAuthority(role)));
+        Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())));
     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(auth);
   }
