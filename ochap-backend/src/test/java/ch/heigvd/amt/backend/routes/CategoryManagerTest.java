@@ -15,24 +15,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AmtBackendApplication.class)
 @AutoConfigureMockMvc
 public class CategoryManagerTest {
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    @Test
-    @Transactional
-    @WithMockUser(username = "test-user", authorities = "user")
-    public void nonAdminCantManageCategory() throws Exception{
-        this.mvc.perform(
-                get("/category-manager")
-        ).andExpect(status().is4xxClientError());
-    }
+  @Test
+  @Transactional
+  @WithMockUser(username = "test-user", authorities = "user")
+  public void nonAdminCantManageCategory() throws Exception {
+    this.mvc.perform(get("/category-manager")).andExpect(status().is4xxClientError());
+  }
 
-    @Test
-    @Transactional
-    @WithMockUser(username = "test-user", authorities = "admin")
-    public void adminCanManageProduct() throws Exception{
-        this.mvc.perform(
-                get("/category-manager")
-        ).andExpect(status().is2xxSuccessful());
-    }
+  @Test
+  @Transactional
+  @WithMockUser(username = "test-user", authorities = "admin")
+  public void adminCanManageProduct() throws Exception {
+    this.mvc.perform(get("/category-manager")).andExpect(status().is2xxSuccessful());
+  }
 }
