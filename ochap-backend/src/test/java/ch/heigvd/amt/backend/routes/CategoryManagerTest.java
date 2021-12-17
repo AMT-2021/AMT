@@ -20,15 +20,15 @@ public class CategoryManagerTest {
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "user")
+  @WithMockUser(username = "test-user", roles = "USER")
   public void nonAdminCantManageCategory() throws Exception {
     this.mvc.perform(get("/category-manager")).andExpect(status().is4xxClientError());
   }
 
   @Test
   @Transactional
-  @WithMockUser(username = "test-user", authorities = "admin")
-  public void adminCanManageProduct() throws Exception {
+  @WithMockUser(username = "test-user", roles = "ADMIN")
+  public void adminCanManageCategory() throws Exception {
     this.mvc.perform(get("/category-manager")).andExpect(status().is2xxSuccessful());
   }
 }
