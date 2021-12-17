@@ -28,19 +28,15 @@ public class ProductManagerTests {
   @Test
   @Transactional
   @WithMockUser(username = "test-user", authorities = "user")
-  public void nonAdminCantManageProduct() throws Exception{
-      this.mvc.perform(
-              get("/product-manager")
-      ).andExpect(status().is4xxClientError());
+  public void nonAdminCantManageProduct() throws Exception {
+    this.mvc.perform(get("/product-manager")).andExpect(status().is4xxClientError());
   }
 
   @Test
   @Transactional
   @WithMockUser(username = "test-user", authorities = "admin")
-  public void adminCanManageProduct() throws Exception{
-    this.mvc.perform(
-            get("/product-manager")
-    ).andExpect(status().is2xxSuccessful());
+  public void adminCanManageProduct() throws Exception {
+    this.mvc.perform(get("/product-manager")).andExpect(status().is2xxSuccessful());
   }
 
   @Test
