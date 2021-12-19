@@ -33,10 +33,16 @@
                     <div class="title">
                         <h2> Categories</h2>
                         <ul class="categiri">
-                            <li><a href="/all-products">All hats</a></li>
-                            <li th:each="category: ${categories}"><a
-                                    th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a>
-                            </li>
+                            <li th:if="${currentCategory == null}" class="active"><a href="/all-products">All hats</a></li>
+                            <li th:if="${currentCategory ne null}"><a href="/all-products">All hats</a></li>
+                            <th:block th:each="category: ${categories}">
+                                <li th:if="${currentCategory == category.id}" class="active">
+                                    <a th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}"></a>
+                                </li>
+                                <li th:if="${currentCategory ne category.id}">
+                                    <a th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}"></a>
+                                </li>
+                            </th:block>
                         </ul>
                     </div>
                 </div>
