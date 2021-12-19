@@ -31,6 +31,9 @@
                             <li sec:authorize="isAuthenticated()" class="menu_iconb">
                                 <a th:href="@{/users/logout}">Log out<img style="margin-left: 15px;" src="/icon/5.png" alt="#" /></a>
                             </li>
+                            <li sec:authorize="hasRole('ROLE_ADMIN')" class="menu_iconb">
+                                <a th:href="@{/admin}">Admin<img style="margin-left: 15px;" /></a>
+                            </li>
                             <li class="tytyu">
                                 <a href="/shopping-cart"> <img style="margin-right: 15px;" src="/icon/2.png" alt="#" /></a>
                             </li>
