@@ -12,7 +12,7 @@ public class ProductQuantity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @OneToOne(optional = false, cascade = CascadeType.PERSIST)
+  @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
   private Product product;
 
   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
