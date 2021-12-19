@@ -39,21 +39,13 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
   }
 
   public static void main(String[] args) {
-    /*// créer le dossier uploads/
-    Path uploadDir = Paths.get("hatPhotos");
-    try {
-      Files.createDirectories(uploadDir);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    Path filePath = uploadDir.resolve("default.png");
-    // get image from ressource
-    try {
-      File file = ResourceUtils.getFile("classpath:img/default.png");
-      Files.copy(file.toPath(), filePath, StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }*/
+    /*
+     * // créer le dossier uploads/ Path uploadDir = Paths.get("hatPhotos"); try {
+     * Files.createDirectories(uploadDir); } catch (Exception e) { e.printStackTrace(); } Path
+     * filePath = uploadDir.resolve("default.png"); // get image from ressource try { File file =
+     * ResourceUtils.getFile("classpath:img/default.png"); Files.copy(file.toPath(), filePath,
+     * StandardCopyOption.REPLACE_EXISTING); } catch (IOException e) { e.printStackTrace(); }
+     */
     SpringApplication.run(AmtBackendApplication.class, args);
   }
 

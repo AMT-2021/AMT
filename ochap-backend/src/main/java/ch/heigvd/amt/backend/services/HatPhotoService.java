@@ -18,8 +18,7 @@ public class HatPhotoService {
    *
    * @param uploadsDirectoryPath Where to store images in the filesystem.
    */
-  public HatPhotoService(
-      @Value("${ch.heivd.amt.backend.datadir}") String uploadsDirectoryPath) {
+  public HatPhotoService(@Value("${ch.heivd.amt.backend.datadir}") String uploadsDirectoryPath) {
     uploadsDirectory = Paths.get(uploadsDirectoryPath).normalize();
     try {
       Files.createDirectories(uploadsDirectory);
@@ -29,8 +28,7 @@ public class HatPhotoService {
 
     // get image from ressource
     try {
-      InputStream in = getClass()
-              .getResourceAsStream("/static/images/default.png");
+      InputStream in = getClass().getResourceAsStream("/static/images/default.png");
       assert in != null;
       Files.copy(in, uploadsDirectory.resolve("default.png"), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
@@ -44,7 +42,7 @@ public class HatPhotoService {
    * If the specified hat has a photo, the photo is replaced.
    */
   public void saveHatPhoto(String id, InputStream contents) throws IOException {
-    Path target = uploadsDirectory.resolve(id+".png");
+    Path target = uploadsDirectory.resolve(id + ".png");
     Files.copy(contents, target, StandardCopyOption.REPLACE_EXISTING);
   }
 }
