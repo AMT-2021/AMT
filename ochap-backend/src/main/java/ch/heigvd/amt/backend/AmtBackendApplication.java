@@ -17,9 +17,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.InputMismatchException;
 
 @SpringBootApplication
 @EnableWebSecurity
@@ -30,6 +39,26 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
   }
 
   public static void main(String[] args) {
+    // créer le dossier uploads/
+    Path uploadDir = Paths.get("hatPhotos");
+    try {
+      Files.createDirectories(uploadDir);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    Path filePath = uploadDir.resolve("default.png");
+    // get image from ressource
+    try {
+      File file = ResourceUtils.getFile("classpath:img/default.png");
+      Files.copy(file.toPath(), filePath, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    // write image in uploads/
+
+
     SpringApplication.run(AmtBackendApplication.class, args);
   }
 

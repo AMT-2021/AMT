@@ -92,7 +92,7 @@ public class ProductManager {
       product.setImageRef(fileName);
       Product p = productDAO.save(product);
 
-      String uploadDir = "uploads/" + p.getId();
+      String uploadDir = "hatPhotos/" + p.getId();
 
       try {
         saveFile(uploadDir, fileName, image);
