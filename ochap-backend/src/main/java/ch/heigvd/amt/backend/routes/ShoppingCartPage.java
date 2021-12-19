@@ -77,6 +77,9 @@ public class ShoppingCartPage {
       consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
   public String addProduct(@RequestParam Map<String, String> productQuantityToAdd) {
     int clientId = getClientId();
+    if (clientId < 0) {
+      return "no-shopping-cart";
+    }
     int id = Integer.parseInt(productQuantityToAdd.get("id"));
     int quantity = Integer.parseInt(productQuantityToAdd.get("quantity"));
 
