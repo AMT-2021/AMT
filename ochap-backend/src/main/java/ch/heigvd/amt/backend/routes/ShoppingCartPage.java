@@ -57,12 +57,9 @@ public class ShoppingCartPage {
   private int getClientId() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     var authorities = authentication.getAuthorities();
-    if (authorities.stream().noneMatch(x -> (x.toString().equals("ROLE_ADMIN")))
-        && authorities.stream().noneMatch(x -> (x.toString().equals("ROLE_USER")))) {
-      System.out.println(authorities);
-    } else {
+    if (authorities.stream().anyMatch(x -> (x.toString().equals("ROLE_ADMIN")))
+        || authorities.stream().anyMatch(x -> (x.toString().equals("ROLE_USER")))) {
       String user = (String) authentication.getPrincipal();
-      System.out.println(user.hashCode());
       return user.hashCode();
     }
     return -1;
