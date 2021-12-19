@@ -38,6 +38,9 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
     return app.sources(AmtBackendApplication.class);
   }
 
+  @Value("${ch.heigvd.amt.ochap.datapath=.}")
+  private String storagePath;
+
   public static void main(String[] args) {
     // créer le dossier uploads/
     Path uploadDir = Paths.get("hatPhotos");
@@ -46,7 +49,6 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
     Path filePath = uploadDir.resolve("default.png");
     // get image from ressource
     try {
@@ -55,10 +57,6 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    // write image in uploads/
-
-
     SpringApplication.run(AmtBackendApplication.class, args);
   }
 
