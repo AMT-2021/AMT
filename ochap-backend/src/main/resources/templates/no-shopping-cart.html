@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>lion</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- fevicon -->
+    <link rel="icon" href="images/fevicon.png" type="image/gif"/>
+</head>
+<!-- body -->
+
+<body class="main-layout">
+
+<div class="wrapper">
+
+    <!-- end loader -->
+    <div class="sidebar">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+
+            <div id="dismiss">
+                <i class="fa fa-arrow-left"></i>
+            </div>
+
+            <ul class="list-unstyled components">
+
+                <li class="active">
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="#brand">Brands</a>
+                </li>
+                <li>
+                    <a href="#shoes">Shoes</a>
+                </li>
+                <li>
+                    <a href="#jewellery">Jewellery</a>
+                </li>
+                <li>
+                    <a href="#kids">Kids and Babies</a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
+
+    <div id="content">
+        <!-- header -->
+        <div th:replace="fragments/header :: header"></div>
+        <div class="ShoppingCart">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="title">
+                            <h2> Shopping Cart</h2>
+                        </div>
+                    </div>
+                </div>
+                <div id="brand" class="brand-bg">
+                    <h3>No Shopping Cart</h3>
+                    <p>You must logging to access your shopping cart</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+    <!-- end footer -->
+
+
+</div>
+</body>
+
+</html>

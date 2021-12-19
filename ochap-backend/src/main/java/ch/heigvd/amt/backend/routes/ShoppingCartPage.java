@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -36,6 +37,9 @@ public class ShoppingCartPage {
   @GetMapping("/shopping-cart")
   public String viewShoppingCart(Model model) {
     int clientId = getClientId();
+    if (clientId == -1) {
+      return "no-shopping-cart";
+    }
     ShoppingCart cart = getShoppingCartByClientId(clientId);
 
     List<ProductQuantity> products = cart.getProducts();
@@ -45,16 +49,23 @@ public class ShoppingCartPage {
     return "shopping-cart";
   }
 
+  @GetMapping("/no-shopping-cart")
+  public String noShoppingCart() {
+    return "no-shopping-cart";
+  }
+
   private int getClientId() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication.getName().equals("anonymousUser")) {
-      System.out.println("not authenticated");
+    var authorities = authentication.getAuthorities();
+    if (authorities.stream().noneMatch(x -> (x.toString().equals("ROLE_ADMIN")))
+        && authorities.stream().noneMatch(x -> (x.toString().equals("ROLE_USER")))) {
+      System.out.println(authorities);
     } else {
       String user = (String) authentication.getPrincipal();
       System.out.println(user.hashCode());
       return user.hashCode();
     }
-    return 2;
+    return -1;
   }
 
   private ShoppingCart getShoppingCartByClientId(Integer clientId) {
