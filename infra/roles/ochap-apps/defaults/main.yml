@@ -4,3 +4,4 @@ ochap_backend_db_pass: insecure-default-ochap-backend-db-pass
 ochap_backend_db_name: ochap-backend
 ochap_backend_db_host: localhost
 ochap_backend_db_port: 5432
+ochap_backend_datadir: /var/lib/ochap
