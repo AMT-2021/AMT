@@ -1,14 +1,13 @@
 package ch.heigvd.amt.backend.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 @Component
 public class HatPhotoService {
@@ -22,7 +21,21 @@ public class HatPhotoService {
   public HatPhotoService(
       @Value("${ch.heivd.amt.backend.datadir}") String uploadsDirectoryPath) {
     uploadsDirectory = Paths.get(uploadsDirectoryPath).normalize();
-    uploadsDirectory.toFile().mkdirs();
+    try {
+      Files.createDirectories(uploadsDirectory);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // uploadsDirectory.toFile().mkdirs();
+
+
+    // get image from ressource
+    try {
+      File file = ResourceUtils.getFile("classpath:img/default.png");
+      Files.copy(file.toPath(), uploadsDirectory.resolve("default.png"), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -31,7 +44,7 @@ public class HatPhotoService {
    * If the specified hat has a photo, the photo is replaced.
    */
   public void saveHatPhoto(String id, InputStream contents) throws IOException {
-    Path target = uploadsDirectory.resolve("id");
+    Path target = uploadsDirectory.resolve(id+".png");
     Files.copy(contents, target, StandardCopyOption.REPLACE_EXISTING);
   }
 }

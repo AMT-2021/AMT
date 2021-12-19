@@ -22,7 +22,7 @@
                 <article class="product">
                     <input name="id" type="hidden" th:value="*{id}" />
                     <h1 class="product-name" th:text="*{name}"></h1>
-                    <img th:src="@{{ir}(ir=${product.getImageRef()})}"  alt="hat image"/>
+                    <img th:src="@{/image/{id}(id=${product.id})}"  alt="hat image"/>
                     <p class="product-price">CHF <th:block th:text="*{price}" /></p>
                     <section class="product-add-to-shopping-cart">
                         <label class="product-quantity-label" for="product-quantity">Quantity</label>
