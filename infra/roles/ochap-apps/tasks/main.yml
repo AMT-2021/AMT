@@ -29,6 +29,13 @@
     src: ochap_usermgmt.application.properties
     dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main/application.properties
 
+- name: Create ochap data directory
+  file:
+    path: "{{ ochap_backend_datadir }}"
+    state: directory
+    owner: wildfly
+    mode: 0700
+
 - name: "Copy Ô Chap' WARs"
   copy:
     src: "{{ item }}"

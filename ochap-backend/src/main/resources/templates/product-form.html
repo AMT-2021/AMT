@@ -97,8 +97,6 @@
 
           <label for="image">Image</label>
           <input name="image" type="file" class="form-control-file">
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('imageRef')}" th:errors="*{imageRef}"/>
 
           <label for="category">Categories</label>
           <th:block th:each="cat : ${categories}">

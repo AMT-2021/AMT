@@ -2,8 +2,10 @@ package ch.heigvd.amt.backend.routes;
 
 import ch.heigvd.amt.backend.entities.Category;
 import ch.heigvd.amt.backend.entities.Product;
+import ch.heigvd.amt.backend.entities.ProductQuantity;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
+import ch.heigvd.amt.backend.services.HatPhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,6 +38,9 @@ public class ProductManager {
 
   @Autowired
   private CategoryDAO categoryDAO;
+
+  @Autowired
+  private HatPhotoService hatPhotoService;
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
@@ -89,18 +94,14 @@ public class ProductManager {
 
     if (image != null && !image.isEmpty()) {
       String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
-      product.setImageRef(fileName);
       Product p = productDAO.save(product);
 
-      String uploadDir = "hatPhotos/" + p.getId();
-
       try {
-        saveFile(uploadDir, fileName, image);
+        hatPhotoService.saveHatPhoto(p.getId().toString(), image.getInputStream());
       } catch (IOException e) {
         e.printStackTrace();
       }
     } else {
-      product.setImageRef("default.png");
       productDAO.save(product);
     }
 
@@ -112,21 +113,6 @@ public class ProductManager {
       });
     }
     return "redirect:/product-manager";
-  }
-
-  void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
-    Path uploadPath = Paths.get(uploadDir);
-
-    if (!Files.exists(uploadPath)) {
-      Files.createDirectories(uploadPath);
-    }
-
-    try (InputStream inputStream = multipartFile.getInputStream()) {
-      Path filePath = uploadPath.resolve(fileName);
-      Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException ioe) {
-      throw new IOException("Could not save image file: " + fileName, ioe);
-    }
   }
 
   @PostMapping("/product-manager/update")
@@ -152,17 +138,11 @@ public class ProductManager {
 
       // save image and save path in product
       if (image != null && !image.isEmpty()) {
-        String fileName =
-            StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
-        p.setImageRef(fileName);
-        String uploadDir = "uploads/" + p.getId();
         try {
-          saveFile(uploadDir, fileName, image);
+          hatPhotoService.saveHatPhoto(p.getId().toString(), image.getInputStream());
         } catch (IOException e) {
           e.printStackTrace();
         }
-      } else {
-        p.setImageRef("default.png");
       }
 
       productDAO.save(assignProduct(p, updatedProduct));

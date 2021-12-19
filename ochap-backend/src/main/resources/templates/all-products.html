@@ -54,7 +54,7 @@
                 <form th:action="@{/shopping-cart/add}" class="row" th:if="${#lists.size(products) != 0}" method="post">
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
                         <div class="brand-box">
-                            <i> <img th:src="@{{ir}(ir=${product.getImageRef()})}"  alt="hat image"/> </i>
+                            <i> <img th:src="@{/image/{id}(id=${product.id})}"  alt="hat image"/> </i>
                             <h4 th:text="${product.name}"></h4>
                             <h4 th:if="${product.price != null}">Price: CHF <span th:text="${product.price}"></span></h4>
                             <h4 th:unless="${product.price != null}">Not for Sale</h4>
