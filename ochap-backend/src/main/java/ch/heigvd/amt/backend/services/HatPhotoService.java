@@ -26,13 +26,13 @@ public class HatPhotoService {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    // uploadsDirectory.toFile().mkdirs();
-
 
     // get image from ressource
     try {
-      File file = ResourceUtils.getFile("classpath:img/default.png");
-      Files.copy(file.toPath(), uploadsDirectory.resolve("default.png"), StandardCopyOption.REPLACE_EXISTING);
+      InputStream in = getClass()
+              .getResourceAsStream("/static/images/default.png");
+      assert in != null;
+      Files.copy(in, uploadsDirectory.resolve("default.png"), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       e.printStackTrace();
     }
