@@ -33,6 +33,7 @@
                     <div class="title">
                         <h2> Categories</h2>
                         <ul class="categiri">
+                            <li><a href="/all-products">All hats</a></li>
                             <li th:each="category: ${categories}"><a
                                     th:href="@{|/all-products?category=${category.id}|}" th:text="${category.name}">Electronics</a>
                             </li>
