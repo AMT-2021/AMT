@@ -8,6 +8,11 @@ import ch.heigvd.amt.backend.repository.ProductQuantityDAO;
 import ch.heigvd.amt.backend.repository.ShoppingCartDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.lang.reflect.Array;
 import java.util.*;
 
 @Controller
@@ -29,13 +35,26 @@ public class ShoppingCartPage {
 
   @GetMapping("/shopping-cart")
   public String viewShoppingCart(Model model) {
-    int clientId = 2;
+    int clientId = getClientId();
     ShoppingCart cart = getShoppingCartByClientId(clientId);
+
     List<ProductQuantity> products = cart.getProducts();
 
     model.addAttribute("products", products);
     model.addAttribute("cart", cart);
     return "shopping-cart";
+  }
+
+  private int getClientId() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication.getName().equals("anonymousUser")) {
+      System.out.println("not authenticated");
+    } else {
+      String user = (String) authentication.getPrincipal();
+      System.out.println(user.hashCode());
+      return user.hashCode();
+    }
+    return 2;
   }
 
   private ShoppingCart getShoppingCartByClientId(Integer clientId) {
@@ -47,13 +66,14 @@ public class ShoppingCartPage {
     ShoppingCart newCart = new ShoppingCart();
     newCart.setClientId(clientId);
     newCart.setProducts(new ArrayList<>());
+    shoppingCartDAO.save(newCart);
     return newCart;
   }
 
   @PostMapping(path = "/shopping-cart/add",
       consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
   public String addProduct(@RequestParam Map<String, String> productQuantityToAdd) {
-    int clientId = 2;
+    int clientId = getClientId();
     int id = Integer.parseInt(productQuantityToAdd.get("id"));
     int quantity = Integer.parseInt(productQuantityToAdd.get("quantity"));
 
@@ -123,7 +143,7 @@ public class ShoppingCartPage {
   private void removeOneProduct(@Valid ProductQuantity item) {
     Optional<ProductQuantity> pQ = productQuantityDAO.getProductQuantityById(item.getId());
     pQ.ifPresent(productQuantity -> {
-      int clientId = 2;
+      int clientId = getClientId();
       ShoppingCart cart = getShoppingCartByClientId(clientId);
       List<ProductQuantity> products = cart.getProducts();
       products.removeIf(p -> p.getId().equals(item.getId()));
