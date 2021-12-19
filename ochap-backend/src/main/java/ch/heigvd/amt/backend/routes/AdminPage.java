@@ -10,8 +10,8 @@ import javax.annotation.security.RolesAllowed;
 @RolesAllowed("ROLE_ADMIN")
 public class AdminPage {
 
-    @GetMapping("/admin")
-    public String getPage(Model model){
-        return "admin-page";
-    }
+  @GetMapping("/admin")
+  public String getPage(Model model) {
+    return "admin-page";
+  }
 }
