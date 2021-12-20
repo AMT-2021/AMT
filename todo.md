@@ -10,3 +10,6 @@
   - one product : enlever bouton add to cart si produit pas disponible
   - gérer suppression du produit quand ils sont dans un shopping cart (problème relation entre product quantity 
     et product)
+
+- Tests :
+  - ADD TESTS. EVERYWHERE.
