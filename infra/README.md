@@ -22,25 +22,38 @@ replicating the production server using local virtual machines.
 > Mind that with respect to most documentation out there, we store our playbooks
 > in the `playbooks/` directory instead of the project root.
 
-We use `ansible-playbook` to run a _playbooks_ over an _inventory_.
+We use `ansible-playbook` to run _playbooks_ over an _inventory_.
 A _playbook_ is a set of _roles_ to be applied over an _inventory_.
-An _inventory_ is a set of _hosts_ that may have some variables attached.
+An _inventory_ is a set of _hosts_ (or machines) where changes are applied to.
 A _role_ is a 'feature' that is to be provided, such as 'web server' or
 'database'; roles are made out of _tasks_, which are units of configuration,
 such as 'install nginx', or 'copy the configuration file'.
+Roles (and tasks) use variables to tune fine details (such as a password);
+Each _host_ or _group_ of hosts can have some variables associated to it.
 
 Playbooks may be run (from within the `playbooks` directory) using the command
 command below. Please make sure to **read the README file under the 'playbooks/'
 directory** first.:
+
+This command will apply the ochap playbook on the vagrant inventory.
+This required the vagrant inventory to be provisioned (see section bellow).
 
 ```
 ansible-playbook -i ../inventories/vagrant ochap.yaml
 ```
 
 > If ansible is unable to find your inventory with the command above, your
-> operating may not have support for symlinks. Yry using
+> operating may not have support for symlinks. Try using
 > `../.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory`
 > as inventory.
+
+> Mind that if you are using Microsoft Windows, it is strongly recommended to
+> run Ansible on WSL.
+> Ansible will refuse to execute unless the playbooks directory has proper UNIX
+> filesystem permissions due to security concerns.
+> The filesystem used in WSL does not respect UNIX permissions by default.
+> You can use the following tutorial to implement a fix:
+> https://www.turek.dev/posts/fix-wsl-file-permissions/
 
 At the moment, we provide one inventory, which uses machines provisioned by
 vagrant.
@@ -88,8 +101,18 @@ guide.
 - If you are under GNU/Linux and using the libvirt vagrant backend (default),
   you can manage and attach to the server console using `virt-manager`.
 
+- If you are using Microsoft windows, make sure to install and properly
+  configure VirtualBox.
+
 You can test your machines are up and running with the following command:
 `vagrant ssh vg-ochap-appserver`.
+
+> Mind that if you are using Microsoft Windows, it is strongly recommended to
+> run Vagrant on WSL.
+> We have found empirically that proper VM emulation is unusable on some
+> versions of Microsoft Windows due to licensing requirements regarding HyperV.
+> These errors are silent and can only be detecting by comparing file checksums.
+> See https://www.virtualbox.org/ticket/19695 for alternate solutions.
 
 ## Production deployment
 
