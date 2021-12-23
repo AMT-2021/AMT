@@ -42,7 +42,10 @@ Please see the corresponding [README](infra/README.md) for details.
 
 ### Deployment instructions for local dev/testing
 
-Please see the README of each module.
+Please see the README of each module
+- infrastructure management: [README](infra/README.md)
+- backend application : [README](ochap-backend/README.md)
+- user management: [README](ochap-user-management/README.md)
 
 ## Contributing
 

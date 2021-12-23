@@ -41,7 +41,7 @@ development setup since they reside in the user-management web application
 > to the JWT token in your web browser.
 
 > On firefox, this can be done by right-clicking on the website canvas > Inspect
-> > Storage tab > Cookies > http://localhost > Plus simbol (add item).
+> > Storage tab > Cookies > http://localhost > Plus symbol (add item).
 
 > Be advised that if you use an invalid token (e.g. expired), the website will
 > display a 500 error. Try removing and readding the token in this case.
