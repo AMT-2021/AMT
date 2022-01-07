@@ -5,7 +5,7 @@ import ch.heigvd.amt.backend.entities.Product;
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;//TODO Review NGY - unused import statement
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
+import java.util.Set;//TODO Review NGY - unused import statement
 
 @Controller
 @RolesAllowed("ROLE_ADMIN")
 public class CategoryManager {
 
-  @Autowired
+  @Autowired //TODO NGY Field injection is not recommended
   private CategoryDAO categoryDAO;
-  @Autowired
+  @Autowired //TODO NGY Field injection is not recommended
   private ProductDAO productDAO;
 
   @GetMapping("/category-manager")

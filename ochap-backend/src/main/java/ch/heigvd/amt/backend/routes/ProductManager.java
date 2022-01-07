@@ -2,12 +2,12 @@ package ch.heigvd.amt.backend.routes;
 
 import ch.heigvd.amt.backend.entities.Category;
 import ch.heigvd.amt.backend.entities.Product;
-import ch.heigvd.amt.backend.entities.ProductQuantity;
+import ch.heigvd.amt.backend.entities.ProductQuantity;//TODO Review NGY - unused import statement
 import ch.heigvd.amt.backend.repository.CategoryDAO;
 import ch.heigvd.amt.backend.repository.ProductDAO;
 import ch.heigvd.amt.backend.services.HatPhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;//TODO Review NGY - unused import statement
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,11 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;//TODO Review NGY - unused import statement
+import java.nio.file.Files;//TODO Review NGY - unused import statement
+import java.nio.file.Path;//TODO Review NGY - unused import statement
+import java.nio.file.Paths;//TODO Review NGY - unused import statement
+import java.nio.file.StandardCopyOption;//TODO Review NGY - unused import statement
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,13 +33,13 @@ import java.util.Optional;
 @Controller
 @RolesAllowed("ROLE_ADMIN")
 public class ProductManager {
-  @Autowired
+  @Autowired //TODO NGY Field injection is not recommended
   private ProductDAO productDAO;
 
-  @Autowired
+  @Autowired //TODO NGY Field injection is not recommended
   private CategoryDAO categoryDAO;
 
-  @Autowired
+  @Autowired //TODO NGY Field injection is not recommended
   private HatPhotoService hatPhotoService;
 
   @GetMapping("/product-manager")
@@ -92,6 +92,7 @@ public class ProductManager {
       }
     }
 
+    //TOO NGY - refactor possible with updateProduct Method
     if (image != null && !image.isEmpty()) {
       String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
       Product p = productDAO.save(product);

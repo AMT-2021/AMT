@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 
-import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
+import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;//TODO NGY Unused import statement
 import ch.heigvd.amt.ochap.usermgmt.data.LoginDTO;
 import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
+import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;//TODO NGY Unused import statement
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.IncorrectCredentialsException;
 import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.PropertyError;

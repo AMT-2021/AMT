@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.LoginDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;
+import ch.heigvd.amt.ochap.usermgmt.data.LoginDTO;//TODO NGY Unused import statement
+import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;//TODO NGY Unused import statement
 import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class AmtAuthService {
     private List<PropertyError> errors;
   }
 
-  @Autowired
+  @Autowired //TODO NGY Filed injection not recommended
   @Qualifier("AuthServiceWebClient")
   WebClient httpClient;
 

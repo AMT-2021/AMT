@@ -35,13 +35,14 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
   }
 
   @Bean
+  //TODO NGY Exception never thrown
   public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
     return JWT.require(Algorithm.HMAC256(secret)).build();
   }
 
   @Configuration
   public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
+    @Autowired //TODO NGY Field injection is not recommended
     public JwtFilter jwtFilter;
 
     @Override

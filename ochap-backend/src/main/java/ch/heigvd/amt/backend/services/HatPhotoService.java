@@ -1,15 +1,15 @@
 package ch.heigvd.amt.backend.services;
 
-import java.io.File;
+import java.io.File;//TODO NGY - unused import statement
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
+import org.springframework.util.ResourceUtils;//TODO NGY - unused import statement
 
-@Component
+@Component //TODO NGY - use @Service instead of @Component to be more specific
 public class HatPhotoService {
   private Path uploadsDirectory;
 
@@ -26,7 +26,7 @@ public class HatPhotoService {
       e.printStackTrace();
     }
 
-    // get image from ressource
+    // get image from resource
     try {
       InputStream in = getClass().getResourceAsStream("/static/images/default.png");
       assert in != null;
@@ -42,6 +42,7 @@ public class HatPhotoService {
    * If the specified hat has a photo, the photo is replaced.
    */
   public void saveHatPhoto(String id, InputStream contents) throws IOException {
+    //TODO NGY - better to get the MIME Type File as hard coded the extension
     Path target = uploadsDirectory.resolve(id + ".png");
     Files.copy(contents, target, StandardCopyOption.REPLACE_EXISTING);
   }
