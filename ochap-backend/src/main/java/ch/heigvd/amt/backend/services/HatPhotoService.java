@@ -1,13 +1,11 @@
 package ch.heigvd.amt.backend.services;
 
-import java.io.File;// TODO NGY - unused import statement
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;// TODO NGY - unused import statement
 
 @Component // TODO NGY - use @Service instead of @Component to be more specific
 public class HatPhotoService {

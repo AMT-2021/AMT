@@ -1,22 +1,21 @@
 package ch.heigvd.amt.backend.routes;
 
-import ch.heigvd.amt.backend.entities.Category;
-import ch.heigvd.amt.backend.entities.Product;
-import ch.heigvd.amt.backend.repository.CategoryDAO;
-import ch.heigvd.amt.backend.repository.ProductDAO;
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;// TODO Review NGY - unused import
-                                                                // statement
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Set;// TODO Review NGY - unused import statement
+import ch.heigvd.amt.backend.entities.Category;
+import ch.heigvd.amt.backend.entities.Product;
+import ch.heigvd.amt.backend.repository.CategoryDAO;
+import ch.heigvd.amt.backend.repository.ProductDAO;
 
 @Controller
 @RolesAllowed("ROLE_ADMIN")
