@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     @PostMapping("/accounts/register")
     @ResponseBody
-    String registerAutentication(@RequestBody AuthLoginCommand credentials){
+    String registerAutentication(@RequestBody AccountRegisterCommand credentials){
 
         return "";
     }
