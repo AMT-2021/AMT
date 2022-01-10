@@ -31,8 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
     this.jwtVerifier = jwtVerifier;
   }
 
-  // TODO NGY method's name to review... and why not using try catch bloc in the
-  // corps methods to
+  // TODO NGY method's name to review... and why not using try catch bloc in the corps methods to
   // deal with exception
   private void trySetJwtBasedAuthentication(HttpServletRequest request) {
     var cookies = request.getCookies();
@@ -51,8 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
     var now = ZonedDateTime.now();
 
     if (now.isBefore(issued) || now.isAfter(expires)) {
-      return; // Token not yet / no longer valid.//TODO NGY How the client is informed about
-              // this
+      return; // Token not yet / no longer valid.//TODO NGY How the client is informed about this
               // issue ?
     }
 
