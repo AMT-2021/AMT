@@ -1,9 +1,8 @@
 package ch.heigvd.amt.backend.entities;
 
-import lombok.Data;
-import lombok.NonNull;// TODO NGY - Unused import statement
-
 import javax.persistence.*;
+
+import lombok.Data;
 
 @Entity
 @Data
