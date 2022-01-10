@@ -26,7 +26,7 @@
                     <p class="product-price">CHF <th:block th:text="*{price}" /></p>
                     <section class="product-add-to-shopping-cart">
                         <label class="product-quantity-label" for="product-quantity">Quantity</label>
-                        <input th:disabled="*{stock == 0}" id="product-quantity" th:max="*{stock}" min="1" name="quantity" type="number" th:value="${quantity}" />
+                        <input th:disabled="*{stock == 0}" id="product-quantity" min="1" name="quantity" type="number" th:value="${quantity}" />
                         <input class="product-submit" type="submit" value="Add to shopping cart"/>
                     </section>
                     <p class="product-description" th:text="*{description}"></p>

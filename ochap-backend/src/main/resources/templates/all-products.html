@@ -58,7 +58,6 @@
                             <h4 th:text="${product.name}"></h4>
                             <h4 th:if="${product.price != null}">Price: CHF <span th:text="${product.price}"></span></h4>
                             <h4 th:unless="${product.price != null}">Not for Sale</h4>
-                            <h4>In stock: <span th:text="${product.stock}"></span></h4>
                         </div>
                         <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
                         <input name="id" type="hidden" th:value="${product.id}" />
