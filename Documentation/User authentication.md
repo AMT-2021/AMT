@@ -95,33 +95,11 @@ For an initial implementation we could use the same repo and have a separate
 
 ### A user logs in
 
-```mermaid
-sequenceDiagram
-    User->>Backend: Click 'Log in'
-    Backend->>User: 302 /user/login?back=<backend:location>
-    User->>User component: GET /user/login?back=<backend:location>
-    User component->>User: 200 (Login form)
-    User->>User component: POST /user/login?back=<backend:location>
-    User component->>Auth Service: POST /login
-    Auth Service->>User component: 200 (user profile)
-    User component->>User: 302 <backend:location>?auth=<jwt>
-    User->>Backend: GET <backend:location>?auth=<jwt>
-```
+![](login_sequence.png)
 
 ### A visitor creates an account
 
-```mermaid
-sequenceDiagram
-    User->>Backend: Click 'Register'
-    Backend->>User: 302 /user/register?back=<backend:location>
-    User->>User component: GET /user/register?back=<backend:location>
-    User component->>User: 200 (register form)
-    User->>User component: POST /user/register?back=<backend:location>
-    User component->>Auth Service: POST /register
-    Auth Service->>User component: 200 (user profile)
-    User component->>User: 302 <backend:location>?auth=<jwt>
-    User->>Backend: GET <backend:location>?auth=<jwt>
-```
+![](create_account_sequence.png)
 
 ## Alternatives
 
