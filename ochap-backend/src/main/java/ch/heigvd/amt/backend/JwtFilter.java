@@ -63,7 +63,11 @@ public class JwtFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
-    trySetJwtBasedAuthentication(request);
+    try {
+      trySetJwtBasedAuthentication(request);
+    } catch (RuntimeException e) {
+      // Silently ignore JWT token erros: If a route has security requirements.
+    }
     filterChain.doFilter(request, response);
   }
 }
