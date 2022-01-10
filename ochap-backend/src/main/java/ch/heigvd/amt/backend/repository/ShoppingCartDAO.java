@@ -1,6 +1,6 @@
 package ch.heigvd.amt.backend.repository;
 
-import ch.heigvd.amt.backend.entities.Product;//TODO Review NGY - unused import statement
+import ch.heigvd.amt.backend.entities.Product;// TODO Review NGY - unused import statement
 import ch.heigvd.amt.backend.entities.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,4 +1,4 @@
-package ch.heigvd.amt.ochap.usermgmt;
+package ch.heigvd.amt.backend.routes;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -18,21 +18,21 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 
-import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;//TODO NGY Unused import statement
-import ch.heigvd.amt.ochap.usermgmt.data.LoginDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;//TODO NGY Unused import statement
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.IncorrectCredentialsException;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.PropertyError;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UnacceptableRegistrationException;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UsernameAlreadyExistsException;
+import ch.heigvd.amt.backend.data.LoginDTO;
+import ch.heigvd.amt.backend.data.RegisterDTO;
+import ch.heigvd.amt.backend.services.AmtAuthService;
+import ch.heigvd.amt.backend.services.AmtAuthService.IncorrectCredentialsException;
+import ch.heigvd.amt.backend.services.AmtAuthService.PropertyError;
+import ch.heigvd.amt.backend.services.AmtAuthService.UnacceptableRegistrationException;
+import ch.heigvd.amt.backend.services.AmtAuthService.UsernameAlreadyExistsException;
 
 @Controller
-public class Routes {
+@RequestMapping("/users")
+public class UserManagement {
   @Autowired
   AmtAuthService authServer;
 

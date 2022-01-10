@@ -1,4 +1,4 @@
-package ch.heigvd.amt.ochap.usermgmt;
+package ch.heigvd.amt.backend.services;
 
 import static org.junit.Assert.*;
 

@@ -1,7 +1,7 @@
 package ch.heigvd.amt.backend;
 
-import java.io.IOException;//TODO Review NGY - need compiler option
-import java.time.Instant;//TODO Review NGY - unused import statement
+import java.io.IOException;// TODO Review NGY - need compiler option
+import java.time.Instant;// TODO Review NGY - unused import statement
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -25,10 +25,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-  @Autowired //TODO NGY Field injection is not recommended
+  @Autowired // TODO NGY Field injection is not recommended
   JWTVerifier jwtVerifier;
 
-  //TODO NGY method's name to review... and why not using try catch bloc in the corps methods to deal with exception
+  // TODO NGY method's name to review... and why not using try catch bloc in the corps methods to
+  // deal with exception
   private void trySetJwtBasedAuthentication(HttpServletRequest request) {
     var cookies = request.getCookies();
     if (cookies == null)
@@ -46,7 +47,8 @@ public class JwtFilter extends OncePerRequestFilter {
     var now = ZonedDateTime.now();
 
     if (now.isBefore(issued) || now.isAfter(expires)) {
-      return; // Token not yet / no longer valid.//TODO NGY How the client is informed about this issue ?
+      return; // Token not yet / no longer valid.//TODO NGY How the client is informed about this
+              // issue ?
     }
 
     String subject = jwt.getSubject();

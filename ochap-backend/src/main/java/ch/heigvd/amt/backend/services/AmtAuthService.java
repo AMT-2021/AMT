@@ -1,4 +1,4 @@
-package ch.heigvd.amt.ochap.usermgmt.service;
+package ch.heigvd.amt.backend.services;
 
 import java.util.List;
 
@@ -9,10 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.LoginDTO;//TODO NGY Unused import statement
-import ch.heigvd.amt.ochap.usermgmt.data.RegisterDTO;//TODO NGY Unused import statement
-import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
+import ch.heigvd.amt.backend.data.AccountInfoDTO;
+import ch.heigvd.amt.backend.data.TokenDTO;
+import ch.heigvd.amt.backend.services.AmtAuthService.IncorrectCredentialsException;
+import ch.heigvd.amt.backend.services.AmtAuthService.UnacceptableRegistrationException;
+import ch.heigvd.amt.backend.services.AmtAuthService.UsernameAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class AmtAuthService {
     private List<PropertyError> errors;
   }
 
-  @Autowired //TODO NGY Filed injection not recommended
+  @Autowired // TODO NGY Filed injection not recommended
   @Qualifier("AuthServiceWebClient")
   WebClient httpClient;
 
