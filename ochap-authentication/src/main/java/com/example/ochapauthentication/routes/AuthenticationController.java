@@ -2,6 +2,7 @@ package com.example.ochapauthentication.routes;
 
 import com.example.ochapauthentication.commands.AccountRegisterCommand;
 import com.example.ochapauthentication.commands.AuthLoginCommand;
+<<<<<<< HEAD
 import com.example.ochapauthentication.dto.AccountInfoDTO;
 import com.example.ochapauthentication.entities.User;
 import com.example.ochapauthentication.repository.RoleDAO;
@@ -13,13 +14,22 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+=======
+import com.example.ochapauthentication.entities.User;
+import com.example.ochapauthentication.repository.RoleDAO;
+import com.example.ochapauthentication.repository.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> d019e90887f4b0731ca28cebb39347deceb698a9
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+<<<<<<< HEAD
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
+=======
+>>>>>>> d019e90887f4b0731ca28cebb39347deceb698a9
 import java.util.Optional;
 
 @Controller
@@ -27,6 +37,7 @@ public class AuthenticationController {
 
     final UserDAO userRepository;
     final RoleDAO roleRepository;
+<<<<<<< HEAD
     final PasswordEncoder passwordEncoder;
     final DaoAuthenticationProvider authProvider;
     @Autowired
@@ -39,6 +50,17 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/auth/login",  produces = MediaType.APPLICATION_JSON_VALUE    )
+=======
+
+    @Autowired
+    public AuthenticationController(UserDAO userRepository, RoleDAO roleRepository){
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+
+    }
+
+    @PostMapping("/auth/login")
+>>>>>>> d019e90887f4b0731ca28cebb39347deceb698a9
     @ResponseBody
     String loginAutentication(@RequestBody AuthLoginCommand credentials){
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
