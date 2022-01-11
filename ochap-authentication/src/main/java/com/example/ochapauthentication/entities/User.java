@@ -20,4 +20,6 @@ public class User {
 
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     private Role role;
+
+
 }
