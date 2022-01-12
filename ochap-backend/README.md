@@ -10,6 +10,7 @@ Running the application requires
 
 - A PostgreSQL database.
 - The JWT secret shared with the authentication server.
+- The URL to the external user authentication service.
 - A directory for storing data.
 
 By default, the application will try to connect to a PostgreSQL cluster on
@@ -21,11 +22,11 @@ secret is still required.
 ## Development server
 
 The development server may be launched with by specifying the
-`authServiceJwtSecret` in the command line:
+`authServiceJwtSecret` and `authServiceBaseUrl` in the command line:
 
 ```console
 $ mvn spring-boot:run \
-  -Dspring-boot.run.jvmArguments="-DauthServiceJwtSecret=<secret>"
+  -Dspring-boot.run.jvmArguments="-DauthServiceJwtSecret=<secret> -DauthServiceBaseUrl=http://localhost:22345"
 ```
 
 A development version of the website should be accesible at
@@ -52,9 +53,12 @@ development setup since they reside in the user-management web application
 Tests may be run using `mvn test` as expected.
 Mind that some tests require real credentials to the external authentication
 service and are thus skipped by default.
+If a connection to the external authentication service is available, these test
+can be run using the following command:
 
 ```console
-$ mvn test -Dtest='AmtAuthServiceTests' -DauthServiceBaseUrl=http://localhost:49123
+$ mvn test -Dtest='AmtAuthServiceTest' \
+  -DauthServiceBaseUrl=http://localhost:49123
 ```
 
 ## Production deployment
@@ -78,6 +82,7 @@ Variable                       | Description                               |
 `spring.datasource.url`        | Java database connection (JDBC) URL       |
 `spring.datasource.username`   | Username to access the database           |
 `spring.datasource.password`   | Password to access the database           |
+`authServiceBaseUrl`           | Base URL of the authentication service    |
 `authServiceJwtSecret`         | Shared secret used to validate JWT tokens |
 `ch.heivd.amt.backend.datadir` | Directory where the app can store data    |
 
@@ -85,6 +90,3 @@ Variable                       | Description                               |
 > We only support postgres.
 > An example postgres JDBC connection URL looks like this:
 > `jdbc:postgresql://localhost:5432/ochap-backend`.
-
-This application requires the `ochap-user-management` application to be mounted
-under `/users/` for login functionnality.
