@@ -5,12 +5,9 @@
 This application composed of two different modules, each its own web application:
 
 - The e-commerce backend
-- The user management application
 
-Both applications are expected to run under the same application server: The
-backend should be mounted under `/`, while the user management application
-should be mounted under `/users`.
-Both applications are independent but required to provide full functionnality.
+This application is expected to run under the an application server: The
+backend should be mounted under `/`.
 
 The only supported execution environment is within a Wildfly application server,
 but other environments may be used for development and debugging.
@@ -45,7 +42,6 @@ Please see the corresponding [README](infra/README.md) for details.
 Please see the README of each module
 - infrastructure management: [README](infra/README.md)
 - backend application : [README](ochap-backend/README.md)
-- user management: [README](ochap-user-management/README.md)
 
 ## Contributing
 
