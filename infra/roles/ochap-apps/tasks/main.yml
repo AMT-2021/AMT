@@ -14,20 +14,15 @@
     src: ochap_backend.application.properties
     dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_backend/configuration/main/application.properties
 
-- name: Create ochap-usermgmt configuration directories
+- name: Remove possibly stranded ochap-usermgmt configuration directories
   file:
     path: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main
-    state: directory
+    state: absent
 
-- name: Install ochap-usermgmt configuration module
-  template:
-    src: ochap_usermgmt.module.xml
-    dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main/module.xml
-
-- name: Install ochap-usermgmt application.properties
-  template:
-    src: ochap_usermgmt.application.properties
-    dest: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main/application.properties
+- name: Remove possibly stranded ochap-usermgmt configuration directories
+  file:
+    path: /opt/wildfly/modules/ch/heigvd/amt/ochap_usermgmt/configuration/main
+    state: absent
 
 - name: Create ochap data directory
   file:
@@ -35,6 +30,19 @@
     state: directory
     owner: wildfly
     mode: 0700
+
+- name: Find old WARs
+  find:
+    paths: /opt/wildfly/standalone/deployments
+    patterns: "*.war"
+    use_regex: true
+  register: wildcard_old_wars
+
+- name: Remove old WARs
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ wildcard_old_wars.files }}"
 
 - name: "Copy Ô Chap' WARs"
   copy:
