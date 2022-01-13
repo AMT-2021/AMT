@@ -28,14 +28,19 @@ import ch.heigvd.amt.backend.services.HatPhotoService;
 @Controller
 @RolesAllowed("ROLE_ADMIN")
 public class ProductManager {
-  @Autowired // TODO NGY Field injection is not recommended
-  private ProductDAO productDAO;
+  private final ProductDAO productDAO;
 
-  @Autowired // TODO NGY Field injection is not recommended
-  private CategoryDAO categoryDAO;
+  private final CategoryDAO categoryDAO;
 
-  @Autowired // TODO NGY Field injection is not recommended
-  private HatPhotoService hatPhotoService;
+  private final HatPhotoService hatPhotoService;
+
+  @Autowired
+  public ProductManager(ProductDAO productDAO, CategoryDAO categoryDAO,
+      HatPhotoService hatPhotoService) {
+    this.productDAO = productDAO;
+    this.categoryDAO = categoryDAO;
+    this.hatPhotoService = hatPhotoService;
+  }
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {

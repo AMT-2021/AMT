@@ -24,8 +24,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-  @Autowired // TODO NGY Field injection is not recommended
-  JWTVerifier jwtVerifier;
+  final JWTVerifier jwtVerifier;
+
+  @Autowired
+  public JwtFilter(JWTVerifier jwtVerifier) {
+    this.jwtVerifier = jwtVerifier;
+  }
 
   // TODO NGY method's name to review... and why not using try catch bloc in the
   // corps methods to

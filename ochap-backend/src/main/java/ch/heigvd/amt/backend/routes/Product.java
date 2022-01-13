@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class Product {
-  @Autowired // TODO NGY Field injection is not recommended
-  private ProductDAO productDAO;
+  private final ProductDAO productDAO;
+
+  @Autowired
+  public Product(ProductDAO productDAO) {
+    this.productDAO = productDAO;
+  }
 
   @GetMapping("/products/{id}")
   public String viewProduct(Model model, @PathVariable int id) {

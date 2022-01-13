@@ -22,12 +22,17 @@ import java.util.*;
 @Controller
 public class ShoppingCartPage {
 
+  private final ShoppingCartDAO shoppingCartDAO;
+  private final ProductQuantityDAO productQuantityDAO;
+  private final ProductDAO productDAO;
+
   @Autowired
-  private ShoppingCartDAO shoppingCartDAO;
-  @Autowired
-  private ProductQuantityDAO productQuantityDAO;
-  @Autowired
-  private ProductDAO productDAO;
+  public ShoppingCartPage(ShoppingCartDAO shoppingCartDAO, ProductQuantityDAO productQuantityDAO,
+      ProductDAO productDAO) {
+    this.shoppingCartDAO = shoppingCartDAO;
+    this.productQuantityDAO = productQuantityDAO;
+    this.productDAO = productDAO;
+  }
 
   @GetMapping("/shopping-cart")
   public String viewShoppingCart(Model model) {

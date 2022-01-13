@@ -22,6 +22,11 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class AmtAuthService {
+  @Autowired
+  public AmtAuthService(@Qualifier("AuthServiceWebClient") WebClient httpClient) {
+    this.httpClient = httpClient;
+  }
+
   public static class IncorrectCredentialsException extends Exception {
   }
 
@@ -35,9 +40,7 @@ public class AmtAuthService {
     private List<PropertyError> errors;
   }
 
-  @Autowired // TODO NGY Filed injection not recommended
-  @Qualifier("AuthServiceWebClient")
-  WebClient httpClient;
+  final WebClient httpClient;
 
   @Data
   @AllArgsConstructor

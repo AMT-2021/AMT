@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.nio.file.*;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component // TODO NGY - use @Service instead of @Component to be more specific
+@Service
 public class HatPhotoService {
   private Path uploadsDirectory;
 
