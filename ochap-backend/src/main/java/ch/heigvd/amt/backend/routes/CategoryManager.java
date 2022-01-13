@@ -21,10 +21,14 @@ import ch.heigvd.amt.backend.repository.ProductDAO;
 @RolesAllowed("ROLE_ADMIN")
 public class CategoryManager {
 
-  @Autowired // TODO NGY Field injection is not recommended
-  private CategoryDAO categoryDAO;
-  @Autowired // TODO NGY Field injection is not recommended
-  private ProductDAO productDAO;
+  private final CategoryDAO categoryDAO;
+  private final ProductDAO productDAO;
+
+  @Autowired
+  public CategoryManager(CategoryDAO categoryDAO, ProductDAO productDAO) {
+    this.categoryDAO = categoryDAO;
+    this.productDAO = productDAO;
+  }
 
   @GetMapping("/category-manager")
   public String getPage(Model model, @RequestParam(required = false) String error) {

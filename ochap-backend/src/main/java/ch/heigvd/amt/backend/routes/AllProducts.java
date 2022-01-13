@@ -17,11 +17,15 @@ import java.util.List;
 @Controller
 public class AllProducts {
 
-  @Autowired // TODO NGY Field injection is not recommended
-  private ProductDAO productDAO;
+  private final ProductDAO productDAO;
 
-  @Autowired // TODO NGY Field injection is not recommended
-  private CategoryDAO categoryDAO;
+  private final CategoryDAO categoryDAO;
+
+  @Autowired
+  public AllProducts(ProductDAO productDAO, CategoryDAO categoryDAO) {
+    this.productDAO = productDAO;
+    this.categoryDAO = categoryDAO;
+  }
 
   @GetMapping("/all-products")
   public String allProduct(Model model, @RequestParam(required = false) Integer category) {
