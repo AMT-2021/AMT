@@ -55,6 +55,23 @@ public class AuthenticationController {
     @ResponseBody
     ResponseEntity<String> loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
+        //TODO
+
+
+        // Generate JWT
+        User u = user.get();
+        AccountInfoDTO accountInfo = new AccountInfoDTO();
+        accountInfo.setUsername(u.getUsername());
+        accountInfo.setId(u.getId());
+        accountInfo.setRole(u.getRole().getName());
+
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken(new JwtTokenUtil().generateToken(accountInfo));
+        tokenDTO.setAccountInfo(accountInfo);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.writeValueAsString(tokenDTO);
 
         if (user.isEmpty() || !Arrays.equals(hashPassword(credentials.getPassword(), user.get().getSalt()),
                                              user.get().getPassword())) {
