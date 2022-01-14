@@ -3,8 +3,13 @@ package com.example.ochapauthentication.routes;
 import com.example.ochapauthentication.commands.AccountRegisterCommand;
 import com.example.ochapauthentication.commands.AuthLoginCommand;
 import com.example.ochapauthentication.dto.AccountInfoDTO;
+<<<<<<< HEAD
 import com.example.ochapauthentication.entities.Role;
+=======
+import com.example.ochapauthentication.dto.TokenDTO;
+>>>>>>> a8ec4b7 (start jwt generation)
 import com.example.ochapauthentication.entities.User;
+import com.example.ochapauthentication.jwt.JwtTokenUtil;
 import com.example.ochapauthentication.repository.RoleDAO;
 import com.example.ochapauthentication.repository.UserDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,7 +44,7 @@ public class AuthenticationController {
 
     @PostMapping("/auth/login")
     @ResponseBody
-    String loginAutentication(@RequestBody AuthLoginCommand credentials){
+    String loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
         if (user.isEmpty()){
             return "{\"error\" : \"user don't exist\"}";
@@ -50,7 +55,20 @@ public class AuthenticationController {
             return "{\"error\" : \"wrong password\"}";
         }
 
-        return "{\"success\" : \"logged\"}";
+        // Generate JWT
+        User u = user.get();
+        AccountInfoDTO accountInfo = new AccountInfoDTO();
+        accountInfo.setUsername(u.getUsername());
+        accountInfo.setId(u.getId());
+        accountInfo.setRole(u.getRole().getName());
+
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken(new JwtTokenUtil().generateToken(accountInfo));
+        tokenDTO.setAccountInfo(accountInfo);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.writeValueAsString(tokenDTO);
     }
 
     @PostMapping(value = "/accounts/register",  produces = MediaType.APPLICATION_JSON_VALUE)
