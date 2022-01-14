@@ -16,7 +16,10 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private byte[] password;
+
+    @Column(nullable = false)
+    private byte[] salt;
 
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     private Role role;
