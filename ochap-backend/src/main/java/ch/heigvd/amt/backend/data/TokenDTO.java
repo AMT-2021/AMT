@@ -1,4 +1,4 @@
-package ch.heigvd.amt.ochap.usermgmt.data;
+package ch.heigvd.amt.backend.data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

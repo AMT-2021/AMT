@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/style.css"/>
-    <title>Ô Chap': Create new account</title>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <title>Ô Chap' Login</title>
 </head>
 <body>
   <main class="center-elems full-viewport">
     <div class="survey-form">
-      <h4>Create a new account</h4>
-      <form id="register-perform"
+      <h4>Login to your Ô Chap' account</h4>
+      <form id="login-perform"
         accept-charset="utf-8"
-        th:action="@{register(callback=${callbackUrl})}" th:object="${registerDTO}"
+        th:action="@{/users/login(callback=${callbackUrl})}" th:object="${loginDTO}"
         method="POST">
         <div class="alert alert-warning"
          th:each="err : ${#fields.globalErrors()}" th:text="${err}"/>
 
         <div class="form-aligned-fields">
           <label for="username">Username</label>
-          <input id="username" type="text" required autofocus
+          <input id="username" type="text" autofocus
            class="form-control"
            th:errorclass="fieldError" th:field="*{username}"
            name="username" placeholder="">
@@ -28,7 +28,7 @@
            th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
 
           <label for="password">Password</label>
-          <input id="password" type="password" required
+          <input id="password" type="password"
            class="form-control"
            th:errorclass="fieldError" th:field="*{password}"
            name="password" placeholder="">
@@ -38,13 +38,13 @@
       </form>
 
       <div class="button-row">
-        <input type="submit" name="perform_register" form="register-perform"
-          value="Register">
-        <input type="submit" name="perform_cancel" form="register-cancel"
+        <input type="submit" name="perform_login" form="login-perform"
+          value="Login">
+        <input type="submit" name="perform_cancel" form="login-cancel"
           class="secondary" value="Cancel">
       </div>
 
-      <form id="register-cancel"
+      <form id="login-cancel"
         accept-charset="utf-8"
         th:action="@{*{cancelUrl}?: '/'}"
         method="GET">

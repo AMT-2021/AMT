@@ -1,4 +1,4 @@
-package ch.heigvd.amt.ochap.usermgmt;
+package ch.heigvd.amt.backend.routes;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -17,18 +17,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.IncorrectCredentialsException;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.PropertyError;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UnacceptableRegistrationException;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UsernameAlreadyExistsException;
+import ch.heigvd.amt.backend.data.AccountInfoDTO;
+import ch.heigvd.amt.backend.data.TokenDTO;
+import ch.heigvd.amt.backend.services.AmtAuthService;
+import ch.heigvd.amt.backend.services.AmtAuthService.IncorrectCredentialsException;
+import ch.heigvd.amt.backend.services.AmtAuthService.PropertyError;
+import ch.heigvd.amt.backend.services.AmtAuthService.UnacceptableRegistrationException;
+import ch.heigvd.amt.backend.services.AmtAuthService.UsernameAlreadyExistsException;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ViewsTests {
+public class UserAuthTest {
   @Autowired
   private MockMvc mvc;
 
@@ -37,7 +37,7 @@ public class ViewsTests {
 
   @Test
   public void testOupsPage() throws Exception {
-    mvc.perform(get("/test-oups-page")).andExpect(status().isOk())
+    mvc.perform(get("/users/test-oups-page")).andExpect(status().isOk())
         .andExpect(content().string(containsString("Test oups page.")))
         .andExpect(content().string(containsString("working on it.")))
         .andExpect(content().string(containsString("form action=\"/\"")))
@@ -46,7 +46,7 @@ public class ViewsTests {
 
   @Test
   public void getLoginReturnsLoginView() throws Exception {
-    this.mvc.perform(get("/login?callback=/foo")).andExpect(view().name("login"));
+    this.mvc.perform(get("/users/login?callback=/foo")).andExpect(view().name("login"));
   }
 
   @Test
@@ -57,8 +57,9 @@ public class ViewsTests {
     Mockito.when(authServer.login(username, password)).thenReturn(Mono.just(token));
 
     this.mvc
-        .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", username).param("password", password))
+        .perform(
+            post("/users/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", username).param("password", password))
         .andExpect(view().name("redirect:/foo"))
         .andExpect(cookie().value("token", token.getToken()))
         .andExpect(cookie().httpOnly("token", true)).andExpect(cookie().path("token", "/"));
@@ -74,7 +75,7 @@ public class ViewsTests {
     authCookie.setPath("/");
     authCookie.setHttpOnly(true);
 
-    this.mvc.perform(get("/logout").cookie(authCookie)).andExpect(cookie().path("token", "/"))
+    this.mvc.perform(get("/users/logout").cookie(authCookie)).andExpect(cookie().path("token", "/"))
         .andExpect(cookie().maxAge("token", 0));
   }
 
@@ -88,8 +89,9 @@ public class ViewsTests {
     Mockito.when(authServer.login(username, password)).thenReturn(Mono.just(token));
 
     this.mvc
-        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", "test-username").param("password", "test-password"))
+        .perform(
+            post("/users/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "test-username").param("password", "test-password"))
         .andExpect(view().name("redirect:/foo"))
         .andExpect(cookie().value("token", token.getToken()));
   }
@@ -97,8 +99,9 @@ public class ViewsTests {
   @Test
   public void loginActionValidationFailureContainsErrorMessages() throws Exception {
     this.mvc
-        .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", "").param("password", ""))
+        .perform(
+            post("/users/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "").param("password", ""))
         .andExpect(content().string(containsString("Username cannot be empty")))
         .andExpect(content().string(containsString("Password cannot be empty")));
   }
@@ -106,8 +109,9 @@ public class ViewsTests {
   @Test
   public void registerActionValidationFailureContainsErrorMessages() throws Exception {
     this.mvc
-        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", "u").param("password", "p"))
+        .perform(
+            post("/users/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "u").param("password", "p"))
         .andExpect(content().string(containsString("Username must have at least 4 characters")))
         .andExpect(content().string(containsString("Password must have at least 4 characters")));
   }
@@ -122,8 +126,9 @@ public class ViewsTests {
                 new PropertyError("password", "error in password"),
                 new PropertyError("some property", "other error")))));
     this.mvc
-        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", username).param("password", password))
+        .perform(
+            post("/users/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", username).param("password", password))
         .andExpect(view().name("register"))
         .andExpect(content().string(containsString("error in username")))
         .andExpect(content().string(containsString("error in password")))
@@ -137,8 +142,9 @@ public class ViewsTests {
     Mockito.when(authServer.register(username, password))
         .thenReturn(Mono.error(new UsernameAlreadyExistsException()));
     this.mvc
-        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", username).param("password", password))
+        .perform(
+            post("/users/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", username).param("password", password))
         .andExpect(view().name("register"))
         .andExpect(content().string(containsString("This username is not available.")))
         .andExpect(content().string(containsString("Please choose a different username.")));
@@ -153,8 +159,9 @@ public class ViewsTests {
     Mockito.when(authServer.login(username, password))
         .thenReturn(Mono.error(new RuntimeException()));
     this.mvc
-        .perform(post("/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", username).param("password", password))
+        .perform(
+            post("/users/register?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", username).param("password", password))
         .andExpect(
             content().string(containsString("account seems to have been succesfully created")))
         .andExpect(content().string(containsString("unable to automatically log you in")))
@@ -169,8 +176,9 @@ public class ViewsTests {
         .thenReturn(Mono.error(new IncorrectCredentialsException()));
 
     this.mvc
-        .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", username).param("password", password))
+        .perform(
+            post("/users/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", username).param("password", password))
         .andExpect(content().string(containsString("could not authenticate you")))
         .andExpect(view().name("login"));
   }
@@ -183,8 +191,9 @@ public class ViewsTests {
         .thenReturn(Mono.error(new RuntimeException()));
 
     this.mvc
-        .perform(post("/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("username", username).param("password", password))
+        .perform(
+            post("/users/login?callback=/foo").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", username).param("password", password))
         .andExpect(content().string(containsString("error occured")))
         .andExpect(view().name("simple-error"));
   }

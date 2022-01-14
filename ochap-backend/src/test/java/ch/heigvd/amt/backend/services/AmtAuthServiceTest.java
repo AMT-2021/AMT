@@ -1,4 +1,4 @@
-package ch.heigvd.amt.ochap.usermgmt;
+package ch.heigvd.amt.backend.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,16 +12,16 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ch.heigvd.amt.ochap.usermgmt.data.AccountInfoDTO;
-import ch.heigvd.amt.ochap.usermgmt.data.TokenDTO;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.PropertyError;
-import ch.heigvd.amt.ochap.usermgmt.service.AmtAuthService.UnacceptableRegistrationException;
+import ch.heigvd.amt.backend.data.AccountInfoDTO;
+import ch.heigvd.amt.backend.data.TokenDTO;
+import ch.heigvd.amt.backend.services.AmtAuthService;
+import ch.heigvd.amt.backend.services.AmtAuthService.PropertyError;
+import ch.heigvd.amt.backend.services.AmtAuthService.UnacceptableRegistrationException;
 
 @EnabledIfSystemProperty(named = "authServiceBaseUrl", matches = "\\S+",
     disabledReason = "Test cannot be run if Auth Service is not known.")
 @SpringBootTest
-public class AmtAuthServiceTests {
+public class AmtAuthServiceTest {
   @Autowired
   private AmtAuthService amtAuthServer;
 

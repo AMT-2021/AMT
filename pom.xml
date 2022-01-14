@@ -12,6 +12,5 @@
 
 	<modules>
 		<module>ochap-backend</module>
-		<module>ochap-user-management</module>
 	</modules>
 </project>
