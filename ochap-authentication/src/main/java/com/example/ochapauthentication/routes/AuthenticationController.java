@@ -3,6 +3,7 @@ package com.example.ochapauthentication.routes;
 import com.example.ochapauthentication.commands.AccountRegisterCommand;
 import com.example.ochapauthentication.commands.AuthLoginCommand;
 import com.example.ochapauthentication.dto.AccountInfoDTO;
+import com.example.ochapauthentication.entities.Role;
 import com.example.ochapauthentication.dto.ErrorDTO;
 import com.example.ochapauthentication.dto.ErrorsDTO;
 import com.example.ochapauthentication.dto.TokenDTO;
@@ -24,6 +25,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
