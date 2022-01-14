@@ -3,7 +3,9 @@ package com.example.ochapauthentication.routes;
 import com.example.ochapauthentication.commands.AccountRegisterCommand;
 import com.example.ochapauthentication.commands.AuthLoginCommand;
 import com.example.ochapauthentication.dto.AccountInfoDTO;
+import com.example.ochapauthentication.dto.TokenDTO;
 import com.example.ochapauthentication.entities.User;
+import com.example.ochapauthentication.jwt.JwtTokenUtil;
 import com.example.ochapauthentication.repository.RoleDAO;
 import com.example.ochapauthentication.repository.UserDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,10 +34,25 @@ public class AuthenticationController {
 
     @PostMapping("/auth/login")
     @ResponseBody
-    String loginAutentication(@RequestBody AuthLoginCommand credentials){
+    String loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
         //TODO
-        return "";
+
+
+        // Generate JWT
+        User u = user.get();
+        AccountInfoDTO accountInfo = new AccountInfoDTO();
+        accountInfo.setUsername(u.getUsername());
+        accountInfo.setId(u.getId());
+        accountInfo.setRole(u.getRole().getName());
+
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken(new JwtTokenUtil().generateToken(accountInfo));
+        tokenDTO.setAccountInfo(accountInfo);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.writeValueAsString(tokenDTO);
     }
 
     @PostMapping(value = "/accounts/register",  produces = MediaType.APPLICATION_JSON_VALUE)
