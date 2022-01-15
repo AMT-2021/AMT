@@ -13,21 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 public class AuthenticationController {
@@ -50,10 +45,11 @@ public class AuthenticationController {
             return "{\"error\" : \"user don't exist\"}";
         }
 
-        if (hashPassword(credentials.getPassword(), user.get().getSalt())
-            != user.get().getPassword()) {
+        byte[] hashedPassword = hashPassword(credentials.getPassword(), user.get().getSalt());
+        if (!Arrays.equals(hashedPassword, user.get().getPassword())) {
             return "{\"error\" : \"wrong password\"}";
         }
+
         return "{\"success\" : \"logged\"}";
     }
 
@@ -61,24 +57,25 @@ public class AuthenticationController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     String registerAutentication(@RequestBody AccountRegisterCommand credentials) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
 
-    if (userRepository.getUserByUsername(credentials.getUsername()).isPresent()) {
-      //TODO
-    }
+
+        if (userRepository.getUserByUsername(credentials.getUsername()).isPresent()) {
+          //TODO
+        }
 
         User user = new User();
         user.setUsername(credentials.getUsername());
 
         byte[] salt = generateSalt();
-
-        user.setPassword(hashPassword(credentials.getPassword(), salt));
+        byte[] hashedPasssword = hashPassword(credentials.getPassword(), salt);
+        user.setPassword(hashedPasssword);
         user.setSalt(salt);
         Role role = roleRepository.findByName("user");
         user.setRole(role);
         User userCreated = userRepository.save(user);
 
 
+        ObjectMapper objectMapper = new ObjectMapper();
 
         AccountInfoDTO accountInfo = new AccountInfoDTO();
         accountInfo.setId(userCreated.getId());
@@ -93,10 +90,10 @@ public class AuthenticationController {
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             md.update(salt);
-            return md.digest(password.getBytes(StandardCharsets.UTF_8));
+            return md.digest(password.getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return "ERROR".getBytes(StandardCharsets.UTF_8);
+            throw new RuntimeException();
         }
     }
 
