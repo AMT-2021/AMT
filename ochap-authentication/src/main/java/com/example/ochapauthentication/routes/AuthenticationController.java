@@ -3,11 +3,8 @@ package com.example.ochapauthentication.routes;
 import com.example.ochapauthentication.commands.AccountRegisterCommand;
 import com.example.ochapauthentication.commands.AuthLoginCommand;
 import com.example.ochapauthentication.dto.AccountInfoDTO;
-<<<<<<< HEAD
 import com.example.ochapauthentication.entities.Role;
-=======
 import com.example.ochapauthentication.dto.TokenDTO;
->>>>>>> a8ec4b7 (start jwt generation)
 import com.example.ochapauthentication.entities.User;
 import com.example.ochapauthentication.jwt.JwtTokenUtil;
 import com.example.ochapauthentication.repository.RoleDAO;
@@ -41,6 +38,8 @@ public class AuthenticationController {
         this.roleRepository = roleRepository;
     }
 
+    @Autowired
+    private JwtTokenUtil jwt;
 
     @PostMapping("/auth/login")
     @ResponseBody
@@ -63,7 +62,9 @@ public class AuthenticationController {
         accountInfo.setRole(u.getRole().getName());
 
         TokenDTO tokenDTO = new TokenDTO();
-        tokenDTO.setToken(new JwtTokenUtil().generateToken(accountInfo));
+        String token = jwt.generateToken(accountInfo);
+        System.out.println(token);
+        tokenDTO.setToken(token);
         tokenDTO.setAccountInfo(accountInfo);
 
         ObjectMapper objectMapper = new ObjectMapper();
