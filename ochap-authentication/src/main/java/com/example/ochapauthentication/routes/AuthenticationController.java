@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -63,23 +62,6 @@ public class AuthenticationController {
     @ResponseBody
     ResponseEntity<String> loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
-        //TODO
-
-
-        // Generate JWT
-        User u = user.get();
-        AccountInfoDTO accountInfo = new AccountInfoDTO();
-        accountInfo.setUsername(u.getUsername());
-        accountInfo.setId(u.getId());
-        accountInfo.setRole(u.getRole().getName());
-
-        TokenDTO tokenDTO = new TokenDTO();
-        tokenDTO.setToken(new JwtTokenUtil().generateToken(accountInfo));
-        tokenDTO.setAccountInfo(accountInfo);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        return objectMapper.writeValueAsString(tokenDTO);
 
         if (user.isEmpty() || !Arrays.equals(hashPassword(credentials.getPassword(), user.get().getSalt()),
                                              user.get().getPassword())) {
@@ -89,6 +71,11 @@ public class AuthenticationController {
             return new ResponseEntity<>(objectMapper.writeValueAsString(incorrectCredentials), HttpStatus.FORBIDDEN);
         }
 
+        // Generate JWT
+        User u = user.get();
+        AccountInfoDTO accountInfo = new AccountInfoDTO(u.getId(), u.getUsername(), u.getRole().getName());
+
+        TokenDTO tokenDTO = new TokenDTO(new JwtTokenUtil().generateToken(accountInfo), accountInfo);
 
         // Generate JWT
         User u = user.get();

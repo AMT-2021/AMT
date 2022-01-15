@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class TokenDTO {
     private String token;
-    private AccountInfoDTO account;
+    private AccountInfoDTO accountInfo;
 
-    public TokenDTO(String token, AccountInfoDTO account) {
+    public TokenDTO(String token, AccountInfoDTO accountInfo) {
         this.token = token;
-        this.account = account;
+        this.accountInfo = accountInfo;
     }
 }
