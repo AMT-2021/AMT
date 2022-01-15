@@ -158,6 +158,7 @@ public class AuthenticationController {
                 user.getUsername(),
                 user.getRole().getName());
 
+        ObjectMapper objectMapper = new ObjectMapper();
 
         return new ResponseEntity<>(objectMapper.writeValueAsString(accountInfo), HttpStatus.CREATED);
     }
