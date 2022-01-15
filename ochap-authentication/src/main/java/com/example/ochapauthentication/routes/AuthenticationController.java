@@ -7,11 +7,6 @@ import com.example.ochapauthentication.dto.ErrorDTO;
 import com.example.ochapauthentication.dto.ErrorsDTO;
 import com.example.ochapauthentication.dto.TokenDTO;
 import com.example.ochapauthentication.entities.Role;
-import com.example.ochapauthentication.dto.ErrorDTO;
-import com.example.ochapauthentication.dto.ErrorsDTO;
-import com.example.ochapauthentication.dto.TokenDTO;
-import com.example.ochapauthentication.entities.Role;
-import com.example.ochapauthentication.dto.TokenDTO;
 import com.example.ochapauthentication.entities.User;
 import com.example.ochapauthentication.jwt.JwtTokenUtil;
 import com.example.ochapauthentication.repository.RoleDAO;
@@ -23,13 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -75,29 +66,9 @@ public class AuthenticationController {
         User u = user.get();
         AccountInfoDTO accountInfo = new AccountInfoDTO(u.getId(), u.getUsername(), u.getRole().getName());
 
-        TokenDTO tokenDTO = new TokenDTO(new JwtTokenUtil().generateToken(accountInfo), accountInfo);
+        TokenDTO tokenDTO = new TokenDTO(jwt.generateToken(accountInfo), accountInfo);
 
-        // Generate JWT
-        User u = user.get();
-        AccountInfoDTO accountInfo = new AccountInfoDTO();
-        accountInfo.setUsername(u.getUsername());
-        accountInfo.setId(u.getId());
-        accountInfo.setRole(u.getRole().getName());
-
-        TokenDTO tokenDTO = new TokenDTO();
-        String token = jwt.generateToken(accountInfo);
-        System.out.println(token);
-        tokenDTO.setToken(token);
-        tokenDTO.setAccountInfo(accountInfo);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(tokenDTO);
-        AccountInfoDTO account = new AccountInfoDTO(
-                user.get().getId(),
-                user.get().getUsername(),
-                user.get().getRole().getName());
-        TokenDTO payload = new TokenDTO("PLACEHOLDER", account); //FIXME place a valid JWT token
-        return new ResponseEntity<>(objectMapper.writeValueAsString(payload), HttpStatus.OK);
+        return new ResponseEntity<>(objectMapper.writeValueAsString(tokenDTO), HttpStatus.OK);
     }
 
     @PostMapping(value = "/accounts/register",  produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +82,7 @@ public class AuthenticationController {
             errorList.add(new ErrorDTO("username", "Must be at least " + MIN_USERNAME_LENGTH + " characters long"));
         }
 
-        if(credentials.getPassword() == null || credentials.getPassword().length() < MIN_USERNAME_LENGTH) {
+        if(credentials.getPassword() == null || credentials.getPassword().length() < MIN_PASSWORD_LENGTH) {
             isError = true;
             errorList.add(new ErrorDTO("password", "Must be at least " + MIN_PASSWORD_LENGTH + " characters long"));
         }
@@ -140,9 +111,9 @@ public class AuthenticationController {
         User userCreated = userRepository.save(user);
 
         AccountInfoDTO accountInfo = new AccountInfoDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getRole().getName());
+                userCreated.getId(),
+                userCreated.getUsername(),
+                userCreated.getRole().getName());
 
         ObjectMapper objectMapper = new ObjectMapper();
 
