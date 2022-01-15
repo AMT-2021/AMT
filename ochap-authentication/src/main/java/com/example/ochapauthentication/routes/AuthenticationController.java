@@ -67,7 +67,6 @@ public class AuthenticationController {
         tokenDTO.setAccountInfo(accountInfo);
 
         ObjectMapper objectMapper = new ObjectMapper();
-
         return objectMapper.writeValueAsString(tokenDTO);
     }
 
