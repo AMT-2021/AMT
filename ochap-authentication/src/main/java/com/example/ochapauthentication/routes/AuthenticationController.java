@@ -4,7 +4,9 @@ import com.example.ochapauthentication.commands.AccountRegisterCommand;
 import com.example.ochapauthentication.commands.AuthLoginCommand;
 import com.example.ochapauthentication.dto.AccountInfoDTO;
 import com.example.ochapauthentication.entities.Role;
+import com.example.ochapauthentication.dto.TokenDTO;
 import com.example.ochapauthentication.entities.User;
+import com.example.ochapauthentication.jwt.JwtTokenUtil;
 import com.example.ochapauthentication.repository.RoleDAO;
 import com.example.ochapauthentication.repository.UserDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,10 +38,12 @@ public class AuthenticationController {
         this.roleRepository = roleRepository;
     }
 
+    @Autowired
+    private JwtTokenUtil jwt;
 
     @PostMapping("/auth/login")
     @ResponseBody
-    String loginAutentication(@RequestBody AuthLoginCommand credentials){
+    String loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
         if (user.isEmpty()){
             return "{\"error\" : \"user don't exist\"}";
@@ -50,7 +54,21 @@ public class AuthenticationController {
             return "{\"error\" : \"wrong password\"}";
         }
 
-        return "{\"success\" : \"logged\"}";
+        // Generate JWT
+        User u = user.get();
+        AccountInfoDTO accountInfo = new AccountInfoDTO();
+        accountInfo.setUsername(u.getUsername());
+        accountInfo.setId(u.getId());
+        accountInfo.setRole(u.getRole().getName());
+
+        TokenDTO tokenDTO = new TokenDTO();
+        String token = jwt.generateToken(accountInfo);
+        System.out.println(token);
+        tokenDTO.setToken(token);
+        tokenDTO.setAccountInfo(accountInfo);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(tokenDTO);
     }
 
     @PostMapping(value = "/accounts/register",  produces = MediaType.APPLICATION_JSON_VALUE)
