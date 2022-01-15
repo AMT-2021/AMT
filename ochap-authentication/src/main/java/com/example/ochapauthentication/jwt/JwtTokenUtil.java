@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 @Component
 public class JwtTokenUtil implements Serializable {
-    private static final long serialVersionUUID = -2550185165626007488L;
     public static final long JWT_TOKEN_VALIDITY = 5*60*60;
 
     @Value("${jwt.secret}")
