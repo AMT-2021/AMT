@@ -20,15 +20,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -142,8 +146,8 @@ public class AuthenticationController {
         user.setUsername(credentials.getUsername());
 
         byte[] salt = generateSalt();
-        byte[] hashedPasssword = hashPassword(credentials.getPassword(), salt);
-        user.setPassword(hashedPasssword);
+
+        user.setPassword(hashPassword(credentials.getPassword(), salt));
         user.setSalt(salt);
         Role role = roleRepository.findByName("user");
         user.setRole(role);
@@ -153,6 +157,7 @@ public class AuthenticationController {
                 user.getId(),
                 user.getUsername(),
                 user.getRole().getName());
+
 
         return new ResponseEntity<>(objectMapper.writeValueAsString(accountInfo), HttpStatus.CREATED);
     }
