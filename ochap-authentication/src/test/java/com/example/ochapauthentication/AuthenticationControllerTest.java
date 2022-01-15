@@ -1,5 +1,7 @@
 package com.example.ochapauthentication;
 
+import com.example.ochapauthentication.commands.AccountRegisterCommand;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,15 +22,51 @@ public class AuthenticationControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    private final ObjectMapper om = new ObjectMapper();
+
     @Test
     @Transactional
     public void newUserCanRegister() throws Exception {
-        String username = "testUser";
-        String password = "testUser123";
+        AccountRegisterCommand credentials = new AccountRegisterCommand();
+        credentials.setUsername("TestUser");
+        credentials.setPassword("TestUser123");
+        String requestJson =om.writeValueAsString(credentials);
         this.mvc.perform(post("/accounts/register")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .param("username", username)
-                .param("password", password))
-            .andExpect(status().is2xxSuccessful());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+            .andExpect(status().isCreated());
     }
+
+    @Test
+    @Transactional
+    public void newCredentialsIncorrect() throws Exception {
+        AccountRegisterCommand credentials = new AccountRegisterCommand();
+        credentials.setUsername("TestUser");
+        credentials.setPassword("TestUser123");
+        String requestJson =om.writeValueAsString(credentials);
+        this.mvc.perform(post("/accounts/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @Transactional
+    public void cantHaveSameUsername() throws Exception {
+        AccountRegisterCommand credentials = new AccountRegisterCommand();
+        credentials.setUsername("TestUser");
+        credentials.setPassword("TestUser123");
+        String requestJson =om.writeValueAsString(credentials);
+
+        this.mvc.perform(post("/accounts/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson));
+
+        this.mvc.perform(post("/accounts/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isConflict());
+    }
+
+
 }
