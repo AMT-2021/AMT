@@ -4,13 +4,13 @@ import lombok.Data;
 
 @Data
 public class AccountInfoDTO {
-    private Integer id;
-    private String username;
-    private String role;
+  private Integer id;
+  private String username;
+  private String role;
 
-    public AccountInfoDTO(Integer id, String username, String role) {
-        this.id = id;
-        this.username = username;
-        this.role = role;
-    }
+  public AccountInfoDTO(Integer id, String username, String role) {
+    this.id = id;
+    this.username = username;
+    this.role = role;
+  }
 }

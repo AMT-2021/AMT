@@ -32,110 +32,120 @@ import java.util.Optional;
 @Controller
 public class AuthenticationController {
 
-    final UserDAO userRepository;
-    final RoleDAO roleRepository;
-    final ObjectMapper objectMapper;
+  final UserDAO userRepository;
+  final RoleDAO roleRepository;
+  final ObjectMapper objectMapper;
 
-    final int MIN_USERNAME_LENGTH = 3;
-    final int MIN_PASSWORD_LENGTH = 8;
+  final int MIN_USERNAME_LENGTH = 3;
+  final int MIN_PASSWORD_LENGTH = 8;
 
-    @Autowired
-    AuthenticationController(UserDAO userRepository, RoleDAO roleRepository){
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.objectMapper = new ObjectMapper();
+  @Autowired
+  AuthenticationController(UserDAO userRepository, RoleDAO roleRepository) {
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
+    this.objectMapper = new ObjectMapper();
+  }
+
+  @Autowired
+  private JwtTokenUtil jwt;
+
+  @PostMapping("/auth/login")
+  @ResponseBody
+  ResponseEntity<Object> loginAutentication(@RequestBody AuthLoginCommand credentials)
+      throws JsonProcessingException {
+    Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
+
+    if (user.isEmpty()
+        || !Arrays.equals(hashPassword(credentials.getPassword(), user.get().getSalt()),
+            user.get().getPasswordHash())) {
+      com.example.ochapauthentication.dto.Error incorrectCredentials =
+          new com.example.ochapauthentication.dto.Error("Incorrect credentials");
+
+      return new ResponseEntity<>(objectMapper.writeValueAsString(incorrectCredentials),
+          HttpStatus.FORBIDDEN);
     }
 
-    @Autowired
-    private JwtTokenUtil jwt;
+    // Generate JWT
+    User u = user.get();
+    AccountInfoDTO accountInfo =
+        new AccountInfoDTO(u.getId(), u.getUsername(), u.getRole().getName());
 
-    @PostMapping("/auth/login")
-    @ResponseBody
-    ResponseEntity<Object> loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
-        Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
+    TokenDTO tokenDTO = new TokenDTO(jwt.generateToken(accountInfo), accountInfo);
 
-        if (user.isEmpty() || !Arrays.equals(hashPassword(credentials.getPassword(), user.get().getSalt()),
-                                             user.get().getPasswordHash())) {
-            com.example.ochapauthentication.dto.Error incorrectCredentials =
-                    new com.example.ochapauthentication.dto.Error("Incorrect credentials");
+    return new ResponseEntity<>(objectMapper.writeValueAsString(tokenDTO), HttpStatus.OK);
+  }
 
-            return new ResponseEntity<>(objectMapper.writeValueAsString(incorrectCredentials), HttpStatus.FORBIDDEN);
-        }
+  @PostMapping(value = "/accounts/register", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  ResponseEntity<Object> registerAutentication(@RequestBody AccountRegisterCommand credentials)
+      throws JsonProcessingException {
 
-        // Generate JWT
-        User u = user.get();
-        AccountInfoDTO accountInfo = new AccountInfoDTO(u.getId(), u.getUsername(), u.getRole().getName());
-
-        TokenDTO tokenDTO = new TokenDTO(jwt.generateToken(accountInfo), accountInfo);
-
-        return new ResponseEntity<>(objectMapper.writeValueAsString(tokenDTO), HttpStatus.OK);
+    boolean isError = false;
+    ArrayList<ErrorDTO> errorList = new ArrayList<>();
+    if (credentials.getUsername() == null
+        || credentials.getUsername().length() < MIN_USERNAME_LENGTH) {
+      isError = true;
+      errorList.add(
+          new ErrorDTO("username", "Must be at least " + MIN_USERNAME_LENGTH + " characters long"));
     }
 
-    @PostMapping(value = "/accounts/register",  produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    ResponseEntity<Object> registerAutentication(@RequestBody AccountRegisterCommand credentials) throws JsonProcessingException {
-
-        boolean isError = false;
-        ArrayList<ErrorDTO> errorList = new ArrayList<>();
-        if(credentials.getUsername() == null || credentials.getUsername().length() < MIN_USERNAME_LENGTH) {
-            isError = true;
-            errorList.add(new ErrorDTO("username", "Must be at least " + MIN_USERNAME_LENGTH + " characters long"));
-        }
-
-        if(credentials.getPassword() == null || credentials.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            isError = true;
-            errorList.add(new ErrorDTO("password", "Must be at least " + MIN_PASSWORD_LENGTH + " characters long"));
-        }
-
-        if(isError){
-            ErrorsDTO errors = new ErrorsDTO(errorList);
-            return new ResponseEntity<>(objectMapper.writeValueAsString(errors), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
-        if (userRepository.getUserByUsername(credentials.getUsername()).isPresent()) {
-            com.example.ochapauthentication.dto.Error alreadyExisting =
-            new com.example.ochapauthentication.dto.Error("A user with the specified username already exists.");
-
-            return new ResponseEntity<>(objectMapper.writeValueAsString(alreadyExisting), HttpStatus.CONFLICT);
-        }
-
-        User user = new User();
-        user.setUsername(credentials.getUsername());
-
-        byte[] salt = generateSalt();
-
-        user.setPasswordHash(hashPassword(credentials.getPassword(), salt));
-        user.setSalt(salt);
-        Role role = roleRepository.findByName("user");
-        user.setRole(role);
-        User userCreated = userRepository.save(user);
-
-        AccountInfoDTO accountInfo = new AccountInfoDTO(
-                userCreated.getId(),
-                userCreated.getUsername(),
-                userCreated.getRole().getName());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        return new ResponseEntity<>(objectMapper.writeValueAsString(accountInfo), HttpStatus.CREATED);
+    if (credentials.getPassword() == null
+        || credentials.getPassword().length() < MIN_PASSWORD_LENGTH) {
+      isError = true;
+      errorList.add(
+          new ErrorDTO("password", "Must be at least " + MIN_PASSWORD_LENGTH + " characters long"));
     }
 
-    private byte[] hashPassword(String password, byte[] salt){
-
-        try{
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            return md.digest(password.getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
+    if (isError) {
+      ErrorsDTO errors = new ErrorsDTO(errorList);
+      return new ResponseEntity<>(objectMapper.writeValueAsString(errors),
+          HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    private byte[] generateSalt(){
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        return salt;
+    if (userRepository.getUserByUsername(credentials.getUsername()).isPresent()) {
+      com.example.ochapauthentication.dto.Error alreadyExisting =
+          new com.example.ochapauthentication.dto.Error(
+              "A user with the specified username already exists.");
+
+      return new ResponseEntity<>(objectMapper.writeValueAsString(alreadyExisting),
+          HttpStatus.CONFLICT);
     }
+
+    User user = new User();
+    user.setUsername(credentials.getUsername());
+
+    byte[] salt = generateSalt();
+
+    user.setPasswordHash(hashPassword(credentials.getPassword(), salt));
+    user.setSalt(salt);
+    Role role = roleRepository.findByName("user");
+    user.setRole(role);
+    User userCreated = userRepository.save(user);
+
+    AccountInfoDTO accountInfo = new AccountInfoDTO(userCreated.getId(), userCreated.getUsername(),
+        userCreated.getRole().getName());
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    return new ResponseEntity<>(objectMapper.writeValueAsString(accountInfo), HttpStatus.CREATED);
+  }
+
+  private byte[] hashPassword(String password, byte[] salt) {
+
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-512");
+      md.update(salt);
+      return md.digest(password.getBytes());
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+      throw new RuntimeException();
+    }
+  }
+
+  private byte[] generateSalt() {
+    SecureRandom random = new SecureRandom();
+    byte[] salt = new byte[16];
+    random.nextBytes(salt);
+    return salt;
+  }
 }

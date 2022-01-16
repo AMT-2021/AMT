@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AccountRegisterCommand {
-    private String username;
-    private String password;
+  private String username;
+  private String password;
 }

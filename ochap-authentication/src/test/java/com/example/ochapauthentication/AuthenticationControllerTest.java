@@ -19,54 +19,53 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = OchapAuthenticationApplication.class)
 @AutoConfigureMockMvc
 public class AuthenticationControllerTest {
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    private final ObjectMapper om = new ObjectMapper();
+  private final ObjectMapper om = new ObjectMapper();
 
-    @Test
-    @Transactional
-    public void newUserCanRegister() throws Exception {
-        AccountRegisterCommand credentials = new AccountRegisterCommand();
-        credentials.setUsername("TestUser");
-        credentials.setPassword("TestUser123");
-        String requestJson =om.writeValueAsString(credentials);
-        this.mvc.perform(post("/accounts/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-            .andExpect(status().isCreated());
-    }
+  @Test
+  @Transactional
+  public void newUserCanRegister() throws Exception {
+    AccountRegisterCommand credentials = new AccountRegisterCommand();
+    credentials.setUsername("TestUser");
+    credentials.setPassword("TestUser123");
+    String requestJson = om.writeValueAsString(credentials);
+    this.mvc
+        .perform(
+            post("/accounts/register").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        .andExpect(status().isCreated());
+  }
 
-    @Test
-    @Transactional
-    public void newCredentialsIncorrect() throws Exception {
-        AccountRegisterCommand credentials = new AccountRegisterCommand();
-        credentials.setUsername("TestUser");
-        credentials.setPassword("TestUser123");
-        String requestJson =om.writeValueAsString(credentials);
-        this.mvc.perform(post("/accounts/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isCreated());
-    }
+  @Test
+  @Transactional
+  public void newCredentialsIncorrect() throws Exception {
+    AccountRegisterCommand credentials = new AccountRegisterCommand();
+    credentials.setUsername("TestUser");
+    credentials.setPassword("TestUser123");
+    String requestJson = om.writeValueAsString(credentials);
+    this.mvc
+        .perform(
+            post("/accounts/register").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        .andExpect(status().isCreated());
+  }
 
-    @Test
-    @Transactional
-    public void cantHaveSameUsername() throws Exception {
-        AccountRegisterCommand credentials = new AccountRegisterCommand();
-        credentials.setUsername("TestUser");
-        credentials.setPassword("TestUser123");
-        String requestJson =om.writeValueAsString(credentials);
+  @Test
+  @Transactional
+  public void cantHaveSameUsername() throws Exception {
+    AccountRegisterCommand credentials = new AccountRegisterCommand();
+    credentials.setUsername("TestUser");
+    credentials.setPassword("TestUser123");
+    String requestJson = om.writeValueAsString(credentials);
 
-        this.mvc.perform(post("/accounts/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson));
+    this.mvc.perform(
+        post("/accounts/register").contentType(MediaType.APPLICATION_JSON).content(requestJson));
 
-        this.mvc.perform(post("/accounts/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isConflict());
-    }
+    this.mvc
+        .perform(
+            post("/accounts/register").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        .andExpect(status().isConflict());
+  }
 
 
 }
