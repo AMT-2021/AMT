@@ -11,6 +11,7 @@
 	<name>Java Components of the Ô Chap' project</name>
 
 	<modules>
+		<module>ochap-authentication</module>
 		<module>ochap-backend</module>
 	</modules>
 </project>
