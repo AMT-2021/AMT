@@ -39,6 +39,19 @@ Tests may be run using `mvn test` as expected.
 
 ## Production deployment
 
-//TODO
+
+When run under [Wildfly][], the application expects the configuration module
+`ch.heigvd.amt.ochap_authentication.configuration` to be available; moreover the
+resource path is expected to contain an `application.properties` file with the
+following variables:
+
+Variable                       | Description                               |
+--------                       | -----------                               |
+`server.port`                  | The port the server runs on               |
+`spring.datasource.url`        | Java database connection (JDBC) URL       |
+`spring.datasource.username`   | Username to access the database           |
+`spring.datasource.password`   | Password to access the database           |
+`jwt.secret`                   | Shared secret used to validate JWT tokens |
+`admin.password`               | The password for the admin user `ochap`   |
 
 
