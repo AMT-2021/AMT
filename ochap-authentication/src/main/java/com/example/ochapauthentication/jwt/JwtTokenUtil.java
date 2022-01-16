@@ -23,10 +23,10 @@ public class JwtTokenUtil implements Serializable {
     public String generateToken(AccountInfoDTO userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", userDetails.getRole());
-        return doGenerateToken(claims, userDetails.getUsername());
+        return generateJwtWithClaims(userDetails.getUsername(), claims);
     }
 
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String generateJwtWithClaims( String subject, Map<String, Object> claims) {
 
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 

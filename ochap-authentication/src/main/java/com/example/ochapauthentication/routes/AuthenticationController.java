@@ -51,11 +51,11 @@ public class AuthenticationController {
 
     @PostMapping("/auth/login")
     @ResponseBody
-    ResponseEntity<String> loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
+    ResponseEntity<Object> loginAutentication(@RequestBody AuthLoginCommand credentials) throws JsonProcessingException {
         Optional<User> user = userRepository.getUserByUsername(credentials.getUsername());
 
         if (user.isEmpty() || !Arrays.equals(hashPassword(credentials.getPassword(), user.get().getSalt()),
-                                             user.get().getPassword())) {
+                                             user.get().getPasswordHash())) {
             com.example.ochapauthentication.dto.Error incorrectCredentials =
                     new com.example.ochapauthentication.dto.Error("Incorrect credentials");
 
@@ -73,7 +73,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/accounts/register",  produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<String> registerAutentication(@RequestBody AccountRegisterCommand credentials) throws JsonProcessingException {
+    ResponseEntity<Object> registerAutentication(@RequestBody AccountRegisterCommand credentials) throws JsonProcessingException {
 
         boolean isError = false;
         ArrayList<ErrorDTO> errorList = new ArrayList<>();
@@ -94,7 +94,7 @@ public class AuthenticationController {
 
         if (userRepository.getUserByUsername(credentials.getUsername()).isPresent()) {
             com.example.ochapauthentication.dto.Error alreadyExisting =
-            new com.example.ochapauthentication.dto.Error("The username already exist");
+            new com.example.ochapauthentication.dto.Error("A user with the specified username already exists.");
 
             return new ResponseEntity<>(objectMapper.writeValueAsString(alreadyExisting), HttpStatus.CONFLICT);
         }
@@ -104,7 +104,7 @@ public class AuthenticationController {
 
         byte[] salt = generateSalt();
 
-        user.setPassword(hashPassword(credentials.getPassword(), salt));
+        user.setPasswordHash(hashPassword(credentials.getPassword(), salt));
         user.setSalt(salt);
         Role role = roleRepository.findByName("user");
         user.setRole(role);

@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "user_table")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private byte[] password;
+    private byte[] passwordHash;
 
     @Column(nullable = false)
     private byte[] salt;
