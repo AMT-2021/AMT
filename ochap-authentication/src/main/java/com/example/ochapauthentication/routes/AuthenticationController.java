@@ -11,6 +11,7 @@ import com.example.ochapauthentication.entities.User;
 import com.example.ochapauthentication.jwt.JwtTokenUtil;
 import com.example.ochapauthentication.repository.RoleDAO;
 import com.example.ochapauthentication.repository.UserDAO;
+import com.example.ochapauthentication.services.RoleInitService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class AuthenticationController {
   final UserDAO userRepository;
   final RoleDAO roleRepository;
   final ObjectMapper objectMapper;
+  final RoleInitService roleInitService;
 
   final int MIN_USERNAME_LENGTH = 3;
   final int MIN_PASSWORD_LENGTH = 8;
@@ -44,6 +46,7 @@ public class AuthenticationController {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.objectMapper = new ObjectMapper();
+    this.roleInitService = new RoleInitService(this.roleRepository);
   }
 
   @Autowired
