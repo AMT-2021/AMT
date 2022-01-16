@@ -29,8 +29,8 @@ public class RoleInitService {
   private String adminPassword;
 
   @Autowired
-  public RoleInitService(
-      RoleDAO roleRepository, UserDAO userRepository, PlatformTransactionManager ptm) {
+  public RoleInitService(RoleDAO roleRepository, UserDAO userRepository,
+      PlatformTransactionManager ptm) {
     this.roleRepository = roleRepository;
     this.userRepository = userRepository;
     this.ptm = ptm;
@@ -39,35 +39,34 @@ public class RoleInitService {
   @PostConstruct
   public void init() {
     TransactionTemplate tmpl = new TransactionTemplate(ptm);
-    tmpl.execute(
-        new TransactionCallbackWithoutResult() {
-          @Override
-          protected void doInTransactionWithoutResult(TransactionStatus status) {
+    tmpl.execute(new TransactionCallbackWithoutResult() {
+      @Override
+      protected void doInTransactionWithoutResult(TransactionStatus status) {
 
-            if (roleRepository.findByName("user") == null) {
-              Role user = new Role();
-              user.setName("user");
-              roleRepository.save(user);
-            }
+        if (roleRepository.findByName("user") == null) {
+          Role user = new Role();
+          user.setName("user");
+          roleRepository.save(user);
+        }
 
-            if (roleRepository.findByName("admin") == null) {
-              Role admin = new Role();
-              admin.setName("admin");
-              roleRepository.save(admin);
-            }
+        if (roleRepository.findByName("admin") == null) {
+          Role admin = new Role();
+          admin.setName("admin");
+          roleRepository.save(admin);
+        }
 
-            if (userRepository.getUserByUsername("ochap").isEmpty()) {
-              User admin = new User();
-              admin.setUsername("ochap");
+        if (userRepository.getUserByUsername("ochap").isEmpty()) {
+          User admin = new User();
+          admin.setUsername("ochap");
 
-              byte[] salt = generateSalt();
+          byte[] salt = generateSalt();
 
-              admin.setPasswordHash(hashPassword(adminPassword, salt));
-              admin.setSalt(salt);
-              admin.setRole(roleRepository.findByName("admin"));
-              userRepository.save(admin);
-            }
-          }
-        });
+          admin.setPasswordHash(hashPassword(adminPassword, salt));
+          admin.setSalt(salt);
+          admin.setRole(roleRepository.findByName("admin"));
+          userRepository.save(admin);
+        }
+      }
+    });
   }
 }
