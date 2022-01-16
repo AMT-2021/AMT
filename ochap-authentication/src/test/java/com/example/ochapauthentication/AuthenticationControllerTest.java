@@ -6,7 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -16,12 +20,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = OchapAuthenticationApplication.class)
 @AutoConfigureMockMvc
-
+@ContextConfiguration(initializers = AuthenticationControllerTest.ContextInitializer.class)
 public class AuthenticationControllerTest {
   @Autowired
   private MockMvc mvc;
 
   private final ObjectMapper om = new ObjectMapper();
+
+  public static class ContextInitializer
+      implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    @Override
+    public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+
+      TestPropertySourceUtils.addInlinedPropertiesToEnvironment(configurableApplicationContext,
+          "jwt.secret=invalid", "admin.password=invalid");
+    }
+  }
 
   @Test
   @Transactional
