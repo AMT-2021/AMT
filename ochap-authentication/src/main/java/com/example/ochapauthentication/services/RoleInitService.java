@@ -8,21 +8,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleInitService {
 
-    RoleDAO roleRepository;
+  RoleDAO roleRepository;
 
 
-    public RoleInitService(RoleDAO roleRepository){
-        this.roleRepository = roleRepository;
-        if(roleRepository.findByName("user") == null){
-            Role user = new Role();
-            user.setName("user");
-            roleRepository.save(user);
-        }
-
-        if(roleRepository.findByName("admin") == null){
-            Role admin = new Role();
-            admin.setName("admin");
-            roleRepository.save(admin);
-        }
+  public RoleInitService(RoleDAO roleRepository) {
+    this.roleRepository = roleRepository;
+    if (roleRepository.findByName("user") == null) {
+      Role user = new Role();
+      user.setName("user");
+      roleRepository.save(user);
     }
+
+    if (roleRepository.findByName("admin") == null) {
+      Role admin = new Role();
+      admin.setName("admin");
+      roleRepository.save(admin);
+    }
+  }
 }

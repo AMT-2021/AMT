@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = OchapAuthenticationApplication.class)
 @AutoConfigureMockMvc
+
 public class AuthenticationControllerTest {
   @Autowired
   private MockMvc mvc;
