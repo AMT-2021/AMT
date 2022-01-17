@@ -50,7 +50,6 @@
 
             <!-- news brand -->
             <div id="brand" class="brand-bg">
-                <h3>Products</h3>
                 <form th:action="@{/shopping-cart/add}" class="row" th:if="${#lists.size(products) != 0}" method="post">
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
                         <div class="brand-box">
@@ -63,7 +62,7 @@
                         <input name="id" type="hidden" th:value="${product.id}" />
                         <input name="quantity" type="hidden" value="1" />
                         <input class="buynow" th:if="${product.stock > 0 && product.price != null}" type="submit" value="Add to Cart" />
-                        <h4 th:unless="${product.stock > 0 && product.price != null}" class="mt-5" style="text-align: center">Unavailable</h4>
+                        <h4 th:unless="${product.stock > 0 && product.price != null}" class="unavailable">Unavailable</h4>
                     </div>
                 </form>
                 <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>

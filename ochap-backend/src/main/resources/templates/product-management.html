@@ -33,34 +33,36 @@
     <div class="Categories">
         <div class="container">
             <div class="row">
-                <div class="title">
-                    <h2>Product Manager</h2>
+                <div class="col-md-12">
+                    <div class="title">
+                        <h2>Product Manager</h2>
+                    </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="brand-bg container">
                 <form method="get" th:action="@{/product-manager/add}">
-                    <button type="submit" class="btn btn-primary"> Add Product</button>
+                    <button type="submit" class="buynow">New Product</button>
                 </form>
                 <div class="row mb-2 pb-2 mt-4" style="border-bottom: black 1px solid">
                     <p class="col-2">Name</p>
-                    <p class="col-2">description</p>
-                    <p class="col-2">stock</p>
-                    <p class="col-2">price</p>
+                    <p class="col-2">Description</p>
+                    <p class="col-2">Stock</p>
+                    <p class="col-2">Price</p>
                 </div>
                 <div th:each="p : ${products}" class="row">
-                        <p th:text=" ${p.name} " class="col-2"></p>
-                        <p th:text=" ${p.description} "  class="col-2"></p>
-                        <p th:text=" ${p.stock} "  class="col-2"></p>
-                        <p th:text=" ${p.price} "  class="col-2"></p>
+                    <p th:text=" ${p.name} " class="col-2"></p>
+                    <p th:text=" ${p.description} "  class="col-2"></p>
+                    <p th:text=" ${p.stock} "  class="col-2"></p>
+                    <p th:text=" ${p.price} "  class="col-2"></p>
                     <div class="col-2">
-                        <a th:href="@{/product-manager/update(id=${p.id})}" class="btn btn-primary">Update</a>
+                        <a th:href="@{/product-manager/update(id=${p.id})}" class="buynow">Update</a>
                     </div>
                     <div class="col-2">
                         <form method="post" th:action="@{/product-manager/remove}" th:object="${p}">
                             <label hidden>
                                 <input name="id" th:field="*{id}" th:value="${p.id}" type="value"/>
                             </label>
-                            <button type="submit" class="btn btn-primary"> remove </button>
+                            <button type="submit" class="buynow">Remove</button>
                         </form>
                     </div>
                 </div>

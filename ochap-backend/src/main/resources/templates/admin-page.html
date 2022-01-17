@@ -11,15 +11,30 @@
     <link rel="stylesheet" href="/css/product.css">
 </head>
 <body class="main-layout">
-    <div id="content">
-        <div th:replace="fragments/header :: header"></div>
-        <a href="/product-manager">
-            <button>Manage Products</button>
-        </a>
-        <a href="/category-manager">
-            <button>Manage Categories</button>
-        </a>
-        <div th:replace="fragments/footer :: footer"></div>
+<div id="content">
+    <div th:replace="fragments/header :: header"></div>
+    <div class="Categories">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title">
+                        <h2>Managers</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="brand-bg container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 margintop">
+                <a class="buynow" href="/product-manager">Products</a>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 margintop">
+                <a class="buynow" href="/category-manager">Categories</a>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
 </body>
 </html>
