@@ -30,3 +30,17 @@
     owner: "{{ ochap_backend_db_user }}"
   become: true
   become_user: postgres
+
+- name: Ensure postgresql database user for ochap-auth is present
+  postgresql_user:
+    name: "{{ ochap_auth_db_user }}"
+    password: "{{ ochap_auth_db_pass }}"
+  become: true
+  become_user: postgres
+
+- name: Ensure postgresql database for ochap-auth is present
+  postgresql_db:
+    name: "{{ ochap_auth_db_name }}"
+    owner: "{{ ochap_auth_db_user }}"
+  become: true
+  become_user: postgres

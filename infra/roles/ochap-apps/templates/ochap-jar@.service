@@ -1,0 +1,6 @@
+[Unit]
+Description=ÔChap java application '%i'
+Wants=network.target
+
+[Service]
+ExecStart=java -jar '/opt/ochap/%i.jar' '--spring.config.location=file:///opt/ochap/%i/application.properties'

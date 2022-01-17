@@ -1,4 +1,7 @@
 ---
+ochap_auth_db_user: insecure-default-ochap-auth-db-user
+ochap_auth_db_pass: insecure-default-ochap-auth-db-pass
+ochap_auth_db_name: ochap-authentication
 ochap_backend_db_user: insecure-default-ochap-backend-db-user
 ochap_backend_db_pass: insecure-default-ochap-backend-db-pass
 ochap_backend_db_name: ochap-backend
