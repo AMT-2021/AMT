@@ -11,6 +11,10 @@ Deploys the ochap WARs and configuration files.
 
 Variable                          | Description                                              | Type     |
 --------                          | -----------                                              | ----     |
+`ochap_admin_account_pass`        | Password for the admininistrator account                 | String   |
+`ochap_auth_db_name`              | Name of the database used for ochap-authentication       | String   |
+`ochap_auth_db_user`              | Username of the database user for ochap-authentication   | String   |
+`ochap_auth_db_pass`              | Password of the database user for ochap-authentication   | String   |
 `ochap_backend_db_name`           | Name of the database used for ochap-backend              | String   |
 `ochap_backend_db_user`           | Username of the database user for ochap-backend          | String   |
 `ochap_backend_db_pass`           | Password of the database user for ochap-backend          | String   |
