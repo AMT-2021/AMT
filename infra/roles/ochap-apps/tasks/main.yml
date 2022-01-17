@@ -1,3 +1,5 @@
 ---
 - name: Configure wildfly applications
   include_tasks: wildfly-apps.yml
+- name: Configure standalone applications
+  include_tasks: standalone-apps.yml

@@ -14,6 +14,19 @@
       when: "{{ wars_to_deploy | default([]) | length == 0 }}"
     - debug:
         msg: "This playbook will deploy the following WARs: {{ wars_to_deploy }}"
+    - name: Find java archives to deploy
+      set_fact:
+        jars_to_deploy: "{{ jars_to_deploy | default([]) }} + ['{{ item }}']"
+      with_fileglob: '../artifacts/*.jar'
+    - fail:
+        msg: >-
+          I could not find the java application archives to deploy.
+          Please place the JAR files to deploy under the $INFRA_ROOT/artifacts
+          directory. The 'INFRA_ROOT' directory is the directory that contains
+          the 'playbooks' directory.
+      when: "{{ jars_to_deploy | default([]) | length == 0 }}"
+    - debug:
+        msg: "This playbook will deploy the following JARs: {{ jars_to_deploy }}"
   roles:
     - wildfly
     - postgres-for-ochap
