@@ -44,12 +44,13 @@
     cursor: pointer;
     grid-column: 1 / span 2;
     grid-row: 2;
-    padding: 7px 26px;
+    padding: 7px 30px;
+    transition: all 0.4s ease-in;
 }
 .product .product-add-to-shopping-cart .product-submit:hover {
-    background: #fff;
-    border-radius: 20px;
-    color: #000;
+    background: #000;
+    border-radius: 30px;
+    color: #fff;
     transition: all 0.4s ease-in;
 }
 .product .product-description {

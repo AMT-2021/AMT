@@ -1,56 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/css/bootstrap.css"/>
-    <link rel="stylesheet" href="/css/style.css"/>
-    <title>Ô Chap': Create new account</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/bootstrap.css"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <title>Ô Chap': Create new account</title>
 </head>
-<body>
-  <main class="center-elems full-viewport">
-    <div class="survey-form">
-      <h4>Create a new account</h4>
-      <form id="register-perform"
-        accept-charset="utf-8"
-        th:action="@{/users/register(callback=${callbackUrl})}" th:object="${registerDTO}"
-        method="POST">
-        <div class="alert alert-warning"
-         th:each="err : ${#fields.globalErrors()}" th:text="${err}"/>
-
-        <div class="form-aligned-fields">
-          <label for="username">Username</label>
-          <input id="username" type="text" required autofocus
-           class="form-control"
-           th:errorclass="fieldError" th:field="*{username}"
-           name="username" placeholder="">
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
-
-          <label for="password">Password</label>
-          <input id="password" type="password" required
-           class="form-control"
-           th:errorclass="fieldError" th:field="*{password}"
-           name="password" placeholder="">
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+<body class="main-layout">
+<div th:replace="fragments/header :: header"></div>
+<main id="content" class="full-viewport">
+  <div class="col">
+    <div class="Categories">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="title">
+              <h2>Create a new account</h2>
+            </div>
+          </div>
         </div>
-      </form>
-
-      <div class="button-row">
-        <input type="submit" name="perform_register" form="register-perform"
-          value="Register">
-        <input type="submit" name="perform_cancel" form="register-cancel"
-          class="secondary" value="Cancel">
       </div>
-
-      <form id="register-cancel"
-        accept-charset="utf-8"
-        th:action="@{*{cancelUrl}?: '/'}"
-        method="GET">
-        <input name="back" type="hidden" th:value="${#request.getParameter('callback')}">
-      </form>
     </div>
-  </main>
+    <form id="register-perform" class="col"
+          accept-charset="utf-8"
+          th:action="@{/users/register(callback=${callbackUrl})}" th:object="${registerDTO}"
+          method="POST">
+      <div class="alert alert-warning"
+           th:each="err : ${#fields.globalErrors()}" th:text="${err}"/>
+
+      <div class="form-aligned-fields row">
+        <label for="username">Username*</label>
+        <input id="username" type="text" required autofocus
+               th:errorclass="fieldError" th:field="*{username}"
+               name="username" placeholder="">
+        <div class="alert alert-warning field-validation-error"
+             th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+      </div>
+      <div class="form-aligned-fields row">
+        <label for="password">Password*</label>
+        <input id="password" type="password" required
+               th:errorclass="fieldError" th:field="*{password}"
+               name="password" placeholder="">
+        <div class="alert alert-warning field-validation-error"
+             th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+      </div>
+      <span>* These fields are required</span>
+    </form>
+
+    <div class="row">
+      <input type="submit" name="perform_register" form="register-perform"
+             class="buynow" value="Register">
+      <input type="submit" name="perform_cancel" form="register-cancel"
+             class="buynow secondary" value="Cancel">
+    </div>
+
+    <form id="register-cancel"
+          accept-charset="utf-8"
+          th:action="@{*{cancelUrl}?: '/'}"
+          method="GET">
+      <input name="back" type="hidden" th:value="${#request.getParameter('callback')}">
+    </form>
+  </div>
+</main>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -1,0 +1,34 @@
+---
+- name: Create ochap-authentication directories
+  file:
+    path: /opt/ochap/ochap-authentication-0.0.1
+    state: directory
+
+- name: Install ochap-authentication application.properties
+  template:
+    src: ochap_authentication.application.properties
+    dest: /opt/ochap/ochap-authentication-0.0.1/application.properties
+
+- name: "Copy Ô Chap' JARs"
+  copy:
+    src: "{{ item }}"
+    dest: /opt/ochap
+    owner: root
+    mode: 0444
+  with_items: "{{ jars_to_deploy }}"
+
+- name: Install standalone ochap jars systemd service
+  template:
+    src: ochap-jar@.service
+    dest: /etc/systemd/system
+
+- name: Reload systemd to detect potentially installed service files
+  service:
+    daemon_reload: yes
+
+- name: Enable ochap-authentication service and set to start at boot
+  service:
+    name: "ochap-jar@{{ (item | basename | splitext)[0] }}"
+    state: restarted
+    enabled: yes
+  with_items: "{{ jars_to_deploy }}"

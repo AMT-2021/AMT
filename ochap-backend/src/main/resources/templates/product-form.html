@@ -24,90 +24,60 @@
 
 <body class="main-layout">
 
-<!-- end loader -->
-<div class="sidebar">
-    <!-- Sidebar  -->
-    <nav id="sidebar">
-
-        <div id="dismiss">
-            <i class="fa fa-arrow-left"></i>
-        </div>
-
-        <ul class="list-unstyled components">
-
-            <li class="active">
-                <a href="index.html">Home</a>
-            </li>
-            <li>
-                <a href="#brand">Brands</a>
-            </li>
-            <li>
-                <a href="#shoes">Shoes</a>
-            </li>
-            <li>
-                <a href="#jewellery">Jewellery</a>
-            </li>
-            <li>
-                <a href="#kids">Kids and Babies</a>
-            </li>
-        </ul>
-
-    </nav>
-</div>
-
 <div class="wrapper">
-  <div id="content">
-    <div th:replace="fragments/header :: header"></div>
-    <!-- Categories -->
-    <div class="p-5 container">
-      <div class="title">
-        <h2 th:text="${title}" />
-      </div>
-      <form id="product-add"
-        accept-charset="utf-8"
-        th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"
-        method="post" enctype="multipart/form-data">
-        <div class="alert alert-warning"
-         th:each="err : ${#fields.globalErrors()}" th:text="${err}"/>
+    <div id="content">
+        <div th:replace="fragments/header :: header"></div>
+        <!-- Categories -->
+        <div class="p-5 container">
+            <div class="title">
+                <h2 th:text="${title}" />
+            </div>
+            <form id="product-add"
+                  accept-charset="utf-8"
+                  th:action="@{/product-manager/{r}(r=${route})}" th:object="${product}"
+                  method="post" enctype="multipart/form-data">
+                <div class="alert alert-warning"
+                     th:each="err : ${#fields.globalErrors()}" th:text="${err}"/>
 
-        <div class="form-aligned-fields">
-          <input name="id" th:field="*{id}" th:value="${product.id}" hidden>
+                <div class="form-aligned-fields">
+                    <input name="id" th:field="*{id}" th:value="${product.id}" hidden>
 
-          <label for="name">Name</label>
-          <input name="name" th:field="*{name}" th:value="${product.name}"
-           th:readonly="${readonlyName}" required>
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
+                    <label for="name">Name*</label>
+                    <input name="name" th:field="*{name}" th:value="${product.name}"
+                           th:readonly="${readonlyName}" required>
+                    <div class="alert alert-warning field-validation-error"
+                         th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
 
-          <label for="description">Description</label>
-          <input name="description" th:field="*{description}"
-           th:value="${product.description}" required>
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('description')}" th:errors="*{description}"/>
+                    <label for="description">Description*</label>
+                    <input name="description" th:field="*{description}"
+                           th:value="${product.description}" required>
+                    <div class="alert alert-warning field-validation-error"
+                         th:if="${#fields.hasErrors('description')}" th:errors="*{description}"/>
 
-          <label for="price">Price</label>
-          <input name="price" th:field="*{price}" th:value="${product.price}">
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('price')}" th:errors="*{price}"/>
+                    <label for="price">Price</label>
+                    <input name="price" th:field="*{price}" th:value="${product.price}">
+                    <div class="alert alert-warning field-validation-error"
+                         th:if="${#fields.hasErrors('price')}" th:errors="*{price}"/>
 
-          <label for="stock">Stock</label>
-          <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
-          <div class="alert alert-warning field-validation-error"
-           th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"/>
+                    <label for="stock">Stock</label>
+                    <input name="stock" th:field="*{stock}" th:value="${product.stock}" required>
+                    <div class="alert alert-warning field-validation-error"
+                         th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"/>
 
-          <label for="image">Image</label>
-          <input name="image" type="file" class="form-control-file">
+                    <label for="image">Image</label>
+                    <input name="image" type="file" class="form-control-file">
 
-          <label for="category">Categories</label>
-          <th:block th:each="cat : ${categories}">
-            <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
-            <label for="cat" th:text="${cat.name}"></label>
-          </th:block>
+                    <label for="category">Categories</label>
+                    <th:block th:each="cat : ${categories}">
+                        <input type="checkbox" name="categories" id="cat" th:value="${cat.id}">
+                        <label for="cat" th:text="${cat.name}"></label>
+                    </th:block>
+                </div>
+                <p>* These fields are required</p>
+                <button type="submit" class="buynow alert-danger" th:text="${title}"/>
+            </form>
         </div>
-        <button type="submit" class="rounded p-1 m-1 alert-danger" th:text="${title}"/>
-      </form>
+        <div th:replace="fragments/footer :: footer"></div>
     </div>
-    <div th:replace="fragments/footer :: footer"></div>
-  </div>
 </div>
 </body>
