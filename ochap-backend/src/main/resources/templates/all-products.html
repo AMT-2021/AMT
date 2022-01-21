@@ -51,21 +51,25 @@
             <!-- news brand -->
             <div id="brand" class="brand-bg">
                 <h3>Products</h3>
-                <form th:action="@{/shopping-cart/add}" class="row" th:if="${#lists.size(products) != 0}" method="post">
+                <div th:if="${#lists.size(products) != 0}" class="row">
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop" th:each="product: ${products}">
-                        <div class="brand-box">
-                            <i> <img th:src="@{/image/{id}(id=${product.id})}"  alt="hat image"/> </i>
-                            <h4 th:text="${product.name}"></h4>
-                            <h4 th:if="${product.price != null}">Price: CHF <span th:text="${product.price}"></span></h4>
-                            <h4 th:unless="${product.price != null}">Not for Sale</h4>
-                        </div>
-                        <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
-                        <input name="id" type="hidden" th:value="${product.id}" />
-                        <input name="quantity" type="hidden" value="1" />
-                        <input class="buynow" th:if="${product.stock > 0 && product.price != null}" type="submit" value="Add to Cart" />
-                        <h4 th:unless="${product.stock > 0 && product.price != null}" class="mt-5" style="text-align: center">Unavailable</h4>
+                        <form th:action="@{/shopping-cart/add}"   method="post">
+                            <div class="brand-box">
+                                <i> <img th:src="@{/image/{id}(id=${product.id})}"  alt="hat image"/> </i>
+                                <h4 th:text="${product.name}"></h4>
+                                <h4 th:if="${product.price != null}">Price: CHF <span th:text="${product.price}"></span></h4>
+                                <h4 th:unless="${product.price != null}">Not for Sale</h4>
+                            </div>
+                            <a class="buynow" th:href="@{|/products/${product.id}|}">See More</a>
+                            <input name="id" type="hidden" th:value="${product.id}" />
+                            <input name="quantity" type="hidden" value="1" />
+                            <input class="buynow" th:if="${product.stock > 0 && product.price != null}" type="submit" value="Add to Cart" />
+                            <h4 th:unless="${product.stock > 0 && product.price != null}" class="mt-5" style="text-align: center">Unavailable</h4>
+                        </form>
                     </div>
-                </form>
+                </div>
+
+
                 <p th:unless="${#lists.size(products) != 0}">No article available with this category</p>
             </div>
             <!-- end news brand -->
