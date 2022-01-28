@@ -1,7 +1,6 @@
 package ch.heigvd.amt.backend;
 
-import java.io.IOException;
-import java.time.Instant;
+import java.io.IOException;// TODO Review NGY - need compiler option
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -25,9 +24,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-  @Autowired
-  JWTVerifier jwtVerifier;
+  final JWTVerifier jwtVerifier;
 
+  @Autowired
+  public JwtFilter(JWTVerifier jwtVerifier) {
+    this.jwtVerifier = jwtVerifier;
+  }
+
+  // TODO NGY method's name to review... and why not using try catch bloc in the corps methods to
+  // deal with exception
   private void trySetJwtBasedAuthentication(HttpServletRequest request) {
     var cookies = request.getCookies();
     if (cookies == null)
@@ -45,7 +50,8 @@ public class JwtFilter extends OncePerRequestFilter {
     var now = ZonedDateTime.now();
 
     if (now.isBefore(issued) || now.isAfter(expires)) {
-      return; // Token not yet / no longer valid.
+      return; // Token not yet / no longer valid.//TODO NGY How the client is informed about this
+              // issue ?
     }
 
     String subject = jwt.getSubject();
@@ -60,7 +66,11 @@ public class JwtFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
-    trySetJwtBasedAuthentication(request);
+    try {
+      trySetJwtBasedAuthentication(request);
+    } catch (RuntimeException e) {
+      // Silently ignore JWT token erros: If a route has security requirements.
+    }
     filterChain.doFilter(request, response);
   }
 }

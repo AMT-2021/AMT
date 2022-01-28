@@ -17,11 +17,15 @@ import java.util.List;
 @Controller
 public class AllProducts {
 
-  @Autowired
-  private ProductDAO productDAO;
+  private final ProductDAO productDAO;
+
+  private final CategoryDAO categoryDAO;
 
   @Autowired
-  private CategoryDAO categoryDAO;
+  public AllProducts(ProductDAO productDAO, CategoryDAO categoryDAO) {
+    this.productDAO = productDAO;
+    this.categoryDAO = categoryDAO;
+  }
 
   @GetMapping("/all-products")
   public String allProduct(Model model, @RequestParam(required = false) Integer category) {

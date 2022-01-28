@@ -1,13 +1,14 @@
 package ch.heigvd.amt.backend.routes;
 
-import ch.heigvd.amt.backend.entities.Category;
-import ch.heigvd.amt.backend.entities.Product;
-import ch.heigvd.amt.backend.entities.ProductQuantity;
-import ch.heigvd.amt.backend.repository.CategoryDAO;
-import ch.heigvd.amt.backend.repository.ProductDAO;
-import ch.heigvd.amt.backend.services.HatPhotoService;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -18,29 +19,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import ch.heigvd.amt.backend.entities.Category;
+import ch.heigvd.amt.backend.entities.Product;
+import ch.heigvd.amt.backend.repository.CategoryDAO;
+import ch.heigvd.amt.backend.repository.ProductDAO;
+import ch.heigvd.amt.backend.services.HatPhotoService;
 
 @Controller
 @RolesAllowed("ROLE_ADMIN")
 public class ProductManager {
-  @Autowired
-  private ProductDAO productDAO;
+  private final ProductDAO productDAO;
+
+  private final CategoryDAO categoryDAO;
+
+  private final HatPhotoService hatPhotoService;
 
   @Autowired
-  private CategoryDAO categoryDAO;
-
-  @Autowired
-  private HatPhotoService hatPhotoService;
+  public ProductManager(ProductDAO productDAO, CategoryDAO categoryDAO,
+      HatPhotoService hatPhotoService) {
+    this.productDAO = productDAO;
+    this.categoryDAO = categoryDAO;
+    this.hatPhotoService = hatPhotoService;
+  }
 
   @GetMapping("/product-manager")
   public String allProduct(Model model) {
@@ -92,6 +92,7 @@ public class ProductManager {
       }
     }
 
+    // TOO NGY - refactor possible with updateProduct Method
     if (image != null && !image.isEmpty()) {
       String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
       Product p = productDAO.save(product);

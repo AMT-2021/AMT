@@ -1,5 +1,7 @@
 package ch.heigvd.amt.backend;
 
+import java.net.URL;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -18,6 +20,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.StringUtils;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ITemplateResolver;
@@ -35,14 +40,18 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
   }
 
   @Bean
-  public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) throws Exception {
+  public JWTVerifier jwtParser(@Value("${authServiceJwtSecret}") String secret) {
     return JWT.require(Algorithm.HMAC256(secret)).build();
   }
 
   @Configuration
   public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    public final JwtFilter jwtFilter;
+
     @Autowired
-    public JwtFilter jwtFilter;
+    public SecurityConfiguration(JwtFilter jwtFilter) {
+      this.jwtFilter = jwtFilter;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -75,5 +84,15 @@ public class AmtBackendApplication extends SpringBootServletInitializer {
     templateEngine.setTemplateResolver(templateResolver);
     templateEngine.addDialect(sec); // "sec" tags
     return templateEngine;
+  }
+
+  @Bean("AuthServiceWebClient")
+  public WebClient authServiceWebClient(@Value("${authServiceBaseUrl}") String baseUrl)
+      throws Exception {
+    URL parsed = new URL(baseUrl); // Validates the specified URL is valid.
+    if (!StringUtils.hasLength(parsed.getProtocol()) || !StringUtils.hasLength(parsed.getHost()))
+      throw new Exception(
+          "The specified base URL for the authentication service is invalid: " + parsed.toString());
+    return WebClient.builder().uriBuilderFactory(new DefaultUriBuilderFactory(baseUrl)).build();
   }
 }
